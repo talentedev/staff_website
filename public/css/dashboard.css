@@ -1,0 +1,20 @@
+.mt-1 {
+  margin-top: 10px;
+}
+
+.mb-1 {
+  margin-bottom: 10px;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.bg-white {
+  background-color: white !important;
+}
+
+.info-box-icon i {
+  margin-top: 18px;
+}
+

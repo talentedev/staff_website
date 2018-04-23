@@ -1,0 +1,15 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/css/common.css": "/css/common.css",
+    "/css/dashboard.css": "/css/dashboard.css",
+    "/css/users.css": "/css/users.css",
+    "/css/products.css": "/css/products.css",
+    "/js/users.js": "/js/users.js",
+    "/js/products.js": "/js/products.js",
+    "/js/dashboard.js": "/js/dashboard.js",
+    "/js/common.js": "/js/common.js",
+    "/vendor/jvectormap/jquery-jvectormap.css": "/vendor/jvectormap/jquery-jvectormap.css",
+    "/vendor/jvectormap/jquery-jvectormap.min.js": "/vendor/jvectormap/jquery-jvectormap.min.js",
+    "/vendor/axios/axios.min.js": "/vendor/axios/axios.min.js"
+}
