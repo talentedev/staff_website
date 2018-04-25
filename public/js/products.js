@@ -79,7 +79,12 @@ module.exports = __webpack_require__(54);
 $(function () {
 
   // Datatable
-  $('#example1').DataTable();
+  $('#products_table').DataTable({
+    order: [1, 'asc'],
+    columnDefs: [{ targets: [0, 15, 16], orderable: false }],
+    paging: true,
+    info: true
+  });
 
   //iCheck for checkbox and radio inputs
   $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({

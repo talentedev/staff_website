@@ -6,8 +6,8 @@ $(function () {
         columnDefs: [
             { targets: [6], orderable: false}
         ],
-        paging: false,
-        info: false
+        paging: true,
+        info: true
     });
 
     // Select all rows.
@@ -111,6 +111,45 @@ $(function () {
                     console.log(error);
                 });
         }
-    
+    });
+
+    // Delete staff
+    var modalConfirm = function(callback){
+
+        var userData = null;
+
+        $(".delete-user").on("click", function(){
+            $("#mi-modal").modal('show');
+            userData = $(this).data('user');
+        });
+
+        $("#modal-btn-yes").on("click", function(){
+            callback(true, userData);
+            $("#mi-modal").modal('hide');
+        });
+        
+        $("#modal-btn-no").on("click", function(){
+            callback(false);
+            $("#mi-modal").modal('hide');
+        });
+    };
+
+    modalConfirm(function(confirm, data){
+        if(confirm){
+            var url = 'users/' + data.id;
+            axios.delete(url)
+                .then(function (response) {
+                    if (response.data.message == 'User is deleted successfully') {
+                        location.reload();
+                    } else {
+                        alert('Delete user failed!');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }else{
+            console.log('The operation to delete was canceled by user!')
+        }
     });
 })
