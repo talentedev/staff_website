@@ -28,6 +28,9 @@ Route::group(['middleware' => 'web'], function () {
         // Products
         Route::resource('products', 'ProductController');
 
+        // Customers
+        Route::resource('customers', 'CustomerController');
+
     });
 
 });

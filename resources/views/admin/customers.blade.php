@@ -1,48 +1,48 @@
 @extends('adminlte::page')
 
-@section('title', 'Pheramor - Accounts')
+@section('title', 'Pheramor - Customers')
 
 @section('content_header')
-    <h1>Accounts</h1>
+    <h1>Customers</h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Accounts</li>
+        <li class="active">Customers</li>
     </ol>
 @stop
 
 @section('content')
     <div class="box">
         <div class="box-body table-responsive">
-            <table id="users_table" class="table table-bordered table-striped">
+            <table id="customers_table" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th class="text-center">No.</th>
-                        <th class="text-center">User Name</th>
+                        <th class="text-center">Name</th>
                         <th class="text-center">Email</th>
-                        <th class="text-center">Access Code</th>
-                        <th class="text-center">API Key</th>
-                        <th class="text-center">Tag</th>
+                        <th class="text-center">Source</th>
+                        <th class="text-center">Created Date</th>
+                        <th class="text-center">Note</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($users as $key => $user)
+                @foreach ($customers as $key => $customer)
                     <tr>
                         <td class="text-center">{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $user->name }}</td>
-                        <td class="text-center">{{ $user->email }}</td>
-                        <td class="text-center">{{ $user->source }}</td>
-                        <td class="text-center">{{ $user->api_key }}</td>
-                        <td class="text-center">{{ $user->tag }}</td>
+                        <td class="text-center">{{ $customer->name }}</td>
+                        <td class="text-center">{{ $customer->sales_email }}</td>
+                        <td class="text-center">{{ $customer->source }}</td>
+                        <td class="text-center">{{ date('Y-m-d', strtotime($customer->created_at)) }}</td>
+                        <td class="text-center">{{ $customer->note }}</td>
                         <td class="text-center text-red h4">
-                            <i class="fa fa-edit pointer edit-user" data-user="{{ $user }}"></i>
-                            <i class="fa fa-trash pointer delete-user" data-user="{{ $user }}"></i>
+                            <i class="fa fa-edit pointer edit-user" data-user="{{ $customer }}"></i>
+                            <i class="fa fa-trash pointer delete-user" data-user="{{ $customer }}"></i>
                         </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
-            <button class="btn btn-primary" id="add_account">Add Account</button>
+            <button class="btn btn-primary" id="add_customer">Add Customer</button>
         </div>
         <!-- /.box-body -->
     </div>
@@ -53,41 +53,24 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staffModalLabel">Add Staff</h5>
+                    <h5 class="modal-title" id="staffModalLabel">Add Customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="form-group row">
-                            <label for="exampleInputEmail1">Staff Name</label>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Customer Name</label>
                             <input type="text" class="form-control" id="name">
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12 pl-0">
-                                <label for="exampleInputEmail1">Access Code</label>
-                                <div class="row">
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="code">
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="button" class="btn btn-primary" id="generate_code" value="Generate"></input>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
+                        <div class="form-group">
                             <label for="exampleInputEmail1">Email Address</label>
-                            <input type="text" class="form-control" id="email">
+                            <input type="email" class="form-control" id="email">
                         </div>
-                        <div class="form-group row">
-                            <label for="exampleInputEmail1">API Key</label>
-                            <input type="text" class="form-control" id="key">
-                        </div>
-                        <div class="form-group row">
-                            <label for="exampleInputEmail1">Tag</label>
-                            <input type="text" class="form-control" id="tag">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Note</label>
+                            <textarea class="form-control" id="note" rows='5'></textarea>
                         </div>
                     </form>
                 </div>
@@ -121,12 +104,12 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('vendor/adminlte/plugins/iCheck/all.css') }}">
     <!-- custom styles -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/users.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/customers.css') }}">
 @endpush
 
 @push('js')
     <!-- Common JS -->
     <script src="{{ asset('js/common.js') }}"></script>
     <!-- Custom JS -->
-    <script src="{{ asset('js/users.js') }}"></script>
+    <script src="{{ asset('js/customers.js') }}"></script>
 @endpush

@@ -60,85 +60,55 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 52);
+/******/ 	return __webpack_require__(__webpack_require__.s = 56);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 52:
+/***/ 56:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(53);
+module.exports = __webpack_require__(57);
 
 
 /***/ }),
 
-/***/ 53:
+/***/ 57:
 /***/ (function(module, exports) {
 
 $(function () {
 
     // Datatable initialize
-    $('#users_table').DataTable({
+    $('#customers_table').DataTable({
         order: [0, 'asc'],
-        columnDefs: [{ targets: [6], orderable: false }],
+        columnDefs: [{ targets: [4], orderable: false }],
         paging: true,
         info: true
     });
 
-    // Select all rows.
-    $('thead input').on('ifChecked', function (event) {
-        $('tbody input').each(function () {
-            $(this).iCheck('check');
-        });
-    });
-
-    // Deselect all rows.
-    $('thead input').on('ifUnchecked', function (event) {
-        $('tbody input').each(function () {
-            $(this).iCheck('uncheck');
-        });
-    });
-
-    var email = 'admin@pheramor.com';
-    var apiKey = 'bv083j1o67spn0hqek0o3gal9o';
-    var tag = 'Street';
-
-    // Add new staff
-    $('#add_account').click(function () {
+    // Add new customer
+    $('#add_customer').click(function () {
         $('#add_account_modal').modal('show');
-        $('#staffModalLabel').html('Add Staff');
+        $('#staffModalLabel').html('Add Customer');
 
         $('#name').val('');
-        $('#code').val('');
-        $('#email').val(email);
-        $('#key').val(apiKey);
-        $('#tag').val(tag);
+        $('#email').val('');
+        $('#note').val('');
 
         $('#btn_save_data').data('staff', 'add');
     });
 
-    // Generate Access Code
-    $('#generate_code').click(function () {
-        var min = 100000;
-        var max = 999999;
-        var x = Math.floor(Math.random() * (max - min + 1) + min);
-        $('#code').val('staff' + x);
-    });
-
-    // Edit staff
+    // Edit customer
     $('.edit-user').click(function () {
 
         $('#add_account_modal').modal('show');
-        $('#staffModalLabel').html('Edit Staff');
+        $('#staffModalLabel').html('Edit Customer');
 
         var data = $(this).data('user');
 
         $('#name').val(data.name);
-        $('#code').val(data.source);
-        $('#email').val(data.email);
-        $('#key').val(data.api_key);
-        $('#tag').val(data.tag);
+        $('#email').val(data.sales_email);
+        $('#note').val(data.note);
 
         $('#btn_save_data').data('staff', 'edit');
         $('#btn_save_data').data('id', data.id);
@@ -149,34 +119,31 @@ $(function () {
 
         var data = {
             name: $('#name').val(),
-            source: $('#code').val(),
             email: $('#email').val(),
-            api_key: $('#key').val(),
-            tag: $('#tag').val()
+            note: $('#note').val()
         };
 
         var state = $(this).data('staff');
 
         if (state == 'add') {
-            var url = 'users';
+            var url = 'customers';
             axios.post(url, data).then(function (response) {
-                if (response.data.message == 'User successfully added') {
+                if (response.data.message == 'Pheramor account successfully added') {
                     location.reload();
                 } else {
-                    alert('The Access Code is exist already. Please try again with other Access Code.');
+                    console.log('creation failed.');
                 }
             }).catch(function (error) {
                 console.log(error);
             });
         } else if (state == 'edit') {
             var id = $(this).data('id');
-
-            var url = 'users/' + id;
+            var url = 'customers/' + id;
             axios.put(url, data, id).then(function (response) {
-                if (response.data.message == 'User successfully updated') {
+                if (response.data.message == 'Customer successfully updated') {
                     location.reload();
                 } else {
-                    alert('The Access Code is exist already. Please try again with other Access Code.');
+                    console.log('updating failed.');
                 }
             }).catch(function (error) {
                 console.log(error);
@@ -207,9 +174,9 @@ $(function () {
 
     modalConfirm(function (confirm, data) {
         if (confirm) {
-            var url = 'users/' + data.id;
+            var url = 'customers/' + data.id;
             axios.delete(url).then(function (response) {
-                if (response.data.message == 'User is deleted successfully') {
+                if (response.data.message == 'Customer is deleted successfully') {
                     location.reload();
                 } else {
                     alert('Delete user failed!');

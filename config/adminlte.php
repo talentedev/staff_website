@@ -112,12 +112,17 @@ return [
         [
             'text'        => 'Accounts',
             'url'         => 'users',
-            'icon'        => 'users '
+            'icon'        => 'users'
         ],
         [
             'text'        => 'Products',
             'url'         => 'products',
-            'icon'        => 'list-ul '
+            'icon'        => 'list-ul'
+        ],
+        [
+            'text'        => 'Customers',
+            'url'         => 'customers',
+            'icon'        => 'shopping-cart'
         ]
     ],
 
