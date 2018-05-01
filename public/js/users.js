@@ -100,6 +100,18 @@ $(function () {
         });
     });
 
+    // Form validation
+    $('#user_form').validator();
+
+    $('#user_form').validator().on('submit', function (e) {
+        if (e.isDefaultPrevented()) {
+            console.log('form is not valid');
+        } else {
+            e.preventDefault();
+            submit();
+        }
+    });
+
     var email = 'admin@pheramor.com';
     var apiKey = 'bv083j1o67spn0hqek0o3gal9o';
     var tag = 'Street';
@@ -145,7 +157,7 @@ $(function () {
     });
 
     // Save data
-    $('#btn_save_data').click(function () {
+    function submit() {
 
         var data = {
             name: $('#name').val(),
@@ -155,7 +167,7 @@ $(function () {
             tag: $('#tag').val()
         };
 
-        var state = $(this).data('staff');
+        var state = $('#btn_save_data').data('staff');
 
         if (state == 'add') {
             var url = 'users';
@@ -169,7 +181,7 @@ $(function () {
                 console.log(error);
             });
         } else if (state == 'edit') {
-            var id = $(this).data('id');
+            var id = $('#btn_save_data').data('id');
 
             var url = 'users/' + id;
             axios.put(url, data, id).then(function (response) {
@@ -182,7 +194,7 @@ $(function () {
                 console.log(error);
             });
         }
-    });
+    }
 
     // Delete staff
     var modalConfirm = function modalConfirm(callback) {

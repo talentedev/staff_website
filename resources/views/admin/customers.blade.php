@@ -55,28 +55,28 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="staffModalLabel">Add Customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="customer_form" data-toggle="validator" role="form">
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Customer Name</label>
-                            <input type="text" class="form-control" id="name">
+                            <label for="name">Customer Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Email Address</label>
-                            <input type="email" class="form-control" id="email">
+                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Note</label>
+                            <label for="note">Note</label>
                             <textarea class="form-control" id="note" rows='5'></textarea>
                         </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btn_save_data" data-state=''>Save</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btn_save_data" data-state=''>Save</button>
                 </div>
             </div>
         </div>

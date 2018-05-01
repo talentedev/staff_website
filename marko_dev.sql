@@ -16,6 +16,25 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`marko_dev` /*!40100 DEFAULT CHARACTER S
 
 USE `marko_dev`;
 
+/*Table structure for table `customers` */
+
+DROP TABLE IF EXISTS `customers`;
+
+CREATE TABLE `customers` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sales_email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `source` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `note` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `customers` */
+
+insert  into `customers`(`id`,`name`,`sales_email`,`source`,`note`,`created_at`,`updated_at`) values (1,'Customer 1','customer1@email.com','admin','first pheramor user','2018-04-30 18:23:51','2018-04-30 18:23:51');
+
 /*Table structure for table `migrations` */
 
 DROP TABLE IF EXISTS `migrations`;
@@ -25,11 +44,11 @@ CREATE TABLE `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `migrations` */
 
-insert  into `migrations`(`id`,`migration`,`batch`) values (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2018_01_31_151057_create_permission_tables',1),(4,'2018_04_13_170152_create_products_table',1);
+insert  into `migrations`(`id`,`migration`,`batch`) values (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2018_01_31_151057_create_permission_tables',1),(4,'2018_04_13_170152_create_products_table',1),(5,'2018_04_29_171753_create_customers_table',1);
 
 /*Table structure for table `model_has_permissions` */
 
@@ -89,7 +108,7 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-04-23 21:01:10','2018-04-23 21:01:10'),(2,'api','web','2018-04-23 21:01:10','2018-04-23 21:01:10');
+insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-04-30 18:23:13','2018-04-30 18:23:13'),(2,'api','web','2018-04-30 18:23:13','2018-04-30 18:23:13');
 
 /*Table structure for table `products` */
 
@@ -146,7 +165,7 @@ CREATE TABLE `roles` (
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-04-23 21:01:10','2018-04-23 21:01:10'),(2,'Street Team','web','2018-04-23 21:01:10','2018-04-23 21:01:10'),(3,'Staff','web','2018-04-23 21:01:10','2018-04-23 21:01:10');
+insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-04-30 18:23:13','2018-04-30 18:23:13'),(2,'Street Team','web','2018-04-30 18:23:13','2018-04-30 18:23:13'),(3,'Staff','web','2018-04-30 18:23:13','2018-04-30 18:23:13');
 
 /*Table structure for table `users` */
 
@@ -170,7 +189,7 @@ CREATE TABLE `users` (
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Street','$2y$10$3qZ3twRPY7.oxLTwKz/nXuZYhUOTDtWLKfH5US3xptrgOawegtPVm',NULL,'2018-04-23 21:01:11','2018-04-23 21:01:11'),(2,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$.syWphBeKiZtzan0hnyjmOLB1EFJYtQAlIK.e6ynaYciQvlSTskjW',NULL,'2018-04-23 21:01:11','2018-04-23 21:01:11'),(3,'Staff','staff@gmail.com','staff123458','12234567890','Street','$2y$10$8OQC4ANghXd5jHh4wrGYaeB6pLh81MqY5Q3DflsZC2ppoGoR0JMeq',NULL,'2018-04-23 21:01:12','2018-04-23 21:16:02');
+insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Street','$2y$10$LXvm0j6kTRJTY0AOVcocgejBhElPpQssstxTUWlUYPrJKdnxpOBSm',NULL,'2018-04-30 18:23:13','2018-04-30 18:23:13'),(2,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$3dVjlJ1M60bI.qh6QAPbsu5wqVY0V0Cbb6hHdW/RFpE08641cXlti',NULL,'2018-04-30 18:23:13','2018-04-30 18:23:13'),(3,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Street','$2y$10$XZ.JEyoe0uLJgnDdkJSd4e.r/QEeFv1oaaC1tziuY5DjwJ/BXC1V.',NULL,'2018-04-30 18:23:13','2018-04-30 18:23:13');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

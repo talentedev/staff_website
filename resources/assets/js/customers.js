@@ -10,6 +10,18 @@ $(function () {
         info: true
     });
 
+    // Form validation
+    $('#customer_form').validator();
+
+    $('#customer_form').validator().on('submit', function (e) {
+        if (e.isDefaultPrevented()) {
+            console.log('form is not valid');
+        } else {
+            e.preventDefault();
+            submit();
+        }
+    });
+
     // Add new customer
     $('#add_customer').click(function() {
         $('#add_account_modal').modal('show');
@@ -40,7 +52,7 @@ $(function () {
     });
 
     // Save data
-    $('#btn_save_data').click(function() {
+    function submit() {
 
         var data = {
             name: $('#name').val(),
@@ -48,7 +60,7 @@ $(function () {
             note: $('#note').val()
         }
 
-        var state = $(this).data('staff')
+        var state = $('#btn_save_data').data('staff')
 
         if (state == 'add') {
             var url = 'customers'
@@ -64,7 +76,7 @@ $(function () {
                     console.log(error);
                 });
         } else if(state == 'edit') {
-            var id = $(this).data('id');
+            var id = $('#btn_save_data').data('id');
             var url = 'customers/' + id;
             axios.put(url, data, id)
                 .then(function (response) {
@@ -78,7 +90,7 @@ $(function () {
                     console.log(error);
                 });
         }
-    });
+    }
 
     // Delete staff
     var modalConfirm = function(callback){

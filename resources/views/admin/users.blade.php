@@ -59,17 +59,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="user_form" data-toggle="validator" role="form">
                         <div class="form-group row">
                             <label for="exampleInputEmail1">Staff Name</label>
-                            <input type="text" class="form-control" id="name">
+                            <input type="text" class="form-control" id="name" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-12 pl-0">
                                 <label for="exampleInputEmail1">Access Code</label>
                                 <div class="row">
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="code">
+                                        <input type="text" class="form-control" id="code" required>
+                                        <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="col-sm-3">
                                         <input type="button" class="btn btn-primary" id="generate_code" value="Generate"></input>
@@ -79,21 +81,24 @@
                         </div>
                         <div class="form-group row">
                             <label for="exampleInputEmail1">Email Address</label>
-                            <input type="text" class="form-control" id="email">
+                            <input type="text" class="form-control" id="email" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group row">
                             <label for="exampleInputEmail1">API Key</label>
-                            <input type="text" class="form-control" id="key">
+                            <input type="text" class="form-control" id="key" required>
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group row">
                             <label for="exampleInputEmail1">Tag</label>
-                            <input type="text" class="form-control" id="tag">
+                            <input type="text" class="form-control" id="tag" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="row">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="btn_save_data" data-state=''>Save</button>    
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btn_save_data" data-state=''>Save</button>
                 </div>
             </div>
         </div>
