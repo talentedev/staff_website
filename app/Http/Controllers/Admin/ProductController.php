@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Product;
 
 class ProductController extends Controller
@@ -11,7 +12,7 @@ class ProductController extends Controller
     /**
      * @var User
      */
-    private $products;
+    private $product;
 
     /**
      * Set the guard for the controller.
@@ -30,7 +31,7 @@ class ProductController extends Controller
     public function __construct(Product $product)
     {
         $this->middleware('auth:web');
-        $this->products = $product;
+        $this->product = $product;
     }
 
     /**
@@ -40,7 +41,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = $this->products->get();
+        $products = $this->product->get();
         return view('admin.products', [
             'products' => $products
         ]);
@@ -64,7 +65,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->product->pheramor_id = $request->get('pheramor_id');
+        $this->product->sales_email = $request->get('sales_email');
+        $this->product->note = $request->get('note');
+        $this->product->account_email = Auth::user()->email;
+        $this->product->source = Auth::user()->roles[0]->name;
+
+        $this->product->save();
+
+        return response()->json(['status' => true], 200);
     }
 
     /**

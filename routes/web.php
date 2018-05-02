@@ -28,8 +28,9 @@ Route::group(['middleware' => 'web'], function () {
         // Products
         Route::resource('products', 'ProductController');
 
-        // Customers
-        Route::resource('customers', 'CustomerController');
+        // Setting
+        Route::get('settings', 'SettingController@index');
+        Route::post('settings/change_me', 'SettingController@changeMe');
 
     });
 

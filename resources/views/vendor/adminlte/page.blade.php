@@ -185,13 +185,13 @@
                                     <img src="{{ asset('img/avatar.png') }}" class="img-circle" alt="User Image">
                                     <p>
                                         {{ Auth::user()->name }}
-                                        <small>Member since Nov. 2012</small>
+                                        <!-- <small>Member since Nov. 2012</small> -->
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Settings</a>
+                                        <a href="{{ url(config('adminlte.setting_url', 'settings')) }}"" class="btn btn-default btn-flat">Settings</a>
                                     </div>
                                     <div class="pull-right">
                                         @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))

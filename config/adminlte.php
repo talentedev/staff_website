@@ -95,6 +95,8 @@ return [
 
     'register_url' => null, // default : 'register'
 
+    'setting_url' => 'settings',
+
     /*
     |--------------------------------------------------------------------------
     | Menu Items
@@ -115,14 +117,14 @@ return [
             'icon'        => 'users'
         ],
         [
-            'text'        => 'Products',
+            'text'        => 'Customers',
             'url'         => 'products',
             'icon'        => 'list-ul'
         ],
         [
-            'text'        => 'Customers',
-            'url'         => 'customers',
-            'icon'        => 'shopping-cart'
+            'text'        => 'Settings',
+            'url'         => 'settings',
+            'icon'        => 'cog'
         ]
     ],
 
