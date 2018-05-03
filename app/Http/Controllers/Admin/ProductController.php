@@ -120,4 +120,74 @@ class ProductController extends Controller
     {
         //
     }
+
+    /**
+     * Update the specified resources in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateStatus(Request $request)
+    {
+        $ids = $request->get('ids');
+
+        if (is_array($ids)) {
+            foreach ($ids as $key => $id) {
+                $product = $this->product::find($id);
+
+                if ($request->get('sales_date') != '') {
+                   $product->sales_date = $request->get('sales_date');
+                }
+                
+                if ($request->get('account_connected_date') != '') {
+                   $product->account_connected_date = $request->get('account_connected_date');
+                }
+
+                if ($request->get('swab_returned_date') != '') {
+                   $product->swab_returned_date = $request->get('swab_returned_date');
+                }
+
+                if ($request->get('ship_to_lab_date') != '') {
+                   $product->ship_to_lab_date = $request->get('ship_to_lab_date');
+                }
+
+                if ($request->get('lab_received_date') != '') {
+                   $product->lab_received_date = $request->get('lab_received_date');
+                }
+
+                if ($request->get('sequenced_date') != '') {
+                   $product->sequenced_date = $request->get('sequenced_date');
+                }
+
+                if ($request->get('uploaded_to_server_date') != '') {
+                   $product->uploaded_to_server_date = $request->get('uploaded_to_server_date');
+                }
+
+                if ($request->get('bone_marrow_consent_date') != '') {
+                   $product->bone_marrow_consent_date = $request->get('bone_marrow_consent_date');
+                }
+
+                if ($request->get('bone_marrow_shared_date') != '') {
+                   $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
+                }
+                
+                $product->save();
+            }
+        } else {
+            $product = $this->product::find($ids);
+
+            $product->sales_date = $request->get('sales_date');
+            $product->account_connected_date = $request->get('account_connected_date');
+            $product->swab_returned_date = $request->get('swab_returned_date');
+            $product->ship_to_lab_date = $request->get('ship_to_lab_date');
+            $product->lab_received_date = $request->get('lab_received_date');
+            $product->sequenced_date = $request->get('sequenced_date');
+            $product->uploaded_to_server_date = $request->get('uploaded_to_server_date');
+            $product->bone_marrow_consent_date = $request->get('bone_marrow_consent_date');
+            $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
+
+            $product->save();
+        }
+        return response()->json(['status' => true], 200);
+    }
 }

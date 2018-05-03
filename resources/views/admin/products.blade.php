@@ -39,7 +39,7 @@
                 <tbody>
                 @foreach ($products as $key => $product)
                     <tr>
-                        <td class="text-center"><input type="checkbox" class="minimal"></td>
+                        <td class="text-center"><input type="checkbox" class="minimal" data-id="{{ $product->id }}"></td>
                         <td class="text-center">{{ $product->pheramor_id }}</td>
                         <td class="text-center">{{ $product->sales_email }}</td>
                         <td class="text-center">{{ $product->account_email }}</td>
@@ -56,7 +56,7 @@
                         <td class="text-center">{{ $product->bone_marrow_shared_date === null ? 'n/a' : date('d-M-Y', strtotime($product->bone_marrow_shared_date)) }}</td>
                         <td class="text-center">{{ $product->note }}</td>
                         <td class="text-center text-danger">
-                            <button class="btn btn-xs btn-success">update</button>
+                            <button class="btn btn-xs btn-success update-product" data-product="{{ $product }}">update</button>
                             <button class="btn btn-xs btn-info">note</button>
                             <button class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
                         </td>
@@ -76,27 +76,30 @@
                             <option value="Staff">Staff</option>
                         </select>
                     </th>
-                    <th class="filter-date">created_date</th>
-                    <th class="filter-date">sales_date</th>
-                    <th class="filter-date">account_connected_date</th>
-                    <th class="filter-date">swab_returned_date</th>
-                    <th class="filter-date">ship_to_lab_date</th>
-                    <th class="filter-date">lab_received_date</th>
-                    <th class="filter-date">sequenced_date</th>
-                    <th class="filter-date">uploaded_to_server_date</th>
-                    <th class="filter-date">bone_marrow_consent_date</th>
-                    <th class="filter-date">bone_marrow_shared_date</th>
+                    <th class="filter-date">Created Date</th>
+                    <th class="filter-date">Sales Date</th>
+                    <th class="filter-date">Account Connected Date</th>
+                    <th class="filter-date">Swab Returned Date</th>
+                    <th class="filter-date">Ship To Lab Date</th>
+                    <th class="filter-date">Lab Received Date</th>
+                    <th class="filter-date">Sequenced Date</th>
+                    <th class="filter-date">Uploaded To Server Date</th>
+                    <th class="filter-date">Bone Marrow Consent Date</th>
+                    <th class="filter-date">Bone Marrow Shared Date</th>
                     <th></th>
                     <th></th>
                 </tfoot>
             </table>
             <button class="btn btn-primary" id="add_customer">Add Customer</button>
+            <button class="btn btn-success" id="update_status_bulk">Update Status</button>
+            <input type="checkbox" class="minimal" id="show_advanced_filter">
+            <span>&nbsp;Advanced Filters</span>
         </div>
         <!-- /.box-body -->
     </div>
     <!-- /.box -->
 
-    <!-- Modal -->
+    <!-- Add Product Modal -->
     <div class="modal fade" id="add_account_modal" tabindex="-1" role="dialog" aria-labelledby="staffModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -123,7 +126,111 @@
                             <textarea class="form-control" id="note" rows='5'></textarea>
                         </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" id="btn_save_data" data-state=''>Save</button>
+                        <button type="submit" class="btn btn-primary" id="btn_save_data">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Product Modal -->
+    <div class="modal fade" id="update_product_modal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="updateModalLabel">Update Status Dates</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="product_update_form">
+                        <div class="form-group">
+                            <label id="update_modal_label"></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="sales_date">Sales Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="sales_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="account_connected_date">Account Connected Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="account_connected_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="swab_returned_date">Swab Returned Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="swab_returned_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ship_to_lab_date">Ship To Lab Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="ship_to_lab_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lab_received_date">Lab Received Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="lab_received_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sequenced_date">Sequenced Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="sequenced_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="uploaded_to_server_date">Uploaded To Server Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="uploaded_to_server_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bone_marrow_consent_date">Bone Marrow Consent Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="bone_marrow_consent_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bone_marrow_shared_date">Bone Marrow Shared Date</label>
+                            <div class="input-prepend input-group">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="bone_marrow_shared_date"/>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="btn_update_status">Save</button>
                     </form>
                 </div>
             </div>
@@ -136,7 +243,47 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Are you sure to delete the user?</h4>
+                    <h4 class="modal-title" id="myModalLabel">Change Summary</h4>
+                </div>
+                <div class="modal-body container-fluid">
+                    <div>
+                        <span>Sales Date: </span>    
+                        <span class="pull-right" id="summary_sales">---</span>
+                    </div>
+                    <div>
+                        <span>Account Connected Date: </span>    
+                        <span class="pull-right" id="summary_account_connected">---</span>
+                    </div>
+                    <div>
+                        <span>Swab Returned Date: </span>    
+                        <span class="pull-right" id="summary_swab_returned">---</span>
+                    </div>
+                    <div>
+                        <span>Ship To Lab Date: </span>    
+                        <span class="pull-right" id="summary_ship_to_lab">---</span>
+                    </div>
+                    <div>
+                        <span>Lab Received Date: </span>    
+                        <span class="pull-right" id="summary_lab_received">---</span>
+                    </div>
+                    <div>
+                        <span>Sequenced Date: </span>    
+                        <span class="pull-right" id="summary_sequenced">---</span>
+                    </div>
+                    <div>
+                        <span>Uploaded To Server Date: </span>    
+                        <span class="pull-right" id="summary_uploaded_to_server">---</span>
+                    </div>
+                    <div>
+                        <span>Bone Marrow Consent Date: </span>    
+                        <span class="pull-right" id="summary_bone_marrow_consent">---</span>
+                    </div>
+                    <div>
+                        <span>Bone Marrow Shared Date: </span>    
+                        <span class="pull-right" id="summary_bone_marrow_shared">---</span>
+                    </div>
+                    <br>
+                    <label>Are you sure to change them?</label>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="modal-btn-yes">Yes</button>
