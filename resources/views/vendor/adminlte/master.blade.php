@@ -33,6 +33,9 @@
         <link rel="stylesheet" href="{{ asset('vendor/jvectormap/jquery-jvectormap.css') }}">
     @endif
 
+    <!-- Bootstrap Daterangepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.1/daterangepicker.css">
+
     @yield('adminlte_css')
 
     <!--[if lt IE 9]>
@@ -80,6 +83,10 @@
     <!-- iCheck -->
     <script src="{{ asset('vendor/adminlte/plugins/iCheck/icheck.min.js') }}"></script>
 @endif
+
+<!-- Bootstrap Daterangepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.1/daterangepicker.js"></script>
 
 @yield('adminlte_js')
 

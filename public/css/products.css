@@ -2,3 +2,11 @@
   min-width: 127px;
 }
 
+#products_table th.filter-input input {
+  width: 160px;
+}
+
+#products_table .filter-date input {
+  width: 175px;
+}
+
