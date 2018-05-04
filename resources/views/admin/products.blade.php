@@ -35,6 +35,34 @@
                         <th class="text-center">Note</th>
                         <th class="text-center th-actions">Actions</th>
                     </tr>
+                    <tr class="filters">
+                        <th></th>
+                        <th class="filter-input">Pheramor ID</th>
+                        <th class="filter-input">Sales Email</th>
+                        <th class="filter-input">Account Email</th>
+                        <th>
+                            <select class="form-control" id="filter_source">
+                                <option value="">All</option>
+                                <option value="admin">admin</option>
+                                <option value="Street Team">Street Team</option>
+                                <option value="Staff">Staff</option>
+                            </select>
+                        </th>
+                        <th class="filter-date">Created Date</th>
+                        <th class="filter-date">Sales Date</th>
+                        <th class="filter-date">Account Connected Date</th>
+                        <th class="filter-date">Swab Returned Date</th>
+                        <th class="filter-date">Ship To Lab Date</th>
+                        <th class="filter-date">Lab Received Date</th>
+                        <th class="filter-date">Sequenced Date</th>
+                        <th class="filter-date">Uploaded To Server Date</th>
+                        <th class="filter-date">Bone Marrow Consent Date</th>
+                        <th class="filter-date">Bone Marrow Shared Date</th>
+                        <th></th>
+                        <th class="text-center">
+                            <button class="btn btn-xs btn-danger" id="btn_clear_filter">Clear Filters</button>
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
                 @foreach ($products as $key => $product)
@@ -57,13 +85,13 @@
                         <td class="text-center">{{ $product->note }}</td>
                         <td class="text-center text-danger">
                             <button class="btn btn-xs btn-success update-product" data-product="{{ $product }}">update</button>
-                            <button class="btn btn-xs btn-info">note</button>
+                            <button class="btn btn-xs btn-info update-note" data-product="{{ $product }}">note</button>
                             <button class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
                 @endforeach
                 </tbody>
-                <tfoot>
+                <!-- <tfoot>
                     <th></th>
                     <th class="filter-input">Pheramor ID</th>
                     <th class="filter-input">Sales Email</th>
@@ -88,7 +116,7 @@
                     <th class="filter-date">Bone Marrow Shared Date</th>
                     <th></th>
                     <th></th>
-                </tfoot>
+                </tfoot> -->
             </table>
             <button class="btn btn-primary" id="add_customer">Add Customer</button>
             <button class="btn btn-success" id="update_status_bulk">Update Status</button>
@@ -286,8 +314,44 @@
                     <label>Are you sure to change them?</label>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="modal-btn-yes">Yes</button>
-                    <button type="button" class="btn btn-primary" id="modal-btn-no">No</button>
+                    <button type="button" class="btn btn-primary" id="modal-btn-yes">Yes</button>
+                    <button type="button" class="btn btn-default" id="modal-btn-no">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="note_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Update Note</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea class="form-control" rows="5"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="btn_update_note">Save</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Create Callback Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="product_create_callback_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn_callback_confirm" data-dismiss=''>OK</button>
                 </div>
             </div>
         </div>

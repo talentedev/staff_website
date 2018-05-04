@@ -68,7 +68,6 @@ class ProductController extends Controller
         $this->product->pheramor_id = $request->get('pheramor_id');
         $this->product->sales_email = $request->get('sales_email');
         $this->product->note = $request->get('note');
-        $this->product->account_email = Auth::user()->email;
         $this->product->source = Auth::user()->roles[0]->name;
 
         $this->product->save();
@@ -107,7 +106,22 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = $this->product::find($id);
+
+        $product->sales_date = $request->get('sales_date');
+        $product->account_connected_date = $request->get('account_connected_date');
+        $product->swab_returned_date = $request->get('swab_returned_date');
+        $product->ship_to_lab_date = $request->get('ship_to_lab_date');
+        $product->lab_received_date = $request->get('lab_received_date');
+        $product->sequenced_date = $request->get('sequenced_date');
+        $product->uploaded_to_server_date = $request->get('uploaded_to_server_date');
+        $product->bone_marrow_consent_date = $request->get('bone_marrow_consent_date');
+        $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
+        $product->note = $request->get('note');
+
+        $product->save();
+
+        return response()->json(['status' => true], 200);
     }
 
     /**
@@ -170,7 +184,7 @@ class ProductController extends Controller
                 if ($request->get('bone_marrow_shared_date') != '') {
                    $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
                 }
-                
+
                 $product->save();
             }
         } else {

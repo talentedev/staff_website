@@ -15,9 +15,9 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('pheramor_id');
-            $table->string('sales_email');
-            $table->string('account_email');
+            $table->string('pheramor_id')->unique();
+            $table->string('sales_email')->unique();
+            $table->string('account_email')->nullable();
             $table->string('source');
             $table->date('sales_date')->nullable();
             $table->date('account_connected_date')->nullable();

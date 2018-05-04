@@ -83,13 +83,14 @@ $(function () {
         order: [1, 'asc'],
         columnDefs: [{ targets: [0, 15, 16], orderable: false }],
         paging: true,
-        info: true
+        info: true,
+        bSortCellsTop: true
     });
 
     // Date Range Filter
-    $('#products_table tfoot th.filter-date').each(function (key) {
+    $('#products_table thead tr.filters th.filter-date').each(function (key) {
         var title = $(this).text();
-        $(this).html('<div class="input-prepend input-group"><span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span><input type="text" style="width: 200px" name="' + $.trim(title).replace(/ /g, '') + '"  placeholder="Search ' + $.trim(title) + '" class="form-control daterange"/></div>');
+        $(this).html('<div class="input-prepend input-group"><label class="add-on input-group-addon" for="' + $.trim(title).replace(/ /g, '') + '"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></label><input type="text" style="width: 200px" name="' + $.trim(title).replace(/ /g, '') + '"  placeholder="Search ' + $.trim(title) + '" id="' + $.trim(title).replace(/ /g, '') + '" class="form-control daterange"/></div>');
     });
 
     //instantiate datepicker and choose your format of the dates
@@ -115,7 +116,7 @@ $(function () {
     var endDate;
     var dataIdx; //current data column to work with
 
-    $("#products_table tfoot").on("mousedown", "th", function (event) {
+    $("#products_table thead tr.filters").on("mousedown", "th", function (event) {
         var visIdx = $(this).parent().children().index($(this));
         dataIdx = table.column.index('fromVisible', visIdx);
     });
@@ -181,7 +182,7 @@ $(function () {
     });
 
     // Apply the search
-    $.each($('.filter-date', table.table().footer()), function () {
+    $.each($('.filter-date', table.table().header()), function () {
         var column = table.column($(this).index());
         // console.log(column);
         $('input', this).on('keyup change', function () {
@@ -193,26 +194,33 @@ $(function () {
     });
 
     // Setup - add a input to each footer cell
-    $('#products_table tfoot th.filter-input').each(function () {
+    $('#products_table thead tr.filters th.filter-input').each(function () {
         var title = $(this).text();
         $(this).html('<input type="text" class="form-control text" placeholder="Search ' + title + '" />');
     });
 
-    // Apply the search
-    table.columns().every(function () {
-        var that = this;
-
-        $('input.text', this.footer()).on('keyup change', function () {
-            if (that.search() !== this.value) {
-                that.search(this.value).draw();
+    $.each($('.filter-input', table.table().header()), function () {
+        var column = table.column($(this).index());
+        // console.log(column);
+        $('input', this).on('keyup change', function () {
+            console.log(this.value);
+            if (column.search() !== this.value) {
+                column.search(this.value).draw();
             }
         });
+    });
 
-        $('select', this.footer()).change(function () {
-            if (that.search() !== this.value) {
-                that.search(this.value).draw();
-            }
-        });
+    $('#filter_source').change(function () {
+        if (table.search() !== this.value) {
+            table.search(this.value).draw();
+        }
+    });
+
+    // Clear All Filters
+    $('#btn_clear_filter').click(function () {
+        console.log('clear filter');
+        $('#products_table thead input').val('').change();
+        $('#filter_source').val('').change();
     });
 
     // Add Customer Form validation
@@ -238,15 +246,37 @@ $(function () {
 
         var url = 'products';
         axios.post(url, data).then(function (response) {
+            console.log(response.data);
             if (response.data.status == true) {
-                location.reload();
+                callbackCreateProduct(true);
             } else {
                 console.log('creation failed.');
             }
         }).catch(function (error) {
-            console.log(error);
+            callbackCreateProduct(false);
         });
     }
+
+    function callbackCreateProduct(status) {
+        $('#add_account_modal').modal('hide');
+        $('#product_create_callback_modal').modal('show');
+        if (status) {
+            $('#product_create_callback_modal .modal-title').text('Success');
+            $('#product_create_callback_modal .modal-body').text('New customer created successfully.');
+            $('#btn_callback_confirm').data('status', true);
+        } else {
+            $('#product_create_callback_modal .modal-title').text('Failed');
+            $('#product_create_callback_modal .modal-body').text("New customer didn't created successfully, because the same Pheramor ID or Sales Email already exist.");
+            $('#btn_callback_confirm').data('status', false);
+        }
+    }
+
+    $('#btn_callback_confirm').click(function () {
+        $('#product_create_callback_modal').modal('hide');
+        if ($(this).data('status')) {
+            location.reload();
+        }
+    });
 
     // Add new customer
     $('#add_customer').click(function () {
@@ -260,7 +290,9 @@ $(function () {
 
     // Update customer status date
     $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd'
+        format: 'yyyy-mm-dd',
+        endDate: new Date(),
+        maxDate: new Date()
     });
 
     $('.update-product').click(function () {
@@ -283,6 +315,7 @@ $(function () {
         $('#bone_marrow_shared_date').val(data.bone_marrow_shared_date);
 
         $('#btn_update_status').data('id', data.id);
+        $('#btn_update_status').data('product', data);
     });
 
     // Update customer status on bulk
@@ -335,6 +368,28 @@ $(function () {
             $('#summary_uploaded_to_server').text($('#uploaded_to_server_date').val());
             $('#summary_bone_marrow_consent').text($('#bone_marrow_consent_date').val());
             $('#summary_bone_marrow_shared').text($('#bone_marrow_shared_date').val());
+
+            $('#mi-modal .modal-body div').each(function () {
+                $(this).removeClass('bg-green');
+                var id = $(this).children().last().attr('id').replace('summary_', '') + '_date';
+
+                var data = $('#btn_update_status').data('product');
+
+                var isBulk = $.isArray($('#btn_update_status').data('id'));
+
+                if (isBulk) {
+                    if ($(this).children().last().text() != '') {
+                        $(this).addClass('bg-green');
+                    }
+                } else {
+                    if (data[id] == null && $(this).children().last().text() != '') {
+                        $(this).addClass('bg-green');
+                    }
+                    if (data[id] != null && data[id] != $(this).children().last().text()) {
+                        $(this).addClass('bg-green');
+                    }
+                }
+            });
         });
 
         $("#modal-btn-yes").on("click", function () {
@@ -367,16 +422,69 @@ $(function () {
             var url = 'products/update_status';
             axios.post(url, data).then(function (response) {
                 if (response.data.status == true) {
-                    location.reload();
+                    callbackUpdateStatus(true);
                 } else {
                     console.log('Update customer failed!');
                 }
             }).catch(function (error) {
-                console.log(error);
+                callbackUpdateStatus(false);
             });
         } else {
             console.log('The operation to delete was canceled by user!');
         }
+    });
+
+    function callbackUpdateStatus(status) {
+        $("#mi-modal").modal('hide');
+        $('#update_product_modal').modal('hide');
+        $('#product_create_callback_modal').modal('show');
+        if (status) {
+            $('#product_create_callback_modal .modal-title').text('Success');
+            $('#product_create_callback_modal .modal-body').text('Status Dates updated successfully.');
+            $('#btn_callback_confirm').data('status', true);
+        } else {
+            $('#product_create_callback_modal .modal-title').text('Failed');
+            $('#product_create_callback_modal .modal-body').text("Status Dates updated successfully.");
+        }
+    }
+
+    // Update Note for a product
+    $('.update-note').click(function () {
+
+        $('#note_modal').modal('show');
+
+        var data = $(this).data('product');
+
+        $('#note_modal textarea').val(data.note);
+        $('#btn_update_note').data('id', data.id);
+    });
+
+    $('#btn_update_note').click(function () {
+
+        var postData = {
+            sales_date: $('#sales_date').val(),
+            account_connected_date: $('#account_connected_date').val(),
+            swab_returned_date: $('#swab_returned_date').val(),
+            ship_to_lab_date: $('#ship_to_lab_date').val(),
+            lab_received_date: $('#lab_received_date').val(),
+            sequenced_date: $('#sequenced_date').val(),
+            uploaded_to_server_date: $('#uploaded_to_server_date').val(),
+            bone_marrow_consent_date: $('#bone_marrow_consent_date').val(),
+            bone_marrow_shared_date: $('#bone_marrow_shared_date').val(),
+            note: $('#note_modal textarea').val()
+        };
+
+        var id = $(this).data('id');
+        var url = 'products/' + id;
+        axios.put(url, postData, id).then(function (response) {
+            if (response.data.status == true) {
+                location.reload();
+            } else {
+                console.log('Note upating failed.');
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
     });
 
     // Select all rows.
@@ -394,14 +502,14 @@ $(function () {
     });
 
     // Show/Hide Advanced Filters
-    $('#products_table tfoot').hide();
+    $('#products_table thead tr.filters').hide();
 
     $('#show_advanced_filter').on('ifChecked', function (event) {
-        $('#products_table tfoot').show();
+        $('#products_table thead tr.filters').show();
     });
 
     $('#show_advanced_filter').on('ifUnchecked', function (event) {
-        $('#products_table tfoot').hide();
+        $('#products_table thead tr.filters').hide();
     });
 });
 
