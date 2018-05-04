@@ -333,8 +333,8 @@
                     <textarea class="form-control" rows="5"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="btn_update_note">Save</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="btn_update_note">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>

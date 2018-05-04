@@ -89,7 +89,7 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-04 18:39:25','2018-05-04 18:39:25'),(2,'api','web','2018-05-04 18:39:25','2018-05-04 18:39:25');
+insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-04 19:30:36','2018-05-04 19:30:36'),(2,'api','web','2018-05-04 19:30:36','2018-05-04 19:30:36');
 
 /*Table structure for table `products` */
 
@@ -110,15 +110,17 @@ CREATE TABLE `products` (
   `uploaded_to_server_date` date DEFAULT NULL,
   `bone_marrow_consent_date` date DEFAULT NULL,
   `bone_marrow_shared_date` date DEFAULT NULL,
-  `note` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `note` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `products_pheramor_id_unique` (`pheramor_id`),
   UNIQUE KEY `products_sales_email_unique` (`sales_email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `products` */
+
+insert  into `products`(`id`,`pheramor_id`,`sales_email`,`account_email`,`source`,`sales_date`,`account_connected_date`,`swab_returned_date`,`ship_to_lab_date`,`lab_received_date`,`sequenced_date`,`uploaded_to_server_date`,`bone_marrow_consent_date`,`bone_marrow_shared_date`,`note`,`created_at`,`updated_at`) values (1,'UA-11111-1','user1@email.com',NULL,'admin',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'adssssss','2018-05-04 19:31:20','2018-05-04 19:31:49');
 
 /*Table structure for table `role_has_permissions` */
 
@@ -150,7 +152,7 @@ CREATE TABLE `roles` (
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-04 18:39:25','2018-05-04 18:39:25'),(2,'Street Team','web','2018-05-04 18:39:25','2018-05-04 18:39:25'),(3,'Staff','web','2018-05-04 18:39:25','2018-05-04 18:39:25');
+insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-04 19:30:36','2018-05-04 19:30:36'),(2,'Street Team','web','2018-05-04 19:30:36','2018-05-04 19:30:36'),(3,'Staff','web','2018-05-04 19:30:36','2018-05-04 19:30:36');
 
 /*Table structure for table `users` */
 
@@ -174,7 +176,7 @@ CREATE TABLE `users` (
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Street','$2y$10$BWx6ddkHnIGKK8KRtxxKoONVJBjcxsZp7WKpMmDxVnfWasOrKw1i.',NULL,'2018-05-04 18:39:25','2018-05-04 18:39:25'),(2,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$ClvczqY7khKD95gMjZ5UlOImNwkU9SX6EejeFcT193cHqxMaBnU1G',NULL,'2018-05-04 18:39:25','2018-05-04 18:39:25'),(3,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Street','$2y$10$OSmSpXc.yODx4/Gy2u4nA.p8GSp53oWxliTHPS/9h5WSjo/HvhTD.',NULL,'2018-05-04 18:39:25','2018-05-04 18:39:25');
+insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Street','$2y$10$QHcRLipdH.UeYA1rmrDN2uZzCCzSFnJIZ2jgN2TaA5fPIsqjY6uaK',NULL,'2018-05-04 19:30:37','2018-05-04 19:30:37'),(2,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$uXVJDQg/dWak7Ufeluhqie.xL3cXINShdUjy3Tm3vXIRy3DqkkCMu',NULL,'2018-05-04 19:30:37','2018-05-04 19:30:37'),(3,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Street','$2y$10$BcfhiNkYlyuoVQrPW7h0IeD6TFalSeMaqL/0f3Jawy/Ga6T1k4R5S',NULL,'2018-05-04 19:30:37','2018-05-04 19:30:37');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

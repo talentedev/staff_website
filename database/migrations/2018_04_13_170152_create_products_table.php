@@ -28,7 +28,7 @@ class CreateProductsTable extends Migration
             $table->date('uploaded_to_server_date')->nullable();
             $table->date('bone_marrow_consent_date')->nullable();
             $table->date('bone_marrow_shared_date')->nullable();
-            $table->string('note')->nullable();
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }
