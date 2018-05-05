@@ -59,7 +59,7 @@ CREATE TABLE `model_has_roles` (
 
 /*Data for the table `model_has_roles` */
 
-insert  into `model_has_roles`(`role_id`,`model_id`,`model_type`) values (1,'1','App\\User'),(2,'2','App\\User'),(3,'3','App\\User');
+insert  into `model_has_roles`(`role_id`,`model_id`,`model_type`) values (1,'1','App\\User'),(2,'2','App\\User'),(3,'3','App\\User'),(4,'4','App\\User');
 
 /*Table structure for table `password_resets` */
 
@@ -89,7 +89,7 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-04 19:30:36','2018-05-04 19:30:36'),(2,'api','web','2018-05-04 19:30:36','2018-05-04 19:30:36');
+insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-05 15:36:41','2018-05-05 15:36:41'),(2,'api','web','2018-05-05 15:36:41','2018-05-05 15:36:41');
 
 /*Table structure for table `products` */
 
@@ -116,11 +116,9 @@ CREATE TABLE `products` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `products_pheramor_id_unique` (`pheramor_id`),
   UNIQUE KEY `products_sales_email_unique` (`sales_email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `products` */
-
-insert  into `products`(`id`,`pheramor_id`,`sales_email`,`account_email`,`source`,`sales_date`,`account_connected_date`,`swab_returned_date`,`ship_to_lab_date`,`lab_received_date`,`sequenced_date`,`uploaded_to_server_date`,`bone_marrow_consent_date`,`bone_marrow_shared_date`,`note`,`created_at`,`updated_at`) values (1,'UA-11111-1','user1@email.com',NULL,'admin',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'adssssss','2018-05-04 19:31:20','2018-05-04 19:31:49');
 
 /*Table structure for table `role_has_permissions` */
 
@@ -148,11 +146,11 @@ CREATE TABLE `roles` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-04 19:30:36','2018-05-04 19:30:36'),(2,'Street Team','web','2018-05-04 19:30:36','2018-05-04 19:30:36'),(3,'Staff','web','2018-05-04 19:30:36','2018-05-04 19:30:36');
+insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-05-05 15:36:40','2018-05-05 15:36:40'),(2,'admin','web','2018-05-05 15:36:40','2018-05-05 15:36:40'),(3,'street team','web','2018-05-05 15:36:40','2018-05-05 15:36:40'),(4,'staff','web','2018-05-05 15:36:40','2018-05-05 15:36:40');
 
 /*Table structure for table `users` */
 
@@ -172,11 +170,11 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`),
   UNIQUE KEY `users_source_unique` (`source`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Street','$2y$10$QHcRLipdH.UeYA1rmrDN2uZzCCzSFnJIZ2jgN2TaA5fPIsqjY6uaK',NULL,'2018-05-04 19:30:37','2018-05-04 19:30:37'),(2,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$uXVJDQg/dWak7Ufeluhqie.xL3cXINShdUjy3Tm3vXIRy3DqkkCMu',NULL,'2018-05-04 19:30:37','2018-05-04 19:30:37'),(3,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Street','$2y$10$BcfhiNkYlyuoVQrPW7h0IeD6TFalSeMaqL/0f3Jawy/Ga6T1k4R5S',NULL,'2018-05-04 19:30:37','2018-05-04 19:30:37');
+insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','staff123455','ersrsrtrerer','Super Admin','$2y$10$8EmmpgwI0CxWcy0BAVsYF.gYuYaRc.2qYpPmb.MBaHEbVRR9TDL7.',NULL,'2018-05-05 15:36:41','2018-05-05 15:36:41'),(2,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Admin','$2y$10$shujiKmKbPuN95AZUAonHu3kr1eS1KJrXKtXsFU/zlxxrR3LZGskC',NULL,'2018-05-05 15:36:41','2018-05-05 15:36:41'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$rfc9ttkMave9DrUJ2qvSHeN9yCSxcgj6v5zAMiJvKx4GpEFGemM4u',NULL,'2018-05-05 15:36:41','2018-05-05 15:36:41'),(4,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Staff','$2y$10$Cxl3nHRbICF0DiYE/uioTeWa.1qnix927ovRjunAANGYcoZyFmv5G',NULL,'2018-05-05 15:36:41','2018-05-05 15:36:41');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -119,13 +119,14 @@ $(function () {
     // Add new staff
     $('#add_account').click(function () {
         $('#add_account_modal').modal('show');
-        $('#staffModalLabel').html('Add Staff');
+        $('#staffModalLabel').html('Add Account');
 
         $('#name').val('');
         $('#code').val('');
         $('#email').val(email);
         $('#key').val(apiKey);
         $('#tag').val(tag);
+        $('#role').val('admin');
 
         $('#btn_save_data').data('staff', 'add');
     });
@@ -145,12 +146,14 @@ $(function () {
         $('#staffModalLabel').html('Edit Staff');
 
         var data = $(this).data('user');
+        var role = $(this).data('role');
 
         $('#name').val(data.name);
         $('#code').val(data.source);
         $('#email').val(data.email);
         $('#key').val(data.api_key);
         $('#tag').val(data.tag);
+        $('#role').val(role);
 
         $('#btn_save_data').data('staff', 'edit');
         $('#btn_save_data').data('id', data.id);
@@ -164,7 +167,8 @@ $(function () {
             source: $('#code').val(),
             email: $('#email').val(),
             api_key: $('#key').val(),
-            tag: $('#tag').val()
+            tag: $('#tag').val(),
+            role: $('#role').val()
         };
 
         var state = $('#btn_save_data').data('staff');
@@ -173,12 +177,12 @@ $(function () {
             var url = 'users';
             axios.post(url, data).then(function (response) {
                 if (response.data.message == 'User successfully added') {
-                    location.reload();
+                    showCreateResult(true, true);
                 } else {
-                    alert('The Access Code is exist already. Please try again with other Access Code.');
+                    showCreateResult(false, true);
                 }
             }).catch(function (error) {
-                console.log(error);
+                showCreateResult(false, true);
             });
         } else if (state == 'edit') {
             var id = $('#btn_save_data').data('id');
@@ -186,13 +190,41 @@ $(function () {
             var url = 'users/' + id;
             axios.put(url, data, id).then(function (response) {
                 if (response.data.message == 'User successfully updated') {
-                    location.reload();
+                    showCreateResult(true, false);
                 } else {
-                    alert('The Access Code is exist already. Please try again with other Access Code.');
+                    showCreateResult(false, false);
                 }
             }).catch(function (error) {
-                console.log(error);
+                showCreateResult(false, false);
             });
+        }
+    }
+
+    // Show modal for creation or updating result.
+    function showCreateResult(status, isCreate) {
+        $("#add_account_modal").modal('hide');
+        $("#result_modal").modal('show');
+
+        if (status) {
+            $("#result_modal .modal-title").text('Success');
+
+            if (isCreate) {
+                $("#result_modal .modal-body").text('User created successfully.');
+            } else {
+                $("#result_modal .modal-body").text('User updated successfully.');
+            }
+
+            $('#btn_result_modal').data('status', true);
+        } else {
+            $("#result_modal .modal-title").text('Failed');
+
+            if (isCreate) {
+                $("#result_modal .modal-body").text("We can't create the user, because the same Email or Access Code already exist.");
+            } else {
+                $("#result_modal .modal-body").text("We can't update the user, because the same Email or Access Code already exist.");
+            }
+
+            $('#btn_result_modal').data('status', false);
         }
     }
 
@@ -221,16 +253,38 @@ $(function () {
         if (confirm) {
             var url = 'users/' + data.id;
             axios.delete(url).then(function (response) {
-                if (response.data.message == 'User is deleted successfully') {
-                    location.reload();
+                if (response.data.status == true) {
+                    showDeleteResult(true);
                 } else {
-                    alert('Delete user failed!');
+                    showDeleteResult(false);
                 }
             }).catch(function (error) {
-                console.log(error);
+                showDeleteResult(false);
             });
         } else {
             console.log('The operation to delete was canceled by user!');
+        }
+    });
+
+    // Show modal for deleting result.
+    function showDeleteResult(status) {
+        $("#mi-modal").modal('hide');
+        $("#result_modal").modal('show');
+
+        if (status) {
+            $("#result_modal .modal-title").text('Success');
+            $("#result_modal .modal-body").text('User deleted successfully.');
+            $('#btn_result_modal').data('status', true);
+        } else {
+            $("#result_modal .modal-title").text('Failed');
+            $("#result_modal .modal-body").text("We can't delete the user. Please try again.");
+            $('#btn_result_modal').data('status', false);
+        }
+    }
+
+    $('#btn_result_modal').click(function () {
+        if ($(this).data('status')) {
+            location.reload();
         }
     });
 });

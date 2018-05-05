@@ -33,6 +33,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return redirect('users');
+        // Check if authrized user is super admin.
+        if (Auth::user()->hasRole('super admin')) {
+            return redirect('users');
+        } else {
+            return redirect('products');
+        }
     }
 }

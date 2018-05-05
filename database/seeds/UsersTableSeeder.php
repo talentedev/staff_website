@@ -11,14 +11,26 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        // Super Admin
+        $super = new App\User;
+        $super->name = "Super Admin";
+        $super->email = "super@gmail.com";
+        $super->source = "staff123455";
+        $super->api_key = "ersrsrtrerer";
+        $super->tag = "Super Admin";
+        $super->password = \Illuminate\Support\Facades\Hash::make("123456");
+        $super->save();
+
+        $super->assignRole('super admin');
+
         // Admin User
         $admin = new App\User;
         $admin->name = "Admin User";
         $admin->email = "admin@gmail.com";
         $admin->source = "staff123456";
         $admin->api_key = "ersrsrtrerer";
-        $admin->tag = "Street";
-        $admin->password = \Illuminate\Support\Facades\Hash::make("123456");        
+        $admin->tag = "Admin";
+        $admin->password = \Illuminate\Support\Facades\Hash::make("123456");
         $admin->save();
 
         $admin->assignRole('admin');
@@ -33,7 +45,7 @@ class UsersTableSeeder extends Seeder
         $team->password = \Illuminate\Support\Facades\Hash::make("123456");
         $team->save();
 
-        $team->assignRole('Street Team');
+        $team->assignRole('street team');
 
         // Staff
         $staff = new App\User;
@@ -41,11 +53,10 @@ class UsersTableSeeder extends Seeder
         $staff->email = "staff@gmail.com";
         $staff->source = "staff123458";
         $staff->api_key = "ersrsrtrerer";
-        $staff->tag = "Street";
+        $staff->tag = "Staff";
         $staff->password = \Illuminate\Support\Facades\Hash::make("123456");
         $staff->save();
 
-        $staff->assignRole('Staff');
-
+        $staff->assignRole('staff');
     }
 }

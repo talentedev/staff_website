@@ -110,22 +110,7 @@ return [
     */
 
     'menu' => [
-        'Mane Menu',
-        [
-            'text'        => 'Accounts',
-            'url'         => 'users',
-            'icon'        => 'users'
-        ],
-        [
-            'text'        => 'Customers',
-            'url'         => 'products',
-            'icon'        => 'list-ul'
-        ],
-        [
-            'text'        => 'Settings',
-            'url'         => 'settings',
-            'icon'        => 'cog'
-        ]
+        'Mane Menu'
     ],
 
     /*

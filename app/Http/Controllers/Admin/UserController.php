@@ -40,9 +40,15 @@ class UserController extends Controller
      */
     public function index()
     {
+        // All users
         $users = $this->users->get();
+
+        // All Roles
+        $roles = \Spatie\Permission\Models\Role::all();
+
         return view('admin.users', [
-            'users' => $users
+            'users' => $users,
+            'roles' => $roles
         ]);
     }
 
@@ -77,6 +83,9 @@ class UserController extends Controller
             $this->users->password = \Illuminate\Support\Facades\Hash::make("123456");
 
             $this->users->save();
+
+            $this->users->assignRole($request->get('role'));
+
             $message = 'User successfully added';
         }
 
@@ -127,6 +136,9 @@ class UserController extends Controller
         $user->password = \Illuminate\Support\Facades\Hash::make("123456");
 
         $user->save();
+
+        $user->syncRoles($request->get('role'));
+
         $message = 'User successfully updated';
 
         return response()->json(['message' => $message], 200);
@@ -141,8 +153,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         $this->users->destroy($id);
-        $message = 'User is deleted successfully';
-        return response()->json(['message' => $message], 200);
+
+        return response()->json(['status' => true], 200);
     }
 
     /**

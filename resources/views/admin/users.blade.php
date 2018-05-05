@@ -19,6 +19,7 @@
                         <th class="text-center">No.</th>
                         <th class="text-center">User Name</th>
                         <th class="text-center">Email</th>
+                        <th class="text-center">Role</th>
                         <th class="text-center">Access Code</th>
                         <th class="text-center">API Key</th>
                         <th class="text-center">Tag</th>
@@ -26,20 +27,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($users as $key => $user)
+                @if($users->count() > 0)
+                    @foreach ($users as $key => $user)
+                        @if(!$user->hasRole('super admin'))
+                        <tr>
+                            <td class="text-center">{{ $key }}</td>
+                            <td class="text-center">{{ $user->name }}</td>
+                            <td class="text-center">{{ $user->email }}</td>
+                            <td class="text-center">{{ $user->roles->pluck('name')[0] }}</td>
+                            <td class="text-center">{{ $user->source }}</td>
+                            <td class="text-center">{{ $user->api_key }}</td>
+                            <td class="text-center">{{ $user->tag }}</td>
+                            <td class="text-center text-red h4">
+                                <i class="fa fa-edit pointer edit-user" data-user="{{ $user }}" data-role="{{ $user->roles->pluck('name') }}"></i>
+                                <i class="fa fa-trash pointer delete-user" data-user="{{ $user }}"></i>
+                            </td>
+                        </tr>
+                        @endif
+                    @endforeach
+                @else
                     <tr>
-                        <td class="text-center">{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $user->name }}</td>
-                        <td class="text-center">{{ $user->email }}</td>
-                        <td class="text-center">{{ $user->source }}</td>
-                        <td class="text-center">{{ $user->api_key }}</td>
-                        <td class="text-center">{{ $user->tag }}</td>
-                        <td class="text-center text-red h4">
-                            <i class="fa fa-edit pointer edit-user" data-user="{{ $user }}"></i>
-                            <i class="fa fa-trash pointer delete-user" data-user="{{ $user }}"></i>
-                        </td>
+                        <td colspan="7">No Record Found</td>
                     </tr>
-                @endforeach
+                @endif
+                
                 </tbody>
             </table>
             <button class="btn btn-primary" id="add_account">Add Account</button>
@@ -53,7 +64,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staffModalLabel">Add Staff</h5>
+                    <h5 class="modal-title" id="staffModalLabel">Add Account</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -61,13 +72,33 @@
                 <div class="modal-body">
                     <form id="user_form" data-toggle="validator" role="form">
                         <div class="form-group row">
-                            <label for="exampleInputEmail1">Staff Name</label>
+                            <label for="name">Account Name</label>
                             <input type="text" class="form-control" id="name" required>
                             <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group row">
+                            <label for="email">Email Address</label>
+                            <input type="text" class="form-control" id="email" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="role">Account Type</label>
+                            <select class="form-control" id="role" required>
+                                @if($roles->count() > 0)
+                                    @foreach ($roles as $role)
+                                        @if($role->name != "super admin")
+                                            <option>{{ $role->name }}</option>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    No Record Found
+                                @endif
+                            </select>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group row">
                             <div class="col-sm-12 pl-0">
-                                <label for="exampleInputEmail1">Access Code</label>
+                                <label for="code">Access Code</label>
                                 <div class="row">
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" id="code" required>
@@ -80,17 +111,12 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="exampleInputEmail1">Email Address</label>
-                            <input type="text" class="form-control" id="email" required>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="exampleInputEmail1">API Key</label>
+                            <label for="key">API Key</label>
                             <input type="text" class="form-control" id="key" required>
                             <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group row">
-                            <label for="exampleInputEmail1">Tag</label>
+                            <label for="tag">Tag</label>
                             <input type="text" class="form-control" id="tag" required>
                             <div class="help-block with-errors"></div>
                         </div>
@@ -104,7 +130,7 @@
         </div>
     </div>
 
-    <!-- Confirm Modal -->
+    <!-- Delete Confirm Modal -->
     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="mi-modal">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -113,8 +139,25 @@
                     <h4 class="modal-title" id="myModalLabel">Are you sure to delete the user?</h4>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="modal-btn-yes">Yes</button>
-                    <button type="button" class="btn btn-primary" id="modal-btn-no">No</button>
+                    <button type="button" class="btn btn-primary" id="modal-btn-yes">Yes</button>
+                    <button type="button" class="btn btn-default" id="modal-btn-no">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result_modal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss='modal' id="btn_result_modal">OK</button>
                 </div>
             </div>
         </div>

@@ -12,23 +12,28 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        // Admin Suser for the management of the backend
+        // Super Admin
+        $super = new Role();
+        $super->name  = 'super admin';
+        $super->guard_name = 'web';
+        $super->save();
+
+        // Admin
         $admin = new Role();
         $admin->name  = 'admin';
         $admin->guard_name = 'web';
         $admin->save();
 
-        // Account Manager
-        $manager = new Role();
-        $manager->name  = 'Street Team';
-        $manager->guard_name = 'web';
-        $manager->save();
+        // Street Team
+        $team = new Role();
+        $team->name  = 'street team';
+        $team->guard_name = 'web';
+        $team->save();
 
-        // Client
-        $client = new Role();
-        $client->name  = 'Staff';
-        $client->guard_name = 'web';
-        $client->save();
-
+        // Staff
+        $staff = new Role();
+        $staff->name  = 'staff';
+        $staff->guard_name = 'web';
+        $staff->save();
     }
 }

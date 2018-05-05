@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Contracts\Events\Dispatcher;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
-use App\Task;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +18,41 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Dispatcher $events)
     {
         Schema::defaultStringLength(191);
+
+        $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
+            // Sidebar menu items
+            $users = [
+                'text' => 'Accounts',
+                'url' => 'users',
+                'icon' => 'users',
+            ];
+            $products = [
+                'text' => 'Customers',
+                'url'  => 'products',
+                'icon' => 'list-ul',
+            ];
+            $settings = [
+                'text' => 'Settings',
+                'url'  => 'settings',
+                'icon' => 'cog',
+            ];
+
+            // Check if authrized user is super admin.
+            if (Auth::user()->hasRole('super admin')) {
+                // add menu items
+                $event->menu->add(
+                    $users,
+                    $products,
+                    $settings
+                );
+            } else {
+                // add menu items
+                $event->menu->add(
+                    $products,
+                    $settings
+                );
+            }
+        });
     }
 
     /**
