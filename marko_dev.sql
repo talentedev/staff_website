@@ -16,6 +16,27 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`marko_dev` /*!40100 DEFAULT CHARACTER S
 
 USE `marko_dev`;
 
+/*Table structure for table `activity_log` */
+
+DROP TABLE IF EXISTS `activity_log`;
+
+CREATE TABLE `activity_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `log_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject_id` int(11) DEFAULT NULL,
+  `subject_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `causer_id` int(11) DEFAULT NULL,
+  `causer_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `properties` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `activity_log_log_name_index` (`log_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `activity_log` */
+
 /*Table structure for table `migrations` */
 
 DROP TABLE IF EXISTS `migrations`;
@@ -25,11 +46,11 @@ CREATE TABLE `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `migrations` */
 
-insert  into `migrations`(`id`,`migration`,`batch`) values (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2018_01_31_151057_create_permission_tables',1),(4,'2018_04_13_170152_create_products_table',1);
+insert  into `migrations`(`id`,`migration`,`batch`) values (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2018_01_31_151057_create_permission_tables',1),(4,'2018_04_13_170152_create_products_table',1),(5,'2018_05_05_162032_create_activity_log_table',1);
 
 /*Table structure for table `model_has_permissions` */
 
@@ -89,7 +110,7 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-05 15:36:41','2018-05-05 15:36:41'),(2,'api','web','2018-05-05 15:36:41','2018-05-05 15:36:41');
+insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-05 21:16:01','2018-05-05 21:16:01'),(2,'api','web','2018-05-05 21:16:01','2018-05-05 21:16:01');
 
 /*Table structure for table `products` */
 
@@ -150,7 +171,7 @@ CREATE TABLE `roles` (
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-05-05 15:36:40','2018-05-05 15:36:40'),(2,'admin','web','2018-05-05 15:36:40','2018-05-05 15:36:40'),(3,'street team','web','2018-05-05 15:36:40','2018-05-05 15:36:40'),(4,'staff','web','2018-05-05 15:36:40','2018-05-05 15:36:40');
+insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-05-05 21:16:01','2018-05-05 21:16:01'),(2,'admin','web','2018-05-05 21:16:01','2018-05-05 21:16:01'),(3,'street team','web','2018-05-05 21:16:01','2018-05-05 21:16:01'),(4,'staff','web','2018-05-05 21:16:01','2018-05-05 21:16:01');
 
 /*Table structure for table `users` */
 
@@ -174,7 +195,7 @@ CREATE TABLE `users` (
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','staff123455','ersrsrtrerer','Super Admin','$2y$10$8EmmpgwI0CxWcy0BAVsYF.gYuYaRc.2qYpPmb.MBaHEbVRR9TDL7.',NULL,'2018-05-05 15:36:41','2018-05-05 15:36:41'),(2,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Admin','$2y$10$shujiKmKbPuN95AZUAonHu3kr1eS1KJrXKtXsFU/zlxxrR3LZGskC',NULL,'2018-05-05 15:36:41','2018-05-05 15:36:41'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$rfc9ttkMave9DrUJ2qvSHeN9yCSxcgj6v5zAMiJvKx4GpEFGemM4u',NULL,'2018-05-05 15:36:41','2018-05-05 15:36:41'),(4,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Staff','$2y$10$Cxl3nHRbICF0DiYE/uioTeWa.1qnix927ovRjunAANGYcoZyFmv5G',NULL,'2018-05-05 15:36:41','2018-05-05 15:36:41');
+insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','staff123455','ersrsrtrerer','Super Admin','$2y$10$XgMkTp4fUmv1IeWBSsSTAezj12rbdBOmaV13QbLxXAfZjyYCztdPS',NULL,'2018-05-05 21:16:02','2018-05-05 21:16:02'),(2,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Admin','$2y$10$cUoQpYGXIgLgvMBSA7k2bej3EvGGPvtRz/Qx0yRJAdaB3fKOO56hO',NULL,'2018-05-05 21:16:02','2018-05-05 21:16:02'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$EvGhjaYq3mZmhTTEwdgS2es77dGDBaZE/yaJUHysGIxLthHd5qi7C',NULL,'2018-05-05 21:16:02','2018-05-05 21:16:02'),(4,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Staff','$2y$10$CumD4PzUIW1Bd6kAnlChEOSw/49qKdoLgIOcswvxhcGyBwXKcsf6q',NULL,'2018-05-05 21:16:02','2018-05-05 21:16:02');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

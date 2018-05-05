@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Spatie\Activitylog\Models\Activity;
 
 class SettingController extends Controller
 {
@@ -41,8 +42,17 @@ class SettingController extends Controller
      */
     public function index()
     {
+        // Get activity logs
+        $logs;
+        if (Auth::user()->hasRole('super admin')) {
+            $logs = Activity::all();
+        } else {
+            $logs = Activity::where('causer_id', Auth::user()->id)->get();
+        }
+
         return view('admin.settings', [
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'logs' => $logs
         ]);
     }
 

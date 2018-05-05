@@ -40,6 +40,24 @@
         <!-- /.box-body -->
     </div>
     <!-- /.box -->
+
+    <div class="box">
+        <div class="box-header">
+            <i class="ion ion-clipboard"></i>
+            <h3 class="box-title">Activity Logs</h3>
+        </div>
+        <div class="box-body">
+            @if(count($logs) > 0)
+                @foreach($logs as $log)
+                    <p>{{ $log->description }}</p>
+                @endforeach
+            @else
+                There are no logs.
+            @endif
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
 @stop
 
 @push('css')

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity;
 
 class LoginController extends Controller
 {
@@ -57,12 +58,28 @@ class LoginController extends Controller
         if(!Auth::guard('web')->attempt($credentials)){
             return redirect('/login');
         }else{
+            // Register login activity
+            $auth_name = Auth::guard('web')->user()->name;
+            $auth_id =  Auth::guard('web')->user()->id;
+            $log_text = $auth_name . ' logged at ' . date('Y-m-d h:m:s') . '.';
+            activity()
+                ->causedBy($auth_id)
+                ->log($log_text);
+
             return redirect('/');
         }
     }
 
     public function logout()
     {
+        // Register logout activity
+        $auth_name = Auth::guard('web')->user()->name;
+        $auth_id = Auth::guard('web')->user()->id;
+        $log_text = $auth_name . ' logged out at ' . date('Y-m-d h:m:s') . '.';
+        activity()
+            ->causedBy($auth_id)
+            ->log($log_text);
+
         Auth::guard('web')->logout();
         return redirect('/login');
     }
