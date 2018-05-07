@@ -1,12 +1,12 @@
 @extends('adminlte::page')
 
-@section('title', 'Pheramor - Products')
+@section('title', 'Pheramor - Customers')
 
 @section('content_header')
-    <h1>Products</h1>
+    <h1>Customers</h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Products</li>
+        <li class="active">Customers</li>
     </ol>
 @stop
 
@@ -122,6 +122,9 @@
             <button class="btn btn-success" id="update_status_bulk">Update Status</button>
             <input type="checkbox" class="minimal" id="show_advanced_filter">
             <span>&nbsp;Advanced Filters</span>
+            <button class="btn bg-teal" id="get_csv_file">Upload CSV</button>
+            <input type="file" id="upload_csv" style="display: none;">
+            <input type="hidden" data-products="{{ $products }}" id="data_products">
         </div>
         <!-- /.box-body -->
     </div>
@@ -356,6 +359,70 @@
             </div>
         </div>
     </div>
+
+    <!-- CSV Confirm Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="csv-mi-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Change Summary By CSV File</h4>
+                </div>
+                <div class="modal-body table-responsive">
+                    <h4>Create Customers</h4>
+                    <table class="table table-bordered table-striped" id="csv_create_confirm_table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Pheramor ID</th>
+                                <th class="text-center">Sales Email</th>
+                                <th class="text-center">Account Email</th>
+                                <th class="text-center">Sales</th>
+                                <th class="text-center">Account Connected</th>
+                                <th class="text-center">Swab Returned</th>
+                                <th class="text-center">Ship To Lab</th>
+                                <th class="text-center">Lab Received</th>
+                                <th class="text-center">Sequeced</th>
+                                <th class="text-center">Uploaded</th>
+                                <th class="text-center">Bone Marrow Consent</th>
+                                <th class="text-center">Bone Marrow Shared</th>
+                                <th class="text-center">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <h4>Update Customers</h4>
+                    <table class="table table-bordered table-striped" id="csv_update_confirm_table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Pheramor ID</th>
+                                <th class="text-center">Sales Email</th>
+                                <th class="text-center">Account Email</th>
+                                <th class="text-center">Sales</th>
+                                <th class="text-center">Account Connected</th>
+                                <th class="text-center">Swab Returned</th>
+                                <th class="text-center">Ship To Lab</th>
+                                <th class="text-center">Lab Received</th>
+                                <th class="text-center">Sequeced</th>
+                                <th class="text-center">Uploaded</th>
+                                <th class="text-center">Bone Marrow Consent</th>
+                                <th class="text-center">Bone Marrow Shared</th>
+                                <th class="text-center">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <br>
+                    <label>Are you sure to upload them?</label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="csv-modal-btn-yes">Yes</button>
+                    <button type="button" class="btn btn-default" id="csv-modal-btn-no">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @push('css')
@@ -366,6 +433,9 @@
 @endpush
 
 @push('js')
+    <!-- JQquery CSV Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.8.9/jquery.csv.min.js"></script>
+    <!-- Custom JS -->
     <script src="{{ asset('js/common.js') }}"></script>
     <script src="{{ asset('js/products.js') }}"></script>
 @endpush

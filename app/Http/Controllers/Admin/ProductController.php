@@ -188,7 +188,7 @@ class ProductController extends Controller
                 $product->save();
             }
         } else {
-            $product = $this->product::find($ids);
+            $product = $this->product->find($ids);
 
             $product->sales_date = $request->get('sales_date');
             $product->account_connected_date = $request->get('account_connected_date');
@@ -202,6 +202,63 @@ class ProductController extends Controller
 
             $product->save();
         }
+        return response()->json(['status' => true], 200);
+    }
+
+    /**
+     * Update & Create the specified resources in storage from csv file.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateByCSV(Request $request)
+    {
+        $data = $request->all();
+        $create_data = array();
+
+        foreach ($data as $key => $value) {
+
+            if ($value['id'] != '') { // Update customer
+
+                $product = array();
+
+                $product['sales_date'] = date('Y-m-d', strtotime($value['sales_date']));
+                $product['account_connected_date'] = date('Y-m-d', strtotime($value['account_connected_date']));
+                $product['swab_returned_date'] = date('Y-m-d', strtotime($value['swab_returned_date']));
+                $product['ship_to_lab_date'] = date('Y-m-d', strtotime($value['ship_to_lab_date']));
+                $product['lab_received_date'] = date('Y-m-d', strtotime($value['lab_received_date']));
+                $product['sequenced_date'] = date('Y-m-d', strtotime($value['sequenced_date']));
+                $product['uploaded_to_server_date'] = date('Y-m-d', strtotime($value['uploaded_to_server_date']));
+                $product['bone_marrow_consent_date'] = date('Y-m-d', strtotime($value['bone_marrow_consent_date']));
+                $product['bone_marrow_shared_date'] = date('Y-m-d', strtotime($value['bone_marrow_shared_date']));
+                $product['note'] = $value['note'];
+
+                Product::where('id', $value['id'])->update($product);
+            } else { // Create customer
+
+                $product = array();
+
+                $product['pheramor_id'] = $value['pheramor_id'];
+                $product['sales_email'] = $value['sales_email'];
+                $product['account_email'] = $value['account_email'];
+                $product['source'] = Auth::user()->roles[0]->name;
+                $product['sales_date'] = date('Y-m-d', strtotime($value['sales_date']));
+                $product['account_connected_date'] = date('Y-m-d', strtotime($value['account_connected_date']));
+                $product['swab_returned_date'] = date('Y-m-d', strtotime($value['swab_returned_date']));
+                $product['ship_to_lab_date'] = date('Y-m-d', strtotime($value['ship_to_lab_date']));
+                $product['lab_received_date'] = date('Y-m-d', strtotime($value['lab_received_date']));
+                $product['sequenced_date'] = date('Y-m-d', strtotime($value['sequenced_date']));
+                $product['uploaded_to_server_date'] = date('Y-m-d', strtotime($value['uploaded_to_server_date']));
+                $product['bone_marrow_consent_date'] = date('Y-m-d', strtotime($value['bone_marrow_consent_date']));
+                $product['bone_marrow_shared_date'] = date('Y-m-d', strtotime($value['bone_marrow_shared_date']));
+                $product['note'] = $value['note'];
+
+                array_push($create_data, $product);
+            }
+        }
+
+        Product::insert($create_data);
+
         return response()->json(['status' => true], 200);
     }
 }

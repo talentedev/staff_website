@@ -388,7 +388,7 @@ $(function () {
             $('#btn_callback_confirm').data('status', true);
         } else {
             $('#product_create_callback_modal .modal-title').text('Failed');
-            $('#product_create_callback_modal .modal-body').text("Status Dates updated successfully.");
+            $('#product_create_callback_modal .modal-body').text("Status Dates didn't updated.");
         }
     }
 
@@ -457,4 +457,152 @@ $(function () {
     $('#show_advanced_filter').on('ifUnchecked', function(event){
         $('#products_table thead tr.filters').hide();
     });
+
+    ////////////////////////////// Read CSV File ////////////////////////////////
+    $('#get_csv_file').click(function() {
+        $('#upload_csv').click();
+    });
+
+    $('#upload_csv').change(function (e) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            processCSVData($.csv.toArrays(reader.result));
+        };
+        // start reading the file. When it is done, calls the onload event defined above.
+        reader.readAsBinaryString(document.getElementById("upload_csv").files[0]);
+    });
+
+    function processCSVData(data) {
+        var requestData = [];
+        var createData = [];
+        var updateData = [];
+        for(var i = 1; i < data.length; i++) {
+            if (compareCSVwithExistData(data[i]).result) {
+                requestData.push(makeRequestData(data[i], false, compareCSVwithExistData(data[i]).id));
+                updateData.push(data[i]);
+            } else {
+                requestData.push(makeRequestData(data[i], true));
+                createData.push(data[i]);
+            }
+        }
+
+        // save request date
+        $("#csv-mi-modal").data('csv-data', requestData);
+
+        $('#csv-mi-modal').modal('show');
+
+        // Display the csv data on the table
+        var createTableBody = $('#csv_create_confirm_table tbody');
+        var createTableBodyContent = '';
+        for(key in createData) {
+            createTableBodyContent += '<tr>';
+            for(item in createData[key]){
+                if(createData[key][item] === null){
+                     createData[key][item]= '';
+                }
+                createTableBodyContent += '<td>'+ createData[key][item] +'</td>';
+             }
+            createTableBodyContent += '</tr>' ;
+        }
+        createTableBody.append(createTableBodyContent);
+
+        var updateTableBody = $('#csv_update_confirm_table tbody');
+        var updateTableBodyContent = '';
+        for(key in updateData) {
+            updateTableBodyContent += '<tr>';
+            for(item in updateData[key]){
+                if(updateData[key][item] === null){
+                     updateData[key][item]= '';
+                }
+                updateTableBodyContent += '<td>'+ updateData[key][item] +'</td>';
+             }
+            updateTableBodyContent += '</tr>' ;
+        }
+        updateTableBody.append(updateTableBodyContent);
+    }
+
+    function compareCSVwithExistData(data) {
+        var existData = $('#data_products').data('products');
+        for(key in existData) {
+            if (existData[key].pheramor_id == data[0]) {
+                return {
+                    result: true,
+                    id: existData[key].id
+                };
+            }
+        }
+        return {
+            result: false
+        };
+    }
+
+    function makeRequestData(data, isCreate, id = '') {
+        var requestData = {
+            pheramor_id: data[0],
+            sales_email: data[1],
+            account_email: data[2],
+            sales_date: data[3],
+            account_connected_date: data[4],
+            swab_returned_date: data[5],
+            ship_to_lab_date: data[6],
+            lab_received_date: data[7],
+            sequenced_date: data[8],
+            uploaded_to_server_date: data[9],
+            bone_marrow_consent_date: data[10],
+            bone_marrow_shared_date: data[11],
+            note: data[12],
+            is_create: isCreate,
+            id: id
+        }
+        return requestData;
+    }
+
+    // Update status confirmation
+    var updateCSVConfirm = function(callback){
+
+        $("#csv-modal-btn-yes").on("click", function(){
+            callback(true);
+            $("#csv-mi-modal").modal('hide');
+        });
+        
+        $("#csv-modal-btn-no").on("click", function(){
+            callback(false);
+            $("#csv-mi-modal").modal('hide');
+        });
+    };
+
+    updateCSVConfirm(function(confirm){
+        if(confirm){
+            var requestData = $("#csv-mi-modal").data('csv-data');
+            console.log(requestData);
+            var url = 'products/update_csv';
+            axios.post(url, requestData)
+                .then(function (response) {
+                    console.log(response.data);
+                    if (response.data.status == true) {
+                        callbackUpdateCSV(true);
+                    } else {
+                        callbackUpdateCSV(false);
+                    }
+                })
+                .catch(function (error) {
+                    callbackUpdateCSV(false);
+                });
+        }else{
+            console.log('The operation to delete was canceled by user!')
+        }
+    });
+
+    function callbackUpdateCSV(status) {
+        $("#csv-mi-modal").modal('hide');
+        $('#product_create_callback_modal').modal('show');
+        if (status) {
+            $('#product_create_callback_modal .modal-title').text('Success');
+            $('#product_create_callback_modal .modal-body').text('CSV File uploaded successfully.');
+            $('#btn_callback_confirm').data('status', true);
+        } else {
+            $('#product_create_callback_modal .modal-title').text('Failed');
+            $('#product_create_callback_modal .modal-body').text("CSV File didn't uploaded.");
+        }
+    }
 })

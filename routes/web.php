@@ -28,6 +28,7 @@ Route::group(['middleware' => 'web'], function () {
         // Products
         Route::resource('products', 'ProductController');
         Route::post('products/update_status', 'ProductController@updateStatus');
+        Route::post('products/update_csv', 'ProductController@updateByCSV');
 
         // Setting
         Route::get('settings', 'SettingController@index');
