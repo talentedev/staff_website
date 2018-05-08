@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('account_email')->nullable();
             $table->string('source');
             $table->date('sales_date')->nullable();
+            $table->date('ship_date')->nullable();
             $table->date('account_connected_date')->nullable();
             $table->date('swab_returned_date')->nullable();
             $table->date('ship_to_lab_date')->nullable();

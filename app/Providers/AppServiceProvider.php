@@ -31,6 +31,11 @@ class AppServiceProvider extends ServiceProvider
                 'url'  => 'products',
                 'icon' => 'list-ul',
             ];
+            $tags = [
+                'text' => 'Tags',
+                'url'  => 'tags',
+                'icon' => 'tags',
+            ];
             $settings = [
                 'text' => 'Settings',
                 'url'  => 'settings',
@@ -43,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
                 $event->menu->add(
                     $users,
                     $products,
+                    $tags,
                     $settings
                 );
             } else {

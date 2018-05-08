@@ -60,54 +60,69 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 59);
+/******/ 	return __webpack_require__(__webpack_require__.s = 57);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 59:
+/***/ 57:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(60);
+module.exports = __webpack_require__(58);
 
 
 /***/ }),
 
-/***/ 60:
+/***/ 58:
 /***/ (function(module, exports) {
 
 $(function () {
-
-    // Form validation
-    $('#setting_form').validator();
-
-    $('#setting_form').validator().on('submit', function (e) {
-        if (e.isDefaultPrevented()) {
-            console.log('form is not valid');
-        } else {
-            e.preventDefault();
-            submit();
-        }
-    });
-
-    function submit() {
+    // submit form data
+    $('#btn_submit').click(function () {
         var data = {
-            name: $('#name').val(),
-            email: $('#email').val(),
-            password: $('#password').val()
+            sales_date: $('#sales_date').val(),
+            ship_date: $('#ship_date').val(),
+            account_connected_date: $('#account_connected_date').val(),
+            swab_returned_date: $('#swab_returned_date').val(),
+            ship_to_lab_date: $('#ship_to_lab_date').val(),
+            lab_received_date: $('#lab_received_date').val(),
+            sequenced_date: $('#sequenced_date').val(),
+            uploaded_to_server_date: $('#uploaded_to_server_date').val(),
+            bone_marrow_consent_date: $('#bone_marrow_consent_date').val(),
+            bone_marrow_shared_date: $('#bone_marrow_shared_date').val()
         };
-
-        var url = 'settings/change_me';
+        var url = 'tags';
         axios.post(url, data).then(function (response) {
             if (response.data.status == true) {
-                location.reload();
+                showResult(true);
             } else {
-                console.log('Failed to change the account info.');
+                showResult(false);
             }
         }).catch(function (error) {
-            console.log(error);
+            showResult(false);
         });
+    });
+
+    // Show modal for request result.
+    function showResult(status) {
+        $("#result_modal").modal('show');
+
+        if (status) {
+            $("#result_modal .modal-title").text('Success');
+            $("#result_modal .modal-body").text('Tags updated successfully.');
+            $('#btn_result_modal').data('status', true);
+        } else {
+            $("#result_modal .modal-title").text('Failed');
+            $("#result_modal .modal-body").text("We can't update the tags. Please try again.");
+            $('#btn_result_modal').data('status', false);
+        }
     }
+
+    $('#btn_result_modal').click(function () {
+        if ($(this).data('status')) {
+            location.reload();
+        }
+    });
 });
 
 /***/ })

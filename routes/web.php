@@ -30,6 +30,9 @@ Route::group(['middleware' => 'web'], function () {
         Route::post('products/update_status', 'ProductController@updateStatus');
         Route::post('products/update_csv', 'ProductController@updateByCSV');
 
+        // Tags
+        Route::resource('tags', 'TagController');
+
         // Setting
         Route::get('settings', 'SettingController@index');
         Route::post('settings/change_me', 'SettingController@changeMe');
