@@ -477,6 +477,7 @@ $(function () {
         var id = $(this).data('id');
         var url = 'products/' + id;
         axios.put(url, postData, id).then(function (response) {
+            console.log(response.data);
             if (response.data.status == true) {
                 location.reload();
             } else {
