@@ -1,12 +1,12 @@
 @extends('adminlte::page')
 
-@section('title', 'Pheramor - Accounts')
+@section('title', 'Pheramor - Staffs')
 
 @section('content_header')
-    <h1>Accounts</h1>
+    <h1>Staffs</h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Accounts</li>
+        <li class="active">Staffs</li>
     </ol>
 @stop
 

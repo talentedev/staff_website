@@ -37,6 +37,24 @@ CREATE TABLE `activity_log` (
 
 /*Data for the table `activity_log` */
 
+/*Table structure for table `configs` */
+
+DROP TABLE IF EXISTS `configs`;
+
+CREATE TABLE `configs` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `agile_domain` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `agile_email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `agile_key` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `configs` */
+
+insert  into `configs`(`id`,`agile_domain`,`agile_email`,`agile_key`,`created_at`,`updated_at`) values (1,'likeswiperight','jin@pheramor.com','upns4k6ajqtkm4ovkjb5hjjj9a','2018-05-15 08:07:35','2018-05-15 08:07:35');
+
 /*Table structure for table `migrations` */
 
 DROP TABLE IF EXISTS `migrations`;
@@ -46,11 +64,11 @@ CREATE TABLE `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `migrations` */
 
-insert  into `migrations`(`id`,`migration`,`batch`) values (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2018_01_31_151057_create_permission_tables',1),(4,'2018_04_13_170152_create_products_table',1),(5,'2018_05_05_162032_create_activity_log_table',1),(6,'2018_05_08_171411_create_tags_table',1);
+insert  into `migrations`(`id`,`migration`,`batch`) values (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2018_01_31_151057_create_permission_tables',1),(4,'2018_04_13_170152_create_products_table',1),(5,'2018_05_05_162032_create_activity_log_table',1),(6,'2018_05_08_171411_create_tags_table',1),(7,'2018_05_14_155915_create_configs_table',1);
 
 /*Table structure for table `model_has_permissions` */
 
@@ -110,7 +128,7 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-08 19:10:36','2018-05-08 19:10:36'),(2,'api','web','2018-05-08 19:10:36','2018-05-08 19:10:36');
+insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-15 08:07:35','2018-05-15 08:07:35'),(2,'api','web','2018-05-15 08:07:35','2018-05-15 08:07:35');
 
 /*Table structure for table `products` */
 
@@ -119,7 +137,7 @@ DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pheramor_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sales_email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sales_email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `source` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sales_date` date DEFAULT NULL,
@@ -172,7 +190,7 @@ CREATE TABLE `roles` (
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-05-08 19:10:36','2018-05-08 19:10:36'),(2,'admin','web','2018-05-08 19:10:36','2018-05-08 19:10:36'),(3,'street team','web','2018-05-08 19:10:36','2018-05-08 19:10:36'),(4,'staff','web','2018-05-08 19:10:36','2018-05-08 19:10:36');
+insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-05-15 08:07:35','2018-05-15 08:07:35'),(2,'admin','web','2018-05-15 08:07:35','2018-05-15 08:07:35'),(3,'street team','web','2018-05-15 08:07:35','2018-05-15 08:07:35'),(4,'staff','web','2018-05-15 08:07:35','2018-05-15 08:07:35');
 
 /*Table structure for table `tags` */
 
@@ -214,7 +232,7 @@ CREATE TABLE `users` (
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','staff123455','ersrsrtrerer','Super Admin','$2y$10$1LPcuDrV.mwyO3vo/XPsnedBth8JodyN7.SsJS2ilA5t/b2Knrj6W',NULL,'2018-05-08 19:10:36','2018-05-08 19:10:36'),(2,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Admin','$2y$10$1sC0NwIQvrwx2iLBOcB23.nBhCmpL.74XMYvo.gpBZgOplVJe8tJu',NULL,'2018-05-08 19:10:36','2018-05-08 19:10:36'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$iXunjkGeeKARNBgmW0wykepctabUSED8wGdwE33gWaWP34rKUty62',NULL,'2018-05-08 19:10:37','2018-05-08 19:10:37'),(4,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Staff','$2y$10$yWHT9eSuBv02rHb0GSewl.JyOY26udh/AGUqF90hGG6wFJQ7S5sdW',NULL,'2018-05-08 19:10:37','2018-05-08 19:10:37');
+insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','staff123455','ersrsrtrerer','Super Admin','$2y$10$2VTD/rgfi1FldX.p4BGYXexZ2P69.qkBy1y9HueXU.qGN1ZYJD7.6',NULL,'2018-05-15 08:07:35','2018-05-15 08:07:35'),(2,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Admin','$2y$10$ZMJgQ9utfTdnYKfP68D8k.SI9POqOWGNlt1AYLNSynUU3yor82Ocy',NULL,'2018-05-15 08:07:35','2018-05-15 08:07:35'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$cyAQRgQY4a0FA/yWdfnTIOrDjQORiZkjGWIDKVYZ1A.ASBlWPr4nG',NULL,'2018-05-15 08:07:35','2018-05-15 08:07:35'),(4,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Staff','$2y$10$ydKELVP4qwq1dBhIw/SJWOSlC6rf8YYWzOSqgD3o7UCkbksoOJR2K',NULL,'2018-05-15 08:07:35','2018-05-15 08:07:35');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -36,6 +36,7 @@ Route::group(['middleware' => 'web'], function () {
         // Setting
         Route::get('settings', 'SettingController@index');
         Route::post('settings/change_me', 'SettingController@changeMe');
+        Route::post('settings/change_config', 'SettingController@changeConfig');
 
     });
 

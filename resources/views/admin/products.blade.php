@@ -149,8 +149,7 @@
                         </div>
                         <div class="form-group">
                             <label for="sales_email">Sales Email</label>
-                            <input type="email" class="form-control" id="sales_email" required>
-                            <div class="help-block with-errors"></div>
+                            <input type="email" class="form-control" id="sales_email">
                         </div>
                         <div class="form-group">
                             <label for="note">Note</label>

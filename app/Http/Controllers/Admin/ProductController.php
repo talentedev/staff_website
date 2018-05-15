@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Product;
 use App\Tag;
-use Config;
+use App\Config;
 
 class ProductController extends Controller
 {
@@ -405,9 +405,9 @@ class ProductController extends Controller
             $content_type = "application/json";
         }
         
-        $agile_domain = Config::get('agilecrm.AGILE_DOMAIN');
-        $agile_user_email = Config::get('agilecrm.AGILE_USER_EMAIL');
-        $agile_api_key = Config::get('agilecrm.AGILE_REST_API_KEY');
+        $agile_domain = Config::all()->first()->agile_domain;
+        $agile_user_email = Config::all()->first()->agile_email;
+        $agile_api_key = Config::all()->first()->agile_key;
 
         $agile_url = "https://" . $agile_domain . ".agilecrm.com/dev/api/" . $entity;
         $ch = curl_init();

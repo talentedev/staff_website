@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use App\Config;
 use Spatie\Activitylog\Models\Activity;
 
 class SettingController extends Controller
@@ -50,9 +51,13 @@ class SettingController extends Controller
             $logs = Activity::where('causer_id', Auth::user()->id)->get();
         }
 
+        // Get system configurations
+        $configs = Config::all();
+
         return view('admin.settings', [
             'user' => Auth::user(),
-            'logs' => $logs
+            'logs' => $logs,
+            'configs' => $configs
         ]);
     }
 
@@ -73,6 +78,23 @@ class SettingController extends Controller
         }
 
         $me->save();
+        return response()->json(['status' => true], 200);
+    }
+
+    /**
+     * Change the AgileCRM info.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function changeConfig(Request $request)
+    {
+        $config = Config::all()->first();
+
+        $config->agile_domain = $request->get('agile_domain');
+        $config->agile_email = $request->get('agile_email');
+        $config->agile_key = $request->get('api_key');
+
+        $config->save();
         return response()->json(['status' => true], 200);
     }
 }
