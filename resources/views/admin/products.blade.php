@@ -24,6 +24,7 @@
                         <th class="text-center">Source</th>
                         <th class="text-center">Created</th>
                         <th class="text-center">Sales</th>
+                        <th class="text-center">Ship</th>
                         <th class="text-center">Account Connected</th>
                         <th class="text-center">Swab Returned</th>
                         <th class="text-center">Ship To Lab</th>
@@ -50,6 +51,7 @@
                         </th>
                         <th class="filter-date">Created Date</th>
                         <th class="filter-date">Sales Date</th>
+                        <th class="filter-date">Ship Date</th>
                         <th class="filter-date">Account Connected Date</th>
                         <th class="filter-date">Swab Returned Date</th>
                         <th class="filter-date">Ship To Lab Date</th>
@@ -74,6 +76,7 @@
                         <td class="text-center">{{ $product->source }}</td>
                         <td class="text-center">{{ $product->created_at === null ? 'n/a' : $product->created_at->format('d-M-Y') }}</td>
                         <td class="text-center">{{ $product->sales_date === null ? 'n/a' : date('d-M-Y', strtotime($product->sales_date)) }}</td>
+                        <td class="text-center">{{ $product->ship_date === null ? 'n/a' : date('d-M-Y', strtotime($product->ship_date)) }}</td>
                         <td class="text-center">{{ $product->account_connected_date === null ? 'n/a' : date('d-M-Y', strtotime($product->account_connected_date)) }}</td>
                         <td class="text-center">{{ $product->swab_returned_date === null ? 'n/a' : date('d-M-Y', strtotime($product->swab_returned_date)) }}</td>
                         <td class="text-center">{{ $product->ship_to_lab_date === null ? 'n/a' : date('d-M-Y', strtotime($product->ship_to_lab_date)) }}</td>
@@ -124,6 +127,8 @@
             <span>&nbsp;Advanced Filters</span>
             <button class="btn bg-teal" id="get_csv_file">Upload CSV</button>
             <input type="file" id="upload_csv" style="display: none;">
+            <input type="checkbox" class="minimal" id="csv_ignore_first_row">
+            <span>&nbsp;Ignore first row</span>
             <input type="hidden" data-products="{{ $products }}" id="data_products">
         </div>
         <!-- /.box-body -->
@@ -174,13 +179,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="product_update_form">
-                        <div class="form-group">
+                    <form id="product_update_form" class="form-horizontal">
+                        <div class="form-group text-center">
                             <label id="update_modal_label"></label>
                         </div>
                         <div class="form-group">
-                            <label for="sales_date">Sales Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="sales_date" class="col-sm-4 control-label">Sales Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
@@ -188,8 +193,17 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="account_connected_date">Account Connected Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="sales_date" class="col-sm-4 control-label">Ship Date</label>
+                            <div class="input-prepend input-group col-sm-8">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control datepicker" id="ship_date" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="account_connected_date" class="col-sm-4 control-label">Account Connected Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
@@ -197,8 +211,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="swab_returned_date">Swab Returned Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="swab_returned_date" class="col-sm-4 control-label">Swab Returned Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
@@ -206,8 +220,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="ship_to_lab_date">Ship To Lab Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="ship_to_lab_date" class="col-sm-4 control-label">Ship To Lab Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
@@ -215,8 +229,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="lab_received_date">Lab Received Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="lab_received_date" class="col-sm-4 control-label">Lab Received Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
@@ -224,8 +238,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="sequenced_date">Sequenced Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="sequenced_date" class="col-sm-4 control-label">Sequenced Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
@@ -233,8 +247,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="uploaded_to_server_date">Uploaded To Server Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="uploaded_to_server_date" class="col-sm-4 control-label">Uploaded To Server Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
@@ -242,8 +256,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="bone_marrow_consent_date">Bone Marrow Consent Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="bone_marrow_consent_date" class="col-sm-4 control-label">Bone Marrow Consent Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
@@ -251,12 +265,30 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="bone_marrow_shared_date">Bone Marrow Shared Date</label>
-                            <div class="input-prepend input-group">
+                            <label for="bone_marrow_shared_date" class="col-sm-4 control-label">Bone Marrow Shared Date</label>
+                            <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
                                 </span>
                                 <input type="text" class="form-control datepicker" id="bone_marrow_shared_date"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="update_sales_email" class="col-sm-4 control-label">Sales Email</label>
+                            <div class="input-prepend input-group col-sm-8">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-envelope fa fa-envelope"></i>
+                                </span>
+                                <input type="text" class="form-control" id="update_sales_email" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="update_account_email" class="col-sm-4 control-label">Account Email</label>
+                            <div class="input-prepend input-group col-sm-8">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-envelope fa fa-envelope"></i>
+                                </span>
+                                <input type="text" class="form-control" id="update_account_email" />
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -279,6 +311,10 @@
                     <div>
                         <span>Sales Date: </span>    
                         <span class="pull-right" id="summary_sales">---</span>
+                    </div>
+                    <div>
+                        <span>Ship Date: </span>    
+                        <span class="pull-right" id="summary_ship">---</span>
                     </div>
                     <div>
                         <span>Account Connected Date: </span>    
@@ -367,57 +403,135 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Change Summary By CSV File</h4>
                 </div>
-                <div class="modal-body table-responsive">
-                    <h4>Create Customers</h4>
-                    <table class="table table-bordered table-striped" id="csv_create_confirm_table">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Pheramor ID</th>
-                                <th class="text-center">Sales Email</th>
-                                <th class="text-center">Account Email</th>
-                                <th class="text-center">Sales</th>
-                                <th class="text-center">Account Connected</th>
-                                <th class="text-center">Swab Returned</th>
-                                <th class="text-center">Ship To Lab</th>
-                                <th class="text-center">Lab Received</th>
-                                <th class="text-center">Sequeced</th>
-                                <th class="text-center">Uploaded</th>
-                                <th class="text-center">Bone Marrow Consent</th>
-                                <th class="text-center">Bone Marrow Shared</th>
-                                <th class="text-center">Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <h4>Update Customers</h4>
-                    <table class="table table-bordered table-striped" id="csv_update_confirm_table">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Pheramor ID</th>
-                                <th class="text-center">Sales Email</th>
-                                <th class="text-center">Account Email</th>
-                                <th class="text-center">Sales</th>
-                                <th class="text-center">Account Connected</th>
-                                <th class="text-center">Swab Returned</th>
-                                <th class="text-center">Ship To Lab</th>
-                                <th class="text-center">Lab Received</th>
-                                <th class="text-center">Sequeced</th>
-                                <th class="text-center">Uploaded</th>
-                                <th class="text-center">Bone Marrow Consent</th>
-                                <th class="text-center">Bone Marrow Shared</th>
-                                <th class="text-center">Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <br>
-                    <label>Are you sure to upload them?</label>
+                <div class="modal-body">
+                    <div class="col-md-5 table-responsive">
+                        <h4>Create Customers</h4>
+                        <table class="table table-bordered table-striped" id="csv_create_confirm_table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Pheramor ID</th>
+                                    <th class="text-center">Sales Email</th>
+                                    <th class="text-center">Account Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <h4>Update Customers</h4>
+                        <table class="table table-bordered table-striped" id="csv_update_confirm_table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Pheramor ID</th>
+                                    <th class="text-center">Sales Email</th>
+                                    <th class="text-center">Account Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-7">
+                        <form id="product_update_form" class="form-horizontal">
+                            <div class="form-group text-center">
+                                <label id="update_modal_label"></label>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_sales_date" class="col-sm-5 control-label">Sales Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_sales_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_ship_date" class="col-sm-5 control-label">Ship Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_ship_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_account_connected_date" class="col-sm-5 control-label">Account Connected Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_account_connected_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_swab_returned_date" class="col-sm-5 control-label">Swab Returned Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_swab_returned_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_ship_to_lab_date" class="col-sm-5 control-label">Ship To Lab Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_ship_to_lab_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_lab_received_date" class="col-sm-5 control-label">Lab Received Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_lab_received_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_sequenced_date" class="col-sm-5 control-label">Sequenced Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_sequenced_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_uploaded_to_server_date" class="col-sm-5 control-label">Uploaded To Server Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_uploaded_to_server_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_bone_marrow_consent_date" class="col-sm-5 control-label">Bone Marrow Consent Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_bone_marrow_consent_date" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="csv_bone_marrow_shared_date" class="col-sm-5 control-label">Bone Marrow Shared Date</label>
+                                <div class="input-prepend input-group col-sm-7">
+                                    <span class="add-on input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                    </span>
+                                    <input type="text" class="form-control datepicker" id="csv_bone_marrow_shared_date"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <label></label>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="csv-modal-btn-yes">Yes</button>
-                    <button type="button" class="btn btn-default" id="csv-modal-btn-no">No</button>
+                    <button type="button" class="btn btn-primary" id="csv-modal-btn-yes">Upload</button>
+                    <button type="button" class="btn btn-default" id="csv-modal-btn-no">Cancel</button>
                 </div>
             </div>
         </div>

@@ -81,7 +81,7 @@ $(function () {
     // Datatable
     var table = $('#products_table').DataTable({
         order: [1, 'asc'],
-        columnDefs: [{ targets: [0, 15, 16], orderable: false }],
+        columnDefs: [{ targets: [0, 16, 17], orderable: false }],
         paging: true,
         info: true,
         bSortCellsTop: true
@@ -305,6 +305,7 @@ $(function () {
         $('#update_modal_label').text('Pheramor ID: ' + data.pheramor_id);
 
         $('#sales_date').val(data.sales_date);
+        $('#ship_date').val(data.ship_date);
         $('#account_connected_date').val(data.account_connected_date);
         $('#swab_returned_date').val(data.swab_returned_date);
         $('#ship_to_lab_date').val(data.ship_to_lab_date);
@@ -313,6 +314,11 @@ $(function () {
         $('#uploaded_to_server_date').val(data.uploaded_to_server_date);
         $('#bone_marrow_consent_date').val(data.bone_marrow_consent_date);
         $('#bone_marrow_shared_date').val(data.bone_marrow_shared_date);
+
+        $('#update_sales_email').prop('disabled', false);
+        $('#update_account_email').prop('disabled', false);
+        $('#update_sales_email').val(data.sales_email);
+        $('#update_account_email').val(data.account_email);
 
         $('#btn_update_status').data('id', data.id);
         $('#btn_update_status').data('product', data);
@@ -327,6 +333,8 @@ $(function () {
         var selectedProducts = getSelectedProducts();
         $('#btn_update_status').data('id', selectedProducts);
         $('#update_modal_label').text(selectedProducts.length + ' customers selected.');
+        $('#update_sales_email').prop('disabled', true);
+        $('#update_account_email').prop('disabled', true);
     });
 
     // Get selected rows
@@ -343,6 +351,7 @@ $(function () {
     // initialize update product modal
     function initUpdateStatusModal() {
         $('#sales_date').val('');
+        $('#ship_date').val('');
         $('#account_connected_date').val('');
         $('#swab_returned_date').val('');
         $('#ship_to_lab_date').val('');
@@ -351,6 +360,8 @@ $(function () {
         $('#uploaded_to_server_date').val('');
         $('#bone_marrow_consent_date').val('');
         $('#bone_marrow_shared_date').val('');
+        $('#update_sales_email').val('');
+        $('#update_account_email').val('');
     }
 
     // Update status confirmation
@@ -360,6 +371,7 @@ $(function () {
             $("#mi-modal").modal('show');
 
             $('#summary_sales').text($('#sales_date').val());
+            $('#summary_ship').text($('#ship_date').val());
             $('#summary_account_connected').text($('#account_connected_date').val());
             $('#summary_swab_returned').text($('#swab_returned_date').val());
             $('#summary_ship_to_lab').text($('#ship_to_lab_date').val());
@@ -409,6 +421,7 @@ $(function () {
             var data = {
                 ids: $('#btn_update_status').data('id'),
                 sales_date: $('#sales_date').val(),
+                ship_date: $('#ship_date').val(),
                 account_connected_date: $('#account_connected_date').val(),
                 swab_returned_date: $('#swab_returned_date').val(),
                 ship_to_lab_date: $('#ship_to_lab_date').val(),
@@ -416,7 +429,9 @@ $(function () {
                 sequenced_date: $('#sequenced_date').val(),
                 uploaded_to_server_date: $('#uploaded_to_server_date').val(),
                 bone_marrow_consent_date: $('#bone_marrow_consent_date').val(),
-                bone_marrow_shared_date: $('#bone_marrow_shared_date').val()
+                bone_marrow_shared_date: $('#bone_marrow_shared_date').val(),
+                sales_email: $('#update_sales_email').val(),
+                account_email: $('#update_account_email').val()
             };
 
             var url = 'products/update_status';
@@ -463,6 +478,7 @@ $(function () {
 
         var postData = {
             sales_date: $('#sales_date').val(),
+            ship_date: $('#ship_date').val(),
             account_connected_date: $('#account_connected_date').val(),
             swab_returned_date: $('#swab_returned_date').val(),
             ship_to_lab_date: $('#ship_to_lab_date').val(),
@@ -518,20 +534,40 @@ $(function () {
         $('#upload_csv').click();
     });
 
+    $('#csv_ignore_first_row').iCheck('check');
+
     $('#upload_csv').change(function (e) {
         var reader = new FileReader();
         reader.onload = function () {
-            processCSVData($.csv.toArrays(reader.result));
+            var strCSV = reader.result;
+            if ($('#csv_ignore_first_row').is(':checked')) {
+                strCSV = reader.result;
+            } else {
+                strCSV = 't,t,,\n' + reader.result;
+            }
+            processCSVData($.csv.toArrays(strCSV));
         };
         // start reading the file. When it is done, calls the onload event defined above.
         reader.readAsBinaryString(document.getElementById("upload_csv").files[0]);
+        document.getElementById("upload_csv").value = "";
     });
 
     function processCSVData(data) {
         var requestData = [];
         var createData = [];
         var updateData = [];
+
         for (var i = 1; i < data.length; i++) {
+            // Check if currect csv file is input.
+            if (Object.keys(data[i]).length != 4) {
+                alert('CSV parse error! Invalid data structure!');
+                throw new Error("CSV parse error!");
+            }
+            if (data[i][0] == '') {
+                alert("CSV parse error! The values on first column can't be empty!");
+                throw new Error("CSV parse error! Empty value. The values on first column can't be empty!");
+            }
+
             if (compareCSVwithExistData(data[i]).result) {
                 requestData.push(makeRequestData(data[i], false, compareCSVwithExistData(data[i]).id));
                 updateData.push(data[i]);
@@ -548,28 +584,30 @@ $(function () {
 
         // Display the csv data on the table
         var createTableBody = $('#csv_create_confirm_table tbody');
+        createTableBody.empty();
         var createTableBodyContent = '';
         for (key in createData) {
             createTableBodyContent += '<tr>';
-            for (item in createData[key]) {
-                if (createData[key][item] === null) {
-                    createData[key][item] = '';
+            for (var i = 0; i < createData[key].length - 1; i++) {
+                if (createData[key][i] === null) {
+                    createData[key][i] = '';
                 }
-                createTableBodyContent += '<td>' + createData[key][item] + '</td>';
+                createTableBodyContent += '<td>' + createData[key][i].replace(/\s/g, '') + '</td>';
             }
             createTableBodyContent += '</tr>';
         }
         createTableBody.append(createTableBodyContent);
 
         var updateTableBody = $('#csv_update_confirm_table tbody');
+        updateTableBody.empty();
         var updateTableBodyContent = '';
         for (key in updateData) {
             updateTableBodyContent += '<tr>';
-            for (item in updateData[key]) {
-                if (updateData[key][item] === null) {
-                    updateData[key][item] = '';
+            for (var i = 0; i < updateData[key].length - 1; i++) {
+                if (updateData[key][i] === null) {
+                    updateData[key][i] = '';
                 }
-                updateTableBodyContent += '<td>' + updateData[key][item] + '</td>';
+                updateTableBodyContent += '<td>' + updateData[key][i].replace(/\s/g, '') + '</td>';
             }
             updateTableBodyContent += '</tr>';
         }
@@ -595,19 +633,8 @@ $(function () {
         var id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
 
         var requestData = {
-            pheramor_id: data[0],
-            sales_email: data[1],
-            account_email: data[2],
-            sales_date: data[3],
-            account_connected_date: data[4],
-            swab_returned_date: data[5],
-            ship_to_lab_date: data[6],
-            lab_received_date: data[7],
-            sequenced_date: data[8],
-            uploaded_to_server_date: data[9],
-            bone_marrow_consent_date: data[10],
-            bone_marrow_shared_date: data[11],
-            note: data[12],
+            pheramor_id: data[0].replace(/\s/g, ''),
+            sales_email: data[1].replace(/\s/g, ''),
             is_create: isCreate,
             id: id
         };
@@ -630,7 +657,23 @@ $(function () {
 
     updateCSVConfirm(function (confirm) {
         if (confirm) {
-            var requestData = $("#csv-mi-modal").data('csv-data');
+            var customers = $("#csv-mi-modal").data('csv-data');
+            var updatedDates = {
+                sales_date: $('#csv_sales_date').val(),
+                ship_date: $('#csv_ship_date').val(),
+                account_connected_date: $('#csv_account_connected_date').val(),
+                swab_returned_date: $('#csv_swab_returned_date').val(),
+                ship_to_lab_date: $('#csv_ship_to_lab_date').val(),
+                lab_received_date: $('#csv_lab_received_date').val(),
+                sequenced_date: $('#csv_sequenced_date').val(),
+                uploaded_to_server_date: $('#csv_uploaded_to_server_date').val(),
+                bone_marrow_consent_date: $('#csv_bone_marrow_consent_date').val(),
+                bone_marrow_shared_date: $('#csv_bone_marrow_shared_date').val()
+            };
+            var requestData = {
+                customers: customers,
+                dates: updatedDates
+            };
             console.log(requestData);
             var url = 'products/update_csv';
             axios.post(url, requestData).then(function (response) {

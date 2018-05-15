@@ -111,6 +111,7 @@ class ProductController extends Controller
         $product = $this->product::find($id);
 
         $product->sales_date = $request->get('sales_date');
+        $product->ship_date = $request->get('ship_date');
         $product->account_connected_date = $request->get('account_connected_date');
         $product->swab_returned_date = $request->get('swab_returned_date');
         $product->ship_to_lab_date = $request->get('ship_to_lab_date');
@@ -119,6 +120,8 @@ class ProductController extends Controller
         $product->uploaded_to_server_date = $request->get('uploaded_to_server_date');
         $product->bone_marrow_consent_date = $request->get('bone_marrow_consent_date');
         $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
+        $product->sales_email= $request->get('sales_email');
+        $product->account_email = $request->get('account_email');
         $product->note = $request->get('note');
 
         $product->save();
@@ -154,6 +157,11 @@ class ProductController extends Controller
                 if ($request->get('sales_date') != '') {
                    $product->sales_date = $request->get('sales_date');
                    $this->addTag($product->sales_email, $this->getTagValue('sales_date'));
+                }
+
+                if ($request->get('ship_date') != '') {
+                   $product->ship_date = $request->get('ship_date');
+                   $this->addTag($product->sales_email, $this->getTagValue('ship_date'));
                 }
                 
                 if ($request->get('account_connected_date') != '') {
@@ -206,6 +214,11 @@ class ProductController extends Controller
                 $this->addTag($product->sales_email, $this->getTagValue('sales_date'));
             }
 
+            if ($product->ship_date != $request->get('ship_date')) {
+                $product->ship_date = $request->get('ship_date');
+                $this->addTag($product->sales_email, $this->getTagValue('ship_date'));
+            }
+
             if ($product->account_connected_date != $request->get('account_connected_date')) {
                 $product->account_connected_date = $request->get('account_connected_date');
                 $this->addTag($product->sales_email, $this->getTagValue('account_connected_date'));
@@ -246,6 +259,9 @@ class ProductController extends Controller
                 $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_shared_date'));
             }
 
+            $product->sales_email= $request->get('sales_email');
+            $product->account_email = $request->get('account_email');
+
             $product->save();
         }
         return response()->json(['status' => true], 200);
@@ -260,61 +276,66 @@ class ProductController extends Controller
     public function updateByCSV(Request $request)
     {
         $data = $request->all();
+        $customers = $data['customers'];
+        $dates = $data['dates'];
         $create_data = array();
 
-        foreach ($data as $key => $value) {
+        foreach ($customers as $key => $value) {
 
             if ($value['id'] != '') { // Update customer
 
                 $product = array();
 
-                if ($value['sales_date']  != '') {
-                    $product['sales_date'] = date('Y-m-d', strtotime($value['sales_date']));
+                $product['sales_email'] = $value['sales_email'];
+
+                if ($dates['sales_date']  != '') {
+                    $product['sales_date'] = date('Y-m-d', strtotime($dates['sales_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('sales_date'));
                 }
 
-                if ($value['account_connected_date']  != '') {
-                    $product['account_connected_date'] = date('Y-m-d', strtotime($value['account_connected_date']));
+                if ($dates['ship_date']  != '') {
+                    $product['ship_date'] = date('Y-m-d', strtotime($dates['ship_date']));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('ship_date'));
+                }
+
+                if ($dates['account_connected_date']  != '') {
+                    $product['account_connected_date'] = date('Y-m-d', strtotime($dates['account_connected_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('account_connected_date'));
                 }
 
-                if ($value['swab_returned_date']  != '') {
-                    $product['swab_returned_date'] = date('Y-m-d', strtotime($value['swab_returned_date']));
+                if ($dates['swab_returned_date']  != '') {
+                    $product['swab_returned_date'] = date('Y-m-d', strtotime($dates['swab_returned_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('swab_returned_date'));
                 }
 
-                if ($value['ship_to_lab_date']  != '') {
-                    $product['ship_to_lab_date'] = date('Y-m-d', strtotime($value['ship_to_lab_date']));
+                if ($dates['ship_to_lab_date']  != '') {
+                    $product['ship_to_lab_date'] = date('Y-m-d', strtotime($dates['ship_to_lab_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('ship_to_lab_date'));
                 }
 
-                if ($value['lab_received_date']  != '') {
-                    $product['lab_received_date'] = date('Y-m-d', strtotime($value['lab_received_date']));
+                if ($dates['lab_received_date']  != '') {
+                    $product['lab_received_date'] = date('Y-m-d', strtotime($dates['lab_received_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('lab_received_date'));
                 }
 
-                if ($value['sequenced_date']  != '') {
-                    $product['sequenced_date'] = date('Y-m-d', strtotime($value['sequenced_date']));
+                if ($dates['sequenced_date']  != '') {
+                    $product['sequenced_date'] = date('Y-m-d', strtotime($dates['sequenced_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('sequenced_date'));
                 }
 
-                if ($value['uploaded_to_server_date']  != '') {
-                    $product['uploaded_to_server_date'] = date('Y-m-d', strtotime($value['uploaded_to_server_date']));
+                if ($dates['uploaded_to_server_date']  != '') {
+                    $product['uploaded_to_server_date'] = date('Y-m-d', strtotime($dates['uploaded_to_server_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('uploaded_to_server_date'));
                 }
 
-                if ($value['bone_marrow_consent_date']  != '') {
-                    $product['bone_marrow_consent_date'] = date('Y-m-d', strtotime($value['bone_marrow_consent_date']));
+                if ($dates['bone_marrow_consent_date']  != '') {
+                    $product['bone_marrow_consent_date'] = date('Y-m-d', strtotime($dates['bone_marrow_consent_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('bone_marrow_consent_date'));
                 }
 
-                if ($value['bone_marrow_shared_date']  != '') {
-                    $product['bone_marrow_shared_date'] = date('Y-m-d', strtotime($value['bone_marrow_shared_date']));
+                if ($dates['bone_marrow_shared_date']  != '') {
+                    $product['bone_marrow_shared_date'] = date('Y-m-d', strtotime($dates['bone_marrow_shared_date']));
                     $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('bone_marrow_shared_date'));
-                }
-
-                if ($value['note']  != '') {
-                    $product['note'] = $value['note'];
                 }
                 
                 Product::where('id', $value['id'])->update($product);
@@ -324,56 +345,62 @@ class ProductController extends Controller
 
                 $product['pheramor_id'] = $value['pheramor_id'];
                 $product['sales_email'] = $value['sales_email'];
-                $product['account_email'] = $value['account_email'];
                 $product['source'] = Auth::user()->roles[0]->name;
-                $product['sales_date'] = date('Y-m-d', strtotime($value['sales_date']));
-                $product['account_connected_date'] = date('Y-m-d', strtotime($value['account_connected_date']));
-                $product['swab_returned_date'] = date('Y-m-d', strtotime($value['swab_returned_date']));
-                $product['ship_to_lab_date'] = date('Y-m-d', strtotime($value['ship_to_lab_date']));
-                $product['lab_received_date'] = date('Y-m-d', strtotime($value['lab_received_date']));
-                $product['sequenced_date'] = date('Y-m-d', strtotime($value['sequenced_date']));
-                $product['uploaded_to_server_date'] = date('Y-m-d', strtotime($value['uploaded_to_server_date']));
-                $product['bone_marrow_consent_date'] = date('Y-m-d', strtotime($value['bone_marrow_consent_date']));
-                $product['bone_marrow_shared_date'] = date('Y-m-d', strtotime($value['bone_marrow_shared_date']));
-                $product['note'] = $value['note'];
 
-                array_push($create_data, $product);
-
-                if ($value['sales_date']  != '') {
+                if ($dates['sales_date']  != '') {
+                    $product['sales_date'] = date('Y-m-d', strtotime($dates['sales_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('sales_date'));
                 }
 
-                if ($value['account_connected_date']  != '') {
+                if ($dates['ship_date']  != '') {
+                    $product['ship_date'] = date('Y-m-d', strtotime($dates['ship_date']));
+                    $this->addTag($value['sales_email'], $this->getTagValue('ship_date'));
+                }
+
+                if ($dates['account_connected_date']  != '') {
+                    $product['account_connected_date'] = date('Y-m-d', strtotime($dates['account_connected_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('account_connected_date'));
                 }
 
-                if ($value['swab_returned_date']  != '') {
+                if ($dates['swab_returned_date']  != '') {
+                    $product['swab_returned_date'] = date('Y-m-d', strtotime($dates['swab_returned_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('swab_returned_date'));
                 }
 
-                if ($value['ship_to_lab_date']  != '') {
+                if ($dates['ship_to_lab_date']  != '') {
+                    $product['ship_to_lab_date'] = date('Y-m-d', strtotime($dates['ship_to_lab_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('ship_to_lab_date'));
                 }
 
-                if ($value['lab_received_date']  != '') {
+                if ($dates['lab_received_date']  != '') {
+                    $product['lab_received_date'] = date('Y-m-d', strtotime($dates['lab_received_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('lab_received_date'));
                 }
 
-                if ($value['sequenced_date']  != '') {
+                if ($dates['sequenced_date']  != '') {
+                    $product['sequenced_date'] = date('Y-m-d', strtotime($dates['sequenced_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('sequenced_date'));
                 }
 
-                if ($value['uploaded_to_server_date']  != '') {
+                if ($dates['uploaded_to_server_date']  != '') {
+                    $product['uploaded_to_server_date'] = date('Y-m-d', strtotime($dates['uploaded_to_server_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('uploaded_to_server_date'));
                 }
 
-                if ($value['bone_marrow_consent_date']  != '') {
+                if ($dates['bone_marrow_consent_date']  != '') {
+                    $product['bone_marrow_consent_date'] = date('Y-m-d', strtotime($dates['bone_marrow_consent_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('bone_marrow_consent_date'));
                 }
 
-                if ($value['bone_marrow_shared_date']  != '') {
+                if ($dates['bone_marrow_shared_date']  != '') {
+                    $product['bone_marrow_shared_date'] = date('Y-m-d', strtotime($dates['bone_marrow_shared_date']));
                     $this->addTag($value['sales_email'], $this->getTagValue('bone_marrow_shared_date'));
                 }
+
+                $product['created_at'] = \Carbon\Carbon::now();
+                $product['updated_at'] = \Carbon\Carbon::now();
+
+                array_push($create_data, $product);
             }
         }
 
