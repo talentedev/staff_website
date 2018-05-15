@@ -35,9 +35,9 @@ class HomeController extends Controller
     {
         // Check if authrized user is super admin.
         if (Auth::user()->hasRole('super admin')) {
-            return redirect('users');
+            return redirect('staff');
         } else {
-            return redirect('products');
+            return redirect('customers');
         }
     }
 }

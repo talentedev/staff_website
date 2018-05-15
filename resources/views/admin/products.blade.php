@@ -21,6 +21,7 @@
                         <th class="text-center">Pheramor ID</th>
                         <th class="text-center">Sales Email</th>
                         <th class="text-center">Account Email</th>
+                        <th class="text-center">Phone</th>
                         <th class="text-center">Source</th>
                         <th class="text-center">Created</th>
                         <th class="text-center">Sales</th>
@@ -41,6 +42,7 @@
                         <th class="filter-input">Pheramor ID</th>
                         <th class="filter-input">Sales Email</th>
                         <th class="filter-input">Account Email</th>
+                        <th class="filter-input">Phone</th>
                         <th>
                             <select class="form-control" id="filter_source">
                                 <option value="">All</option>
@@ -73,6 +75,7 @@
                         <td class="text-center">{{ $product->pheramor_id }}</td>
                         <td class="text-center">{{ $product->sales_email }}</td>
                         <td class="text-center">{{ $product->account_email }}</td>
+                        <td class="text-center">{{ $product->phone }}</td>
                         <td class="text-center">{{ $product->source }}</td>
                         <td class="text-center">{{ $product->created_at === null ? 'n/a' : $product->created_at->format('d-M-Y') }}</td>
                         <td class="text-center">{{ $product->sales_date === null ? 'n/a' : date('d-M-Y', strtotime($product->sales_date)) }}</td>
@@ -153,8 +156,8 @@
                             <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group">
-                            <label for="sales_email">Sales Email</label>
-                            <input type="email" class="form-control" id="sales_email">
+                            <label for="create_sales_email">Sales Email</label>
+                            <input type="email" class="form-control" id="create_sales_email">
                         </div>
                         <div class="form-group">
                             <label for="note">Note</label>
@@ -274,21 +277,30 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="update_sales_email" class="col-sm-4 control-label">Sales Email</label>
+                            <label for="sales_email" class="col-sm-4 control-label">Sales Email</label>
                             <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-envelope fa fa-envelope"></i>
                                 </span>
-                                <input type="text" class="form-control" id="update_sales_email" />
+                                <input type="text" class="form-control" id="sales_email" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="update_account_email" class="col-sm-4 control-label">Account Email</label>
+                            <label for="account_email" class="col-sm-4 control-label">Account Email</label>
                             <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
                                     <i class="glyphicon glyphicon-envelope fa fa-envelope"></i>
                                 </span>
-                                <input type="text" class="form-control" id="update_account_email" />
+                                <input type="text" class="form-control" id="account_email" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-4 control-label">Phone</label>
+                            <div class="input-prepend input-group col-sm-8">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-envelope fa fa-envelope"></i>
+                                </span>
+                                <input type="number" class="form-control" id="phone" />
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -310,43 +322,55 @@
                 <div class="modal-body container-fluid">
                     <div>
                         <span>Sales Date: </span>    
-                        <span class="pull-right" id="summary_sales">---</span>
+                        <span class="pull-right" id="summary_sales_date">---</span>
                     </div>
                     <div>
                         <span>Ship Date: </span>    
-                        <span class="pull-right" id="summary_ship">---</span>
+                        <span class="pull-right" id="summary_ship_date">---</span>
                     </div>
                     <div>
                         <span>Account Connected Date: </span>    
-                        <span class="pull-right" id="summary_account_connected">---</span>
+                        <span class="pull-right" id="summary_account_connected_date">---</span>
                     </div>
                     <div>
                         <span>Swab Returned Date: </span>    
-                        <span class="pull-right" id="summary_swab_returned">---</span>
+                        <span class="pull-right" id="summary_swab_returned_date">---</span>
                     </div>
                     <div>
                         <span>Ship To Lab Date: </span>    
-                        <span class="pull-right" id="summary_ship_to_lab">---</span>
+                        <span class="pull-right" id="summary_ship_to_lab_date">---</span>
                     </div>
                     <div>
                         <span>Lab Received Date: </span>    
-                        <span class="pull-right" id="summary_lab_received">---</span>
+                        <span class="pull-right" id="summary_lab_received_date">---</span>
                     </div>
                     <div>
                         <span>Sequenced Date: </span>    
-                        <span class="pull-right" id="summary_sequenced">---</span>
+                        <span class="pull-right" id="summary_sequenced_date">---</span>
                     </div>
                     <div>
                         <span>Uploaded To Server Date: </span>    
-                        <span class="pull-right" id="summary_uploaded_to_server">---</span>
+                        <span class="pull-right" id="summary_uploaded_to_server_date">---</span>
                     </div>
                     <div>
                         <span>Bone Marrow Consent Date: </span>    
-                        <span class="pull-right" id="summary_bone_marrow_consent">---</span>
+                        <span class="pull-right" id="summary_bone_marrow_consent_date">---</span>
                     </div>
                     <div>
                         <span>Bone Marrow Shared Date: </span>    
-                        <span class="pull-right" id="summary_bone_marrow_shared">---</span>
+                        <span class="pull-right" id="summary_bone_marrow_shared_date">---</span>
+                    </div>
+                    <div>
+                        <span>Sales Email: </span>    
+                        <span class="pull-right" id="summary_sales_email"></span>
+                    </div>
+                    <div>
+                        <span>Account Email: </span>    
+                        <span class="pull-right" id="summary_account_email"></span>
+                    </div>
+                    <div>
+                        <span>Phone: </span>    
+                        <span class="pull-right" id="summary_phone"></span>
                     </div>
                     <br>
                     <label>Are you sure to change them?</label>

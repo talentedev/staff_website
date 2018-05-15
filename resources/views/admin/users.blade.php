@@ -1,12 +1,12 @@
 @extends('adminlte::page')
 
-@section('title', 'Pheramor - Staffs')
+@section('title', 'Pheramor - Staff')
 
 @section('content_header')
-    <h1>Staffs</h1>
+    <h1>Staff</h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Staffs</li>
+        <li class="active">Staff</li>
     </ol>
 @stop
 
@@ -21,7 +21,6 @@
                         <th class="text-center">Email</th>
                         <th class="text-center">Role</th>
                         <th class="text-center">Access Code</th>
-                        <th class="text-center">API Key</th>
                         <th class="text-center">Tag</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -36,7 +35,6 @@
                             <td class="text-center">{{ $user->email }}</td>
                             <td class="text-center">{{ $user->roles->pluck('name')[0] }}</td>
                             <td class="text-center">{{ $user->source }}</td>
-                            <td class="text-center">{{ $user->api_key }}</td>
                             <td class="text-center">{{ $user->tag }}</td>
                             <td class="text-center text-red h4">
                                 <i class="fa fa-edit pointer edit-user" data-user="{{ $user }}" data-role="{{ $user->roles->pluck('name') }}"></i>
@@ -101,7 +99,7 @@
                                 <label for="code">Access Code</label>
                                 <div class="row">
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="code" required>
+                                        <input type="text" class="form-control" id="code">
                                         <div class="help-block with-errors"></div>
                                     </div>
                                     <div class="col-sm-3">
@@ -109,11 +107,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="key">API Key</label>
-                            <input type="text" class="form-control" id="key" required>
-                            <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group row">
                             <label for="tag">Tag</label>

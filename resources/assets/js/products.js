@@ -4,7 +4,7 @@ $(function () {
     var table = $('#products_table').DataTable({
         order: [1, 'asc'],
         columnDefs: [
-            { targets: [0, 16, 17], orderable: false}
+            { targets: [0, 17, 18], orderable: false}
         ],
         paging: true,
         info: true,
@@ -180,11 +180,11 @@ $(function () {
 
         var data = {
             pheramor_id: $('#pheramor_id').val(),
-            sales_email: $('#sales_email').val(),
+            sales_email: $('#create_sales_email').val(),
             note: $('#note').val()
         }
 
-        var url = 'products'
+        var url = 'customers'
         axios.post(url, data)
             .then(function (response) {
                 console.log(response.data);
@@ -226,7 +226,7 @@ $(function () {
         $('#staffModalLabel').html('Add Customer');
 
         $('#pheramor_id').val('');
-        $('#sales_email').val('');
+        $('#create_sales_email').val('');
         $('#note').val('');
     });
 
@@ -257,10 +257,12 @@ $(function () {
         $('#bone_marrow_consent_date').val(data.bone_marrow_consent_date);
         $('#bone_marrow_shared_date').val(data.bone_marrow_shared_date);
 
-        $('#update_sales_email').prop('disabled', false);
-        $('#update_account_email').prop('disabled', false);
-        $('#update_sales_email').val(data.sales_email);
-        $('#update_account_email').val(data.account_email);
+        $('#sales_email').prop('disabled', false);
+        $('#account_email').prop('disabled', false);
+        $('#phone').prop('disabled', false);
+        $('#sales_email').val(data.sales_email);
+        $('#account_email').val(data.account_email);
+        $('#phone').val(data.phone);
 
         $('#btn_update_status').data('id', data.id);
         $('#btn_update_status').data('product', data);
@@ -275,8 +277,9 @@ $(function () {
         var selectedProducts = getSelectedProducts();
         $('#btn_update_status').data('id', selectedProducts);
         $('#update_modal_label').text(selectedProducts.length + ' customers selected.');
-        $('#update_sales_email').prop('disabled', true);
-        $('#update_account_email').prop('disabled', true);
+        $('#sales_email').prop('disabled', true);
+        $('#account_email').prop('disabled', true);
+        $('#phone').prop('disabled', true);
     });
 
     // Get selected rows
@@ -302,8 +305,9 @@ $(function () {
         $('#uploaded_to_server_date').val('');
         $('#bone_marrow_consent_date').val('');
         $('#bone_marrow_shared_date').val('');
-        $('#update_sales_email').val('');
-        $('#update_account_email').val('');
+        $('#sales_email').val('');
+        $('#account_email').val('');
+        $('#phone').val('');
     }
 
     // Update status confirmation
@@ -312,20 +316,23 @@ $(function () {
         $("#btn_update_status").on("click", function(){
             $("#mi-modal").modal('show');
 
-            $('#summary_sales').text($('#sales_date').val());
-            $('#summary_ship').text($('#ship_date').val());
-            $('#summary_account_connected').text($('#account_connected_date').val());
-            $('#summary_swab_returned').text($('#swab_returned_date').val());
-            $('#summary_ship_to_lab').text($('#ship_to_lab_date').val());
-            $('#summary_lab_received').text($('#lab_received_date').val());
-            $('#summary_sequenced').text($('#sequenced_date').val());
-            $('#summary_uploaded_to_server').text($('#uploaded_to_server_date').val());
-            $('#summary_bone_marrow_consent').text($('#bone_marrow_consent_date').val());
-            $('#summary_bone_marrow_shared').text($('#bone_marrow_shared_date').val());
+            $('#summary_sales_date').text($('#sales_date').val());
+            $('#summary_ship_date').text($('#ship_date').val());
+            $('#summary_account_connected_date').text($('#account_connected_date').val());
+            $('#summary_swab_returned_date').text($('#swab_returned_date').val());
+            $('#summary_ship_to_lab_date').text($('#ship_to_lab_date').val());
+            $('#summary_lab_received_date').text($('#lab_received_date').val());
+            $('#summary_sequenced_date').text($('#sequenced_date').val());
+            $('#summary_uploaded_to_server_date').text($('#uploaded_to_server_date').val());
+            $('#summary_bone_marrow_consent_date').text($('#bone_marrow_consent_date').val());
+            $('#summary_bone_marrow_shared_date').text($('#bone_marrow_shared_date').val());
+            $('#summary_sales_email').text($('#sales_email').val());
+            $('#summary_account_email').text($('#account_email').val());
+            $('#summary_phone').text($('#phone').val());
 
             $('#mi-modal .modal-body div').each(function() {
                 $(this).removeClass('bg-green');
-                var id = $(this).children().last().attr('id').replace('summary_','') + '_date';
+                var id = $(this).children().last().attr('id').replace('summary_','');
 
                 var data = $('#btn_update_status').data('product');
 
@@ -372,11 +379,12 @@ $(function () {
                 uploaded_to_server_date: $('#uploaded_to_server_date').val(),
                 bone_marrow_consent_date: $('#bone_marrow_consent_date').val(),
                 bone_marrow_shared_date: $('#bone_marrow_shared_date').val(),
-                sales_email: $('#update_sales_email').val(),
-                account_email: $('#update_account_email').val()
+                sales_email: $('#sales_email').val(),
+                account_email: $('#account_email').val(),
+                phone: $('#phone').val()
             }
 
-            var url = 'products/update_status';
+            var url = 'customers/update_status';
             axios.post(url, data)
                 .then(function (response) {
                     if (response.data.status == true) {
@@ -431,11 +439,14 @@ $(function () {
             uploaded_to_server_date: $('#uploaded_to_server_date').val(),
             bone_marrow_consent_date: $('#bone_marrow_consent_date').val(),
             bone_marrow_shared_date: $('#bone_marrow_shared_date').val(),
+            sales_email: $('#sales_email').val(),
+            account_email: $('#account_email').val(),
+            phone: $('#phone').val(),
             note: $('#note_modal textarea').val()
         }
 
         var id = $(this).data('id');
-        var url = 'products/' + id;
+        var url = 'customers/' + id;
         axios.put(url, postData, id)
             .then(function (response) {
                 console.log(response.data);
@@ -619,7 +630,7 @@ $(function () {
                 dates: updatedDates
             }
             console.log(requestData);
-            var url = 'products/update_csv';
+            var url = 'customers/update_csv';
             axios.post(url, requestData)
                 .then(function (response) {
                     console.log(response.data);

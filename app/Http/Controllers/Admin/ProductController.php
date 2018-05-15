@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Product;
 use App\Tag;
 use App\Config;
+use Spatie\Activitylog\Models\Activity;
 
 class ProductController extends Controller
 {
@@ -156,52 +157,52 @@ class ProductController extends Controller
 
                 if ($request->get('sales_date') != '') {
                    $product->sales_date = $request->get('sales_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('sales_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('sales_date'), $product->pheramor_id);
                 }
 
                 if ($request->get('ship_date') != '') {
                    $product->ship_date = $request->get('ship_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('ship_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('ship_date'), $product->pheramor_id);
                 }
                 
                 if ($request->get('account_connected_date') != '') {
                    $product->account_connected_date = $request->get('account_connected_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('account_connected_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('account_connected_date'), $product->pheramor_id);
                 }
 
                 if ($request->get('swab_returned_date') != '') {
                    $product->swab_returned_date = $request->get('swab_returned_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('swab_returned_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('swab_returned_date'), $product->pheramor_id);
                 }
 
                 if ($request->get('ship_to_lab_date') != '') {
                    $product->ship_to_lab_date = $request->get('ship_to_lab_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('ship_to_lab_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('ship_to_lab_date'), $product->pheramor_id);
                 }
 
                 if ($request->get('lab_received_date') != '') {
                    $product->lab_received_date = $request->get('lab_received_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('lab_received_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('lab_received_date'), $product->pheramor_id);
                 }
 
                 if ($request->get('sequenced_date') != '') {
                    $product->sequenced_date = $request->get('sequenced_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('sequenced_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('sequenced_date'), $product->pheramor_id);
                 }
 
                 if ($request->get('uploaded_to_server_date') != '') {
                    $product->uploaded_to_server_date = $request->get('uploaded_to_server_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('uploaded_to_server_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('uploaded_to_server_date'), $product->pheramor_id);
                 }
 
                 if ($request->get('bone_marrow_consent_date') != '') {
                    $product->bone_marrow_consent_date = $request->get('bone_marrow_consent_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_consent_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_consent_date'), $product->pheramor_id);
                 }
 
                 if ($request->get('bone_marrow_shared_date') != '') {
                    $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
-                   $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_shared_date'));
+                   $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_shared_date'), $product->pheramor_id);
                 }
 
                 $product->save();
@@ -211,52 +212,52 @@ class ProductController extends Controller
 
             if ($product->sales_date != $request->get('sales_date')) {
                 $product->sales_date = $request->get('sales_date');
-                $this->addTag($product->sales_email, $this->getTagValue('sales_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('sales_date'), $product->pheramor_id);
             }
 
             if ($product->ship_date != $request->get('ship_date')) {
                 $product->ship_date = $request->get('ship_date');
-                $this->addTag($product->sales_email, $this->getTagValue('ship_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('ship_date'), $product->pheramor_id);
             }
 
             if ($product->account_connected_date != $request->get('account_connected_date')) {
                 $product->account_connected_date = $request->get('account_connected_date');
-                $this->addTag($product->sales_email, $this->getTagValue('account_connected_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('account_connected_date'), $product->pheramor_id);
             }
 
             if ($product->swab_returned_date != $request->get('swab_returned_date')) {
                 $product->swab_returned_date = $request->get('swab_returned_date');
-                $this->addTag($product->sales_email, $this->getTagValue('swab_returned_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('swab_returned_date'), $product->pheramor_id);
             }
 
             if ($product->ship_to_lab_date != $request->get('ship_to_lab_date')) {
                 $product->ship_to_lab_date = $request->get('ship_to_lab_date');
-                $this->addTag($product->sales_email, $this->getTagValue('ship_to_lab_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('ship_to_lab_date'), $product->pheramor_id);
             }
 
             if ($product->lab_received_date != $request->get('lab_received_date')) {
                 $product->lab_received_date = $request->get('lab_received_date');
-                $this->addTag($product->sales_email, $this->getTagValue('lab_received_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('lab_received_date'), $product->pheramor_id);
             }
 
             if ($product->sequenced_date != $request->get('sequenced_date')) {
                 $product->sequenced_date = $request->get('sequenced_date');
-                $this->addTag($product->sales_email, $this->getTagValue('sequenced_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('sequenced_date'), $product->pheramor_id);
             }
 
             if ($product->uploaded_to_server_date != $request->get('uploaded_to_server_date')) {
                 $product->uploaded_to_server_date = $request->get('uploaded_to_server_date');
-                $this->addTag($product->sales_email, $this->getTagValue('uploaded_to_server_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('uploaded_to_server_date'), $product->pheramor_id);
             }
 
             if ($product->bone_marrow_consent_date != $request->get('bone_marrow_consent_date')) {
                 $product->bone_marrow_consent_date = $request->get('bone_marrow_consent_date');
-                $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_consent_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_consent_date'), $product->pheramor_id);
             }
 
             if ($product->bone_marrow_shared_date != $request->get('bone_marrow_shared_date')) {
                 $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
-                $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_shared_date'));
+                $this->addTag($product->sales_email, $this->getTagValue('bone_marrow_shared_date'), $product->pheramor_id);
             }
 
             $product->sales_email= $request->get('sales_email');
@@ -290,52 +291,52 @@ class ProductController extends Controller
 
                 if ($dates['sales_date']  != '') {
                     $product['sales_date'] = date('Y-m-d', strtotime($dates['sales_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('sales_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('sales_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['ship_date']  != '') {
                     $product['ship_date'] = date('Y-m-d', strtotime($dates['ship_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('ship_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('ship_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['account_connected_date']  != '') {
                     $product['account_connected_date'] = date('Y-m-d', strtotime($dates['account_connected_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('account_connected_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('account_connected_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['swab_returned_date']  != '') {
                     $product['swab_returned_date'] = date('Y-m-d', strtotime($dates['swab_returned_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('swab_returned_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('swab_returned_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['ship_to_lab_date']  != '') {
                     $product['ship_to_lab_date'] = date('Y-m-d', strtotime($dates['ship_to_lab_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('ship_to_lab_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('ship_to_lab_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['lab_received_date']  != '') {
                     $product['lab_received_date'] = date('Y-m-d', strtotime($dates['lab_received_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('lab_received_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('lab_received_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['sequenced_date']  != '') {
                     $product['sequenced_date'] = date('Y-m-d', strtotime($dates['sequenced_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('sequenced_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('sequenced_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['uploaded_to_server_date']  != '') {
                     $product['uploaded_to_server_date'] = date('Y-m-d', strtotime($dates['uploaded_to_server_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('uploaded_to_server_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('uploaded_to_server_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['bone_marrow_consent_date']  != '') {
                     $product['bone_marrow_consent_date'] = date('Y-m-d', strtotime($dates['bone_marrow_consent_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('bone_marrow_consent_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('bone_marrow_consent_date'), $this->product->find($value['id'])->pheramor_id);
                 }
 
                 if ($dates['bone_marrow_shared_date']  != '') {
                     $product['bone_marrow_shared_date'] = date('Y-m-d', strtotime($dates['bone_marrow_shared_date']));
-                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('bone_marrow_shared_date'));
+                    $this->addTag($this->product->find($value['id'])->sales_email, $this->getTagValue('bone_marrow_shared_date'), $this->product->find($value['id'])->pheramor_id);
                 }
                 
                 Product::where('id', $value['id'])->update($product);
@@ -349,52 +350,52 @@ class ProductController extends Controller
 
                 if ($dates['sales_date']  != '') {
                     $product['sales_date'] = date('Y-m-d', strtotime($dates['sales_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('sales_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('sales_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['ship_date']  != '') {
                     $product['ship_date'] = date('Y-m-d', strtotime($dates['ship_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('ship_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('ship_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['account_connected_date']  != '') {
                     $product['account_connected_date'] = date('Y-m-d', strtotime($dates['account_connected_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('account_connected_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('account_connected_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['swab_returned_date']  != '') {
                     $product['swab_returned_date'] = date('Y-m-d', strtotime($dates['swab_returned_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('swab_returned_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('swab_returned_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['ship_to_lab_date']  != '') {
                     $product['ship_to_lab_date'] = date('Y-m-d', strtotime($dates['ship_to_lab_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('ship_to_lab_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('ship_to_lab_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['lab_received_date']  != '') {
                     $product['lab_received_date'] = date('Y-m-d', strtotime($dates['lab_received_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('lab_received_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('lab_received_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['sequenced_date']  != '') {
                     $product['sequenced_date'] = date('Y-m-d', strtotime($dates['sequenced_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('sequenced_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('sequenced_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['uploaded_to_server_date']  != '') {
                     $product['uploaded_to_server_date'] = date('Y-m-d', strtotime($dates['uploaded_to_server_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('uploaded_to_server_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('uploaded_to_server_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['bone_marrow_consent_date']  != '') {
                     $product['bone_marrow_consent_date'] = date('Y-m-d', strtotime($dates['bone_marrow_consent_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('bone_marrow_consent_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('bone_marrow_consent_date'), $value['pheramor_id']);
                 }
 
                 if ($dates['bone_marrow_shared_date']  != '') {
                     $product['bone_marrow_shared_date'] = date('Y-m-d', strtotime($dates['bone_marrow_shared_date']));
-                    $this->addTag($value['sales_email'], $this->getTagValue('bone_marrow_shared_date'));
+                    $this->addTag($value['sales_email'], $this->getTagValue('bone_marrow_shared_date'), $value['pheramor_id']);
                 }
 
                 $product['created_at'] = \Carbon\Carbon::now();
@@ -410,7 +411,7 @@ class ProductController extends Controller
     }
 
     // Add a tag to AgileCRM contact
-    protected function addTag($email, $tag) {
+    protected function addTag($email, $tag, $pheramor_id) {
 
         $fields = array(
             'email' => urlencode($email),
@@ -424,6 +425,14 @@ class ProductController extends Controller
         }
 
         $this->curl_wrap("contacts/email/tags/add", rtrim($fields_string, '&'), "POST", "application/x-www-form-urlencoded");
+
+        // Register logout activity
+        $auth_name = Auth::guard('web')->user()->name;
+        $auth_id = Auth::guard('web')->user()->id;
+        $log_text = $auth_name . ' added new tag (' . $tag . ') to ' . $pheramor_id . ' on AgileCRM at ' . date('Y-m-d h:m:s') . '.';
+        activity('agile')
+            ->causedBy($auth_id)
+            ->log($log_text);
     }
 
     // Curl request for AgileCRM.

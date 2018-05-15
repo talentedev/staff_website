@@ -53,7 +53,7 @@ CREATE TABLE `configs` (
 
 /*Data for the table `configs` */
 
-insert  into `configs`(`id`,`agile_domain`,`agile_email`,`agile_key`,`created_at`,`updated_at`) values (1,'likeswiperight','jin@pheramor.com','upns4k6ajqtkm4ovkjb5hjjj9a','2018-05-15 08:07:35','2018-05-15 08:07:35');
+insert  into `configs`(`id`,`agile_domain`,`agile_email`,`agile_key`,`created_at`,`updated_at`) values (1,'likeswiperight','jin@pheramor.com','upns4k6ajqtkm4ovkjb5hjjj9a','2018-05-15 22:30:28','2018-05-15 22:30:28');
 
 /*Table structure for table `migrations` */
 
@@ -128,7 +128,7 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-15 08:07:35','2018-05-15 08:07:35'),(2,'api','web','2018-05-15 08:07:35','2018-05-15 08:07:35');
+insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-15 22:30:27','2018-05-15 22:30:27'),(2,'api','web','2018-05-15 22:30:27','2018-05-15 22:30:27');
 
 /*Table structure for table `products` */
 
@@ -139,6 +139,7 @@ CREATE TABLE `products` (
   `pheramor_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sales_email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `source` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sales_date` date DEFAULT NULL,
   `ship_date` date DEFAULT NULL,
@@ -190,7 +191,7 @@ CREATE TABLE `roles` (
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-05-15 08:07:35','2018-05-15 08:07:35'),(2,'admin','web','2018-05-15 08:07:35','2018-05-15 08:07:35'),(3,'street team','web','2018-05-15 08:07:35','2018-05-15 08:07:35'),(4,'staff','web','2018-05-15 08:07:35','2018-05-15 08:07:35');
+insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-05-15 22:30:27','2018-05-15 22:30:27'),(2,'admin','web','2018-05-15 22:30:27','2018-05-15 22:30:27'),(3,'street team','web','2018-05-15 22:30:27','2018-05-15 22:30:27'),(4,'staff','web','2018-05-15 22:30:27','2018-05-15 22:30:27');
 
 /*Table structure for table `tags` */
 
@@ -218,21 +219,20 @@ CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `source` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `api_key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tag` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `source` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `api_key` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tag` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`),
-  UNIQUE KEY `users_source_unique` (`source`)
+  UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','staff123455','ersrsrtrerer','Super Admin','$2y$10$2VTD/rgfi1FldX.p4BGYXexZ2P69.qkBy1y9HueXU.qGN1ZYJD7.6',NULL,'2018-05-15 08:07:35','2018-05-15 08:07:35'),(2,'Admin User','admin@gmail.com','staff123456','ersrsrtrerer','Admin','$2y$10$ZMJgQ9utfTdnYKfP68D8k.SI9POqOWGNlt1AYLNSynUU3yor82Ocy',NULL,'2018-05-15 08:07:35','2018-05-15 08:07:35'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$cyAQRgQY4a0FA/yWdfnTIOrDjQORiZkjGWIDKVYZ1A.ASBlWPr4nG',NULL,'2018-05-15 08:07:35','2018-05-15 08:07:35'),(4,'Staff','staff@gmail.com','staff123458','ersrsrtrerer','Staff','$2y$10$ydKELVP4qwq1dBhIw/SJWOSlC6rf8YYWzOSqgD3o7UCkbksoOJR2K',NULL,'2018-05-15 08:07:35','2018-05-15 08:07:35');
+insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','','ersrsrtrerer','Super Admin','$2y$10$seIzs137JLhEyCdT34Q3h.lfFAkQeF8yhbetJqJrBSDpq33732CaK',NULL,'2018-05-15 22:30:27','2018-05-15 22:30:27'),(2,'Admin User','admin@gmail.com','','ersrsrtrerer','Admin','$2y$10$XkwjZK53LYGnWKsYY7ezn.rWklmm0gWw5s7/2A0AMq4tSXuDdajgG',NULL,'2018-05-15 22:30:27','2018-05-15 22:30:27'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$esad3HJUPnIbxDaSb1OyW.znY/.jpruWJ/gvaQBNVwliMcGJ4jhre',NULL,'2018-05-15 22:30:28','2018-05-15 22:30:28'),(4,'Staff','staff@gmail.com','','ersrsrtrerer','Staff','$2y$10$bmDFwGwYdMnBSnEMu4/gg.ZcaIhtANgTW51eRSbvPZqocnpefcEY.',NULL,'2018-05-15 22:30:28','2018-05-15 22:30:28');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

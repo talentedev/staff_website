@@ -100,6 +100,19 @@ $(function () {
         });
     });
 
+    // Show/Hide access code
+    $('#generate_code').prop('disabled', true);
+    $('#code').prop('disabled', true);
+    $('#role').change(function () {
+        if ($(this).val() == 'street team') {
+            $('#generate_code').prop('disabled', false);
+            $('#code').prop('disabled', false);
+        } else {
+            $('#generate_code').prop('disabled', true);
+            $('#code').prop('disabled', true);
+        }
+    });
+
     // Form validation
     $('#user_form').validator();
 
@@ -124,7 +137,6 @@ $(function () {
         $('#name').val('');
         $('#code').val('');
         $('#email').val(email);
-        $('#key').val(apiKey);
         $('#tag').val(tag);
         $('#role').val('admin');
 
@@ -151,7 +163,6 @@ $(function () {
         $('#name').val(data.name);
         $('#code').val(data.source);
         $('#email').val(data.email);
-        $('#key').val(data.api_key);
         $('#tag').val(data.tag);
         $('#role').val(role);
 
@@ -166,7 +177,6 @@ $(function () {
             name: $('#name').val(),
             source: $('#code').val(),
             email: $('#email').val(),
-            api_key: $('#key').val(),
             tag: $('#tag').val(),
             role: $('#role').val()
         };
@@ -174,7 +184,7 @@ $(function () {
         var state = $('#btn_save_data').data('staff');
 
         if (state == 'add') {
-            var url = 'users';
+            var url = 'staff';
             axios.post(url, data).then(function (response) {
                 if (response.data.message == 'User successfully added') {
                     showCreateResult(true, true);
@@ -187,7 +197,7 @@ $(function () {
         } else if (state == 'edit') {
             var id = $('#btn_save_data').data('id');
 
-            var url = 'users/' + id;
+            var url = 'staff/' + id;
             axios.put(url, data, id).then(function (response) {
                 if (response.data.message == 'User successfully updated') {
                     showCreateResult(true, false);
@@ -251,7 +261,7 @@ $(function () {
 
     modalConfirm(function (confirm, data) {
         if (confirm) {
-            var url = 'users/' + data.id;
+            var url = 'staff/' + data.id;
             axios.delete(url).then(function (response) {
                 if (response.data.status == true) {
                     showDeleteResult(true);

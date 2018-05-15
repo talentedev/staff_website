@@ -22,13 +22,13 @@ class AppServiceProvider extends ServiceProvider
         $events->listen(BuildingMenu::class, function (BuildingMenu $event) {
             // Sidebar menu items
             $users = [
-                'text' => 'Staffs',
-                'url' => 'users',
+                'text' => 'Staff',
+                'url' => 'staff',
                 'icon' => 'users',
             ];
             $products = [
                 'text' => 'Customers',
-                'url'  => 'products',
+                'url'  => 'customers',
                 'icon' => 'list-ul',
             ];
             $tags = [

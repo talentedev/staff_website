@@ -44,11 +44,16 @@ class SettingController extends Controller
     public function index()
     {
         // Get activity logs
-        $logs;
+        $loginLogs = array();
+        $agileLogs = array();
         if (Auth::user()->hasRole('super admin')) {
-            $logs = Activity::all();
+            $loginLogs = Activity::where('log_name', 'login')->get();
+            $agileLogs = Activity::where('log_name', 'agile')->get();
         } else {
-            $logs = Activity::where('causer_id', Auth::user()->id)->get();
+            $loginLogs = Activity::where([
+                'causer_id' => Auth::user()->id,
+                'log_name' => 'login'
+            ])->get();
         }
 
         // Get system configurations
@@ -56,7 +61,8 @@ class SettingController extends Controller
 
         return view('admin.settings', [
             'user' => Auth::user(),
-            'logs' => $logs,
+            'logs' => $loginLogs,
+            'agileLogs' => $agileLogs,
             'configs' => $configs
         ]);
     }

@@ -62,7 +62,7 @@ class LoginController extends Controller
             $auth_name = Auth::guard('web')->user()->name;
             $auth_id =  Auth::guard('web')->user()->id;
             $log_text = $auth_name . ' logged at ' . date('Y-m-d h:m:s') . '.';
-            activity()
+            activity('login')
                 ->causedBy($auth_id)
                 ->log($log_text);
 
@@ -76,7 +76,7 @@ class LoginController extends Controller
         $auth_name = Auth::guard('web')->user()->name;
         $auth_id = Auth::guard('web')->user()->id;
         $log_text = $auth_name . ' logged out at ' . date('Y-m-d h:m:s') . '.';
-        activity()
+        activity('login')
             ->causedBy($auth_id)
             ->log($log_text);
 

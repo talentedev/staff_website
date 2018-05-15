@@ -23,12 +23,12 @@ Route::group(['middleware' => 'web'], function () {
         Route::get('dashboard', 'DashboardController@index');
         
         // Accounts
-        Route::resource('users', 'UserController');
+        Route::resource('staff', 'UserController');
 
         // Products
-        Route::resource('products', 'ProductController');
-        Route::post('products/update_status', 'ProductController@updateStatus');
-        Route::post('products/update_csv', 'ProductController@updateByCSV');
+        Route::resource('customers', 'ProductController');
+        Route::post('customers/update_status', 'ProductController@updateStatus');
+        Route::post('customers/update_csv', 'ProductController@updateByCSV');
 
         // Tags
         Route::resource('tags', 'TagController');
