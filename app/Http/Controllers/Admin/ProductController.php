@@ -123,6 +123,7 @@ class ProductController extends Controller
         $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
         $product->sales_email= $request->get('sales_email');
         $product->account_email = $request->get('account_email');
+        $product->phone = $request->get('phone');
         $product->note = $request->get('note');
 
         $product->save();
@@ -262,6 +263,7 @@ class ProductController extends Controller
 
             $product->sales_email= $request->get('sales_email');
             $product->account_email = $request->get('account_email');
+            $product->phone = $request->get('phone');
 
             $product->save();
         }
@@ -424,12 +426,18 @@ class ProductController extends Controller
             $fields_string .= $key . '=' . $value . '&';
         }
 
-        $this->curl_wrap("contacts/email/tags/add", rtrim($fields_string, '&'), "POST", "application/x-www-form-urlencoded");
+        $status = $this->curl_wrap("contacts/email/tags/add", rtrim($fields_string, '&'), "POST", "application/x-www-form-urlencoded");
 
         // Register logout activity
         $auth_name = Auth::guard('web')->user()->name;
         $auth_id = Auth::guard('web')->user()->id;
-        $log_text = $auth_name . ' added new tag (' . $tag . ') to ' . $pheramor_id . ' on AgileCRM at ' . date('Y-m-d h:m:s') . '.';
+        $log_text = '';
+        if($status == true) {
+            $log_text = $auth_name . ' added new tag (' . $tag . ') to ' . $pheramor_id . ' on AgileCRM at ' . date('Y-m-d h:m:s') . '.';
+        } else {
+            $log_text = $auth_name . ' failed to add new tag (' . $tag . ') to ' . $pheramor_id . ' on AgileCRM at ' . date('Y-m-d h:m:s') . '.';
+        }
+        
         activity('agile')
             ->causedBy($auth_id)
             ->log($log_text);

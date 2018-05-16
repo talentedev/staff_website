@@ -298,7 +298,7 @@
                             <label for="phone" class="col-sm-4 control-label">Phone</label>
                             <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
-                                    <i class="glyphicon glyphicon-envelope fa fa-envelope"></i>
+                                    <i class="glyphicon glyphicon-phone fa fa-phone"></i>
                                 </span>
                                 <input type="number" class="form-control" id="phone" />
                             </div>
@@ -435,7 +435,6 @@
                                 <tr>
                                     <th class="text-center">Pheramor ID</th>
                                     <th class="text-center">Sales Email</th>
-                                    <th class="text-center">Account Email</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -447,7 +446,6 @@
                                 <tr>
                                     <th class="text-center">Pheramor ID</th>
                                     <th class="text-center">Sales Email</th>
-                                    <th class="text-center">Account Email</th>
                                 </tr>
                             </thead>
                             <tbody>

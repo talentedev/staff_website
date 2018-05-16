@@ -550,13 +550,7 @@ $(function () {
     $('#upload_csv').change(function (e) {
         var reader = new FileReader();
         reader.onload = function () {
-            var strCSV = reader.result;
-            if ($('#csv_ignore_first_row').is(':checked')) {
-                strCSV = reader.result;
-            } else {
-                strCSV = 't,t,,\n' + reader.result;
-            }
-            processCSVData($.csv.toArrays(strCSV));
+            processCSVData($.csv.toArrays(reader.result));
         };
         // start reading the file. When it is done, calls the onload event defined above.
         reader.readAsBinaryString(document.getElementById("upload_csv").files[0]);
@@ -568,9 +562,16 @@ $(function () {
         var createData = [];
         var updateData = [];
 
-        for (var i = 1; i < data.length; i++) {
+        var startOffset = 0;
+        if ($('#csv_ignore_first_row').is(':checked')) {
+            startOffset = 1;
+        } else {
+            startOffset = 0;
+        }
+
+        for (var i = startOffset; i < data.length; i++) {
             // Check if currect csv file is input.
-            if (Object.keys(data[i]).length != 4) {
+            if (Object.keys(data[i]).length > 2) {
                 alert('CSV parse error! Invalid data structure!');
                 throw new Error("CSV parse error!");
             }
@@ -599,7 +600,7 @@ $(function () {
         var createTableBodyContent = '';
         for (key in createData) {
             createTableBodyContent += '<tr>';
-            for (var i = 0; i < createData[key].length - 1; i++) {
+            for (var i = 0; i < createData[key].length; i++) {
                 if (createData[key][i] === null) {
                     createData[key][i] = '';
                 }
@@ -614,7 +615,7 @@ $(function () {
         var updateTableBodyContent = '';
         for (key in updateData) {
             updateTableBodyContent += '<tr>';
-            for (var i = 0; i < updateData[key].length - 1; i++) {
+            for (var i = 0; i < updateData[key].length; i++) {
                 if (updateData[key][i] === null) {
                     updateData[key][i] = '';
                 }
@@ -645,7 +646,7 @@ $(function () {
 
         var requestData = {
             pheramor_id: data[0].replace(/\s/g, ''),
-            sales_email: data[1].replace(/\s/g, ''),
+            sales_email: (data[1] || '').replace(/\s/g, ''),
             is_create: isCreate,
             id: id
         };
@@ -685,7 +686,6 @@ $(function () {
                 customers: customers,
                 dates: updatedDates
             };
-            console.log(requestData);
             var url = 'customers/update_csv';
             axios.post(url, requestData).then(function (response) {
                 console.log(response.data);
