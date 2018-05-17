@@ -72,7 +72,7 @@ class UserController extends Controller
     {
         $message = '';
 
-        if($this->existSameCode($request->get('source'))) {
+        if($this->existSameCode($request->get('source')) && $request->get('source') != '') {
             $message = 'Access Code exist already';
         } else {
             $this->users->name = $request->get('name');

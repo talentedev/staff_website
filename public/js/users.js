@@ -110,6 +110,7 @@ $(function () {
         } else {
             $('#generate_code').prop('disabled', true);
             $('#code').prop('disabled', true);
+            $('#code').val('');
         }
     });
 
