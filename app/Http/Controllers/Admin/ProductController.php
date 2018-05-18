@@ -75,6 +75,8 @@ class ProductController extends Controller
 
         $this->product->save();
 
+        $this->addContact($request->get('sales_email'), $request->get('pheramor_id'), array());
+
         return response()->json(['status' => true], 200);
     }
 
@@ -419,7 +421,12 @@ class ProductController extends Controller
 
                 array_push($create_data, $product);
 
-                $this->addTag($value['sales_email'], $tags, $value['pheramor_id']);
+                $existContact = $this->getContact($value['sales_email']);
+                if(empty((array)$existContact)) {
+                    $this->addTag($value['sales_email'], $tags, $value['pheramor_id']);
+                } else {
+                    $this->addContact($value['pheramor_id'], $value['sales_email'], $tags);
+                }
             }
         }
 
@@ -447,7 +454,7 @@ class ProductController extends Controller
 
             $status = $this->curl_wrap("contacts/email/tags/add", rtrim($fields_string, '&'), "POST", "application/x-www-form-urlencoded");
 
-            // Register logout activity
+            // Register log activity
             $auth_name = Auth::guard('web')->user()->name;
             $auth_id = Auth::guard('web')->user()->id;
             $log_text = '';
@@ -462,6 +469,51 @@ class ProductController extends Controller
                 ->causedBy($auth_id)
                 ->log($log_text);
         }
+    }
+
+    // Add new contact to AgileCRM
+    protected function addContact($email, $pheramor_id, $tags) {
+        $contact_json = array(
+          "tags"=>$tags,
+          "properties"=>array(
+            array(
+              "name"=>"email",
+              "value"=>$email,
+              "type"=>"SYSTEM"
+            ),
+            array(
+                "name"=>"Pheramor ID",
+                "value"=>$pheramor_id,      // This is epoch time in seconds.
+                "type"=>"CUSTOM"
+            )
+            
+          )
+        );
+
+        $contact_json = json_encode($contact_json);
+        $status = $this->curl_wrap("contacts", $contact_json, "POST", "application/json");
+
+        // Register log activity
+        $auth_name = Auth::guard('web')->user()->name;
+        $auth_id = Auth::guard('web')->user()->id;
+        $log_text = '';
+        $str = implode(', ', $tags);
+        if($status == true) {
+            $log_text = $auth_name . ' added new contact (' . $pheramor_id . ', ' . $email . ') to AgileCRM at ' . date('Y-m-d h:m:s') . '.';
+        } else {
+            $log_text = $auth_name . ' failed to add new contact (' . $pheramor_id . ', ' . $email . ') to AgileCRM at ' . date('Y-m-d h:m:s') . '.';
+        }
+        
+        activity('agile')
+            ->causedBy($auth_id)
+            ->log($log_text);
+    }
+
+    // Get contact by email
+    protected function getContact($email) {
+        $url = "contacts/search/email/" . $email;
+        $result = $this->curl_wrap($url, null, "GET", "application/json");
+        return $result;
     }
 
     // Curl request for AgileCRM.

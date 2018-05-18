@@ -47,8 +47,8 @@ class SettingController extends Controller
         $loginLogs = array();
         $agileLogs = array();
         if (Auth::user()->hasRole('super admin')) {
-            $loginLogs = Activity::where('log_name', 'login')->get();
-            $agileLogs = Activity::where('log_name', 'agile')->get();
+            $loginLogs = Activity::where('log_name', 'login')->orderBy('created_at', 'desc')->get();
+            $agileLogs = Activity::where('log_name', 'agile')->orderBy('created_at', 'desc')->get();
         } else {
             $loginLogs = Activity::where([
                 'causer_id' => Auth::user()->id,
