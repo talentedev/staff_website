@@ -178,6 +178,9 @@ $(function () {
     // Save data
     function submit() {
 
+        $('#add_account_modal').modal('hide');
+        waitingDialog.show('Adding new customer...');
+
         var data = {
             pheramor_id: $('#pheramor_id').val(),
             sales_email: $('#create_sales_email').val(),
@@ -191,6 +194,7 @@ $(function () {
                 if (response.data.status == true) {
                     callbackCreateProduct(true);
                 } else {
+                    waitingDialog.hide();
                     console.log('creation failed.')
                 }
             })
@@ -200,7 +204,7 @@ $(function () {
     }
 
     function callbackCreateProduct(status) {
-        $('#add_account_modal').modal('hide');
+        waitingDialog.hide();
         $('#product_create_callback_modal').modal('show');
         if (status) {
             $('#product_create_callback_modal .modal-title').text('Success');
@@ -235,6 +239,11 @@ $(function () {
         format: 'yyyy-mm-dd',
         endDate: new Date(),
         maxDate: new Date()
+    });
+
+    // Hide datepicker after selecting date.
+    $('.datepicker').on('changeDate', function(ev){
+        $(this).datepicker('hide');
     });
 
     $('.update-product').click(function() {
@@ -367,6 +376,10 @@ $(function () {
     updateStatusConfirm(function(confirm){
         if(confirm){
 
+            $("#mi-modal").modal('hide');
+            $('#update_product_modal').modal('hide');
+            waitingDialog.show('Updating status dates...');
+
             var data = {
                 ids: $('#btn_update_status').data('id'),
                 sales_date: $('#sales_date').val(),
@@ -402,8 +415,7 @@ $(function () {
     });
 
     function callbackUpdateStatus(status) {
-        $("#mi-modal").modal('hide');
-        $('#update_product_modal').modal('hide');
+        waitingDialog.hide();
         $('#product_create_callback_modal').modal('show');
         if (status) {
             $('#product_create_callback_modal .modal-title').text('Success');
@@ -427,6 +439,8 @@ $(function () {
     });
 
     $('#btn_update_note').click(function() {
+
+        waitingDialog.show('Updating note...');
 
         var postData = {
             sales_date: $('#sales_date').val(),
@@ -613,6 +627,10 @@ $(function () {
 
     updateCSVConfirm(function(confirm){
         if(confirm){
+
+            $("#csv-mi-modal").modal('hide');
+            waitingDialog.show('Uploading CSV...');
+
             var customers = $("#csv-mi-modal").data('csv-data');
             var updatedDates = {
                 sales_date: $('#csv_sales_date').val(),
@@ -649,7 +667,7 @@ $(function () {
     });
 
     function callbackUpdateCSV(status) {
-        $("#csv-mi-modal").modal('hide');
+        waitingDialog.hide();
         $('#product_create_callback_modal').modal('show');
         if (status) {
             $('#product_create_callback_modal .modal-title').text('Success');

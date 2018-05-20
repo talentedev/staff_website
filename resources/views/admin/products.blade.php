@@ -43,14 +43,7 @@
                         <th class="filter-input">Sales Email</th>
                         <th class="filter-input">Account Email</th>
                         <th class="filter-input">Phone</th>
-                        <th>
-                            <select class="form-control" id="filter_source">
-                                <option value="">All</option>
-                                <option value="admin">admin</option>
-                                <option value="Street Team">Street Team</option>
-                                <option value="Staff">Staff</option>
-                            </select>
-                        </th>
+                        <th class="filter-input">Source</th>
                         <th class="filter-date">Created Date</th>
                         <th class="filter-date">Sales Date</th>
                         <th class="filter-date">Ship Date</th>

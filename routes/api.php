@@ -24,6 +24,7 @@ Route::group(['middleware' => 'api'], function ($router) {
 
 Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
 
-    // $router->resource('tasks', 'TaskController');
+    // Products
+    Route::resource('products', 'ProductController');
 
 });
