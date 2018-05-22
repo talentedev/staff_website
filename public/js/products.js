@@ -60,20 +60,20 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 55);
+/******/ 	return __webpack_require__(__webpack_require__.s = 56);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 55:
+/***/ 56:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(56);
+module.exports = __webpack_require__(57);
 
 
 /***/ }),
 
-/***/ 56:
+/***/ 57:
 /***/ (function(module, exports) {
 
 $(function () {
@@ -528,6 +528,61 @@ $(function () {
             console.log(error);
         });
     });
+
+    // Delete product
+    var modalDeleteConfirm = function modalDeleteConfirm(callback) {
+
+        var userData = null;
+
+        $(".delete-product").on("click", function () {
+            $("#delete-mi-modal").modal('show');
+            userData = $(this).data('product');
+        });
+
+        $("#delete-modal-btn-yes").on("click", function () {
+            callback(true, userData);
+            $("#delete-mi-modal").modal('hide');
+            waitingDialog.show('Deleting customer...');
+        });
+
+        $("#delete-modal-btn-no").on("click", function () {
+            callback(false);
+            $("#delete-mi-modal").modal('hide');
+        });
+    };
+
+    modalDeleteConfirm(function (confirm, data) {
+        if (confirm) {
+            var url = 'customers/' + data.id;
+            axios.delete(url).then(function (response) {
+                if (response.data.status == true) {
+                    showDeleteResult(true);
+                } else {
+                    showDeleteResult(false);
+                }
+            }).catch(function (error) {
+                showDeleteResult(false);
+            });
+        } else {
+            console.log('The operation to delete was canceled by user!');
+        }
+    });
+
+    // Show modal for deleting result.
+    function showDeleteResult(status) {
+        $("#delete-mi-modal").modal('hide');
+        waitingDialog.hide();
+        $("#product_create_callback_modal").modal('show');
+
+        if (status) {
+            $('#product_create_callback_modal .modal-title').text('Success');
+            $('#product_create_callback_modal .modal-body').text('Customer deleted successfully.');
+            $('#btn_callback_confirm').data('status', true);
+        } else {
+            $('#product_create_callback_modal .modal-title').text('Failed');
+            $('#product_create_callback_modal .modal-body').text("Customer didn't deleted.");
+        }
+    }
 
     // Select all rows.
     $('thead input').on('ifChecked', function (event) {

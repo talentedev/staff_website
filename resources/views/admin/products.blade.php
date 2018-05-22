@@ -85,7 +85,8 @@
                         <td class="text-center text-danger">
                             <button class="btn btn-xs btn-success update-product" data-product="{{ $product }}">update</button>
                             <button class="btn btn-xs btn-info update-note" data-product="{{ $product }}">note</button>
-                            <button class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                            <button class="btn btn-xs btn-danger delete-product" data-product="{{ $product }}"><i class="fa fa-trash"></i></button>
+                            <a href="{{ url('customers/' . $product->id) }}" target="_blank">Track</a>
                         </td>
                     </tr>
                 @endforeach
@@ -547,6 +548,22 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="csv-modal-btn-yes">Upload</button>
                     <button type="button" class="btn btn-default" id="csv-modal-btn-no">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirm Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="delete-mi-modal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Are you sure to delete the customer?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="delete-modal-btn-yes">Yes</button>
+                    <button type="button" class="btn btn-default" id="delete-modal-btn-no">No</button>
                 </div>
             </div>
         </div>

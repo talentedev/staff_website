@@ -88,7 +88,10 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = $this->product->find($id);
+        return view('admin.track', [
+            'product' => $product
+        ]);
     }
 
     /**
@@ -141,7 +144,9 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->product->destroy($id);
+
+        return response()->json(['status' => true], 200);
     }
 
     /**
