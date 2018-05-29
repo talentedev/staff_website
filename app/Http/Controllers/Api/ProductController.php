@@ -58,10 +58,16 @@ class ProductController extends ApiController
             $this->product->source = Auth::user()->source;
 
             $this->product->save();
-            return $this->respond(['status' => true]);
+            return $this->respond([
+                'status' => true,
+                'data'   => $this->product->orderBy('created_at', 'desc')->first()
+            ]);
         }
         catch(\Exception $e){
-           return $this->respond(['status' => false]);
+            return $this->respond([
+                'status' => false,
+                'message' => 'Pheramor ID or Email alrady exist'
+            ]);
         }
     }
 
@@ -73,7 +79,11 @@ class ProductController extends ApiController
      */
     public function show($id)
     {
-        //
+        $product = $this->product::where('pheramor_id', $id)->get()->first();
+        return $this->respond([
+            'status' => true,
+            'data'   => $product
+        ]);
     }
 
     /**
@@ -84,7 +94,7 @@ class ProductController extends ApiController
      */
     public function edit($id)
     {
-        //
+        // 
     }
 
     /**
@@ -96,7 +106,62 @@ class ProductController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $product = $this->product::where('pheramor_id', $id)->get()->first();
+
+            if($request->get('sales_date') != null) {
+                $product->sales_date = $request->get('sales_date');
+            }
+
+            if($request->get('ship_date') != null) {
+                $product->ship_date = $request->get('ship_date');
+            }
+            
+            if($request->get('account_connected_date') != null) {
+                $product->account_connected_date = $request->get('account_connected_date');
+            }
+
+            if($request->get('swab_returned_date') != null) {
+                $product->swab_returned_date = $request->get('swab_returned_date');
+            }
+
+            if($request->get('ship_to_lab_date') != null) {
+                $product->ship_to_lab_date = $request->get('ship_to_lab_date');
+            }
+
+            if($request->get('lab_received_date') != null) {
+                $product->lab_received_date = $request->get('lab_received_date');
+            }
+
+            if($request->get('sequenced_date') != null) {
+                $product->sequenced_date = $request->get('sequenced_date');
+            }
+
+            if($request->get('uploaded_to_server_date') != null) {
+                $product->uploaded_to_server_date = $request->get('uploaded_to_server_date');
+            }
+
+            if($request->get('bone_marrow_consent_date') != null) {
+                $product->bone_marrow_consent_date = $request->get('bone_marrow_consent_date');
+            }
+
+            if($request->get('bone_marrow_shared_date') != null) {
+                $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
+            }
+            
+            $product->save();
+
+            return $this->respond([
+                'status' => true,
+                'data'   => $this->product->orderBy('updated_at', 'desc')->first()
+            ]);
+        }
+        catch(\Exception $e){
+            return $this->respond([
+                'status' => false,
+                'message' => 'Pheramor ID dont exist'
+            ]);
+        }
     }
 
     /**

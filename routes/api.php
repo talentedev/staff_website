@@ -25,6 +25,6 @@ Route::group(['middleware' => 'api'], function ($router) {
 Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
 
     // Products
-    Route::resource('products', 'ProductController');
+    Route::resource('customers', 'ProductController');
 
 });

@@ -16,7 +16,7 @@ class ApiAuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'me']]);
     }
 
     /**
@@ -44,6 +44,9 @@ class ApiAuthController extends Controller
      */
     public function me()
     {
+        if (empty(auth()->user())) {
+            return response()->json(['error' => 'Token is invalid']);
+        }
         return response()->json(auth()->user());
     }
 
