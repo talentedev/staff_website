@@ -50,7 +50,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21hcmtvLmRldi5waGVyYW1vci5jb20vYXBpL2xvZ2luIiwiaWF0IjoxNTI3NjEzNjE3LCJleHAiOjE1Mjc2MTcyMTcsIm5iZiI6MTUyNzYxMzYxNywianRpIjoiVTh5Ukh5UTE5dW83SG5wRyIsInN1YiI6MywicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.wtiUfbMRCfF50oLTe4MjVb5dekYcC_8Aw3nlD_7ef84",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21hcmtvLmRldi5waGVyYW1vci5jb20vYXBpL2xvZ2luIiwiaWF0IjoxNTI3NjYzNzEzLCJleHAiOjE1Mjc2NjczMTMsIm5iZiI6MTUyNzY2MzcxMywianRpIjoicmpxSW9IaWxGU09QbHFVSCIsInN1YiI6MywicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.sOSO6ScFylaXR1vyiUg_-8wAYvJTU5OyJJUAwz49Fag",
 						"type": "string"
 					}
 				],
@@ -58,7 +58,7 @@
 			},
 			"events": [],
 			"folder": "3b4a2389-1eee-44ea-be54-1c9e5c9b662f",
-			"rawModeData": "{\n\t\"sales_date\": \"2018-05-15\",\n\t\"ship_date\": \"2018-05-15\",\n    \"account_connected_date\": \"2018-05-16\",\n    \"swab_returned_date\": null,\n    \"ship_to_lab_date\": null,\n    \"lab_received_date\": null,\n    \"sequenced_date\": null,\n    \"uploaded_to_server_date\": null,\n    \"bone_marrow_consent_date\": null,\n    \"bone_marrow_shared_date\": null\n}",
+			"rawModeData": "{\n\t\"sales_email\": \"jinisasshole@yop.com\",\n\t\"account_email\": \"jinisasshole@yop.com\",\n\t\"phone\": \"2222222222\",\n\t\"sales_date\": \"2018-05-5\",\n\t\"ship_date\": \"2018-05-5\",\n    \"account_connected_date\": \"2018-05-16\",\n    \"swab_returned_date\": \"2018-05-16\",\n    \"ship_to_lab_date\": \"2018-05-16\",\n    \"lab_received_date\": \"2018-05-16\",\n    \"sequenced_date\": \"2018-05-16\",\n    \"uploaded_to_server_date\": \"2018-05-16\",\n    \"bone_marrow_consent_date\": \"2018-05-16\",\n    \"bone_marrow_shared_date\": \"2018-05-26\"\n}",
 			"headers": "Content-Type: application/json\n",
 			"pathVariables": {}
 		},

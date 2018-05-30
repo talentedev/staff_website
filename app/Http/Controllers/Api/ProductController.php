@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Validator;
 use App\Product;
 
 class ProductController extends ApiController
@@ -106,8 +107,39 @@ class ProductController extends ApiController
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'sales_date' => 'date',
+            'ship_date' => 'date',
+            'account_connected_date' => 'date',
+            'swab_returned_date' => 'date',
+            'ship_to_lab_date' => 'date',
+            'lab_received_date' => 'date',
+            'sequenced_date' => 'date',
+            'uploaded_to_server_date' => 'date',
+            'bone_marrow_consent_date' => 'date',
+            'bone_marrow_shared_date' => 'date'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->respond([
+                'status' => false,
+                'message' => $validator->errors()
+            ]);
+        }
         try{
             $product = $this->product::where('pheramor_id', $id)->get()->first();
+
+            if($request->get('sales_email') != null) {
+                $product->sales_email = $request->get('sales_email');
+            }
+
+            if($request->get('account_email') != null) {
+                $product->account_email = $request->get('account_email');
+            }
+
+            if($request->get('phone') != null) {
+                $product->phone = $request->get('phone');
+            }
 
             if($request->get('sales_date') != null) {
                 $product->sales_date = $request->get('sales_date');

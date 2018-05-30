@@ -86,7 +86,6 @@
                             <button class="btn btn-xs btn-success update-product" data-product="{{ $product }}">update</button>
                             <button class="btn btn-xs btn-info update-note" data-product="{{ $product }}">note</button>
                             <button class="btn btn-xs btn-danger delete-product" data-product="{{ $product }}"><i class="fa fa-trash"></i></button>
-                            <a href="{{ url('customers/' . $product->id) }}" target="_blank">Track</a>
                         </td>
                     </tr>
                 @endforeach
