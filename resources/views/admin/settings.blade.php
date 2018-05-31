@@ -68,7 +68,7 @@
     <!-- /.box -->
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6" id="login_log">
             <div class="box">
                 <div class="box-header">
                     <i class="ion ion-clipboard"></i>
@@ -87,7 +87,7 @@
             </div>
             <!-- /.box -->
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" id="agile_log">
             @if(Auth::user()->hasRole('super admin'))
             <div class="box">
                 <div class="box-header">
