@@ -137,6 +137,14 @@ class ProductController extends ApiController
 
             $tags = array();
 
+            if($request->get('first_name') != null) {
+                $product->first_name = $request->get('first_name');
+            }
+
+            if($request->get('last_name') != null) {
+                $product->last_name = $request->get('last_name');
+            }
+
             if($request->get('sales_email') != null) {
                 $product->sales_email = $request->get('sales_email');
             }

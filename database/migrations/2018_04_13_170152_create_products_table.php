@@ -18,6 +18,8 @@ class CreateProductsTable extends Migration
             $table->string('pheramor_id')->unique();
             $table->string('sales_email')->unique()->nullable();
             $table->string('account_email')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('phone')->nullable();
             $table->string('source');
             $table->date('sales_date')->nullable();

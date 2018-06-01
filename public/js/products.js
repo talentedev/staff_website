@@ -81,7 +81,7 @@ $(function () {
     // Datatable
     var table = $('#products_table').DataTable({
         order: [1, 'asc'],
-        columnDefs: [{ targets: [0, 17, 18], orderable: false }],
+        columnDefs: [{ targets: [0, 18, 19], orderable: false }],
         paging: true,
         info: true,
         bSortCellsTop: true
@@ -243,6 +243,8 @@ $(function () {
 
         var data = {
             pheramor_id: $('#pheramor_id').val(),
+            first_name: $('#create_first_name').val(),
+            last_name: $('#create_last_name').val(),
             sales_email: $('#create_sales_email').val(),
             note: $('#note').val()
         };
@@ -289,6 +291,8 @@ $(function () {
 
         $('#pheramor_id').val('');
         $('#create_sales_email').val('');
+        $('#create_first_name').val('');
+        $('#create_last_name').val('');
         $('#note').val('');
     });
 
@@ -324,9 +328,14 @@ $(function () {
         $('#bone_marrow_consent_date').val(data.bone_marrow_consent_date);
         $('#bone_marrow_shared_date').val(data.bone_marrow_shared_date);
 
+        $('#first_name').prop('disabled', false);
+        $('#last_name').prop('disabled', false);
         $('#sales_email').prop('disabled', false);
         $('#account_email').prop('disabled', false);
         $('#phone').prop('disabled', false);
+
+        $('#first_name').val(data.first_name);
+        $('#last_name').val(data.last_name);
         $('#sales_email').val(data.sales_email);
         $('#account_email').val(data.account_email);
         $('#phone').val(data.phone);
@@ -344,6 +353,9 @@ $(function () {
         var selectedProducts = getSelectedProducts();
         $('#btn_update_status').data('id', selectedProducts);
         $('#update_modal_label').text(selectedProducts.length + ' customers selected.');
+
+        $('#first_name').prop('disabled', true);
+        $('#last_name').prop('disabled', true);
         $('#sales_email').prop('disabled', true);
         $('#account_email').prop('disabled', true);
         $('#phone').prop('disabled', true);
@@ -362,6 +374,8 @@ $(function () {
 
     // initialize update product modal
     function initUpdateStatusModal() {
+        $('#first_name').val('');
+        $('#last_name').val('');
         $('#sales_date').val('');
         $('#ship_date').val('');
         $('#account_connected_date').val('');
@@ -393,6 +407,8 @@ $(function () {
             $('#summary_uploaded_to_server_date').text($('#uploaded_to_server_date').val());
             $('#summary_bone_marrow_consent_date').text($('#bone_marrow_consent_date').val());
             $('#summary_bone_marrow_shared_date').text($('#bone_marrow_shared_date').val());
+            $('#summary_first_name').text($('#first_name').val());
+            $('#summary_last_name').text($('#last_name').val());
             $('#summary_sales_email').text($('#sales_email').val());
             $('#summary_account_email').text($('#account_email').val());
             $('#summary_phone').text($('#phone').val());
@@ -450,6 +466,8 @@ $(function () {
                 uploaded_to_server_date: $('#uploaded_to_server_date').val(),
                 bone_marrow_consent_date: $('#bone_marrow_consent_date').val(),
                 bone_marrow_shared_date: $('#bone_marrow_shared_date').val(),
+                first_name: $('#first_name').val(),
+                last_name: $('#last_name').val(),
                 sales_email: $('#sales_email').val(),
                 account_email: $('#account_email').val(),
                 phone: $('#phone').val()
@@ -475,11 +493,11 @@ $(function () {
         $('#product_create_callback_modal').modal('show');
         if (status) {
             $('#product_create_callback_modal .modal-title').text('Success');
-            $('#product_create_callback_modal .modal-body').text('Status Dates updated successfully.');
+            $('#product_create_callback_modal .modal-body').text('Customer information updated successfully.');
             $('#btn_callback_confirm').data('status', true);
         } else {
             $('#product_create_callback_modal .modal-title').text('Failed');
-            $('#product_create_callback_modal .modal-body').text("Status Dates didn't updated.");
+            $('#product_create_callback_modal .modal-body').text("Customer information didn't updated.");
         }
     }
 
@@ -509,6 +527,8 @@ $(function () {
             uploaded_to_server_date: $('#uploaded_to_server_date').val(),
             bone_marrow_consent_date: $('#bone_marrow_consent_date').val(),
             bone_marrow_shared_date: $('#bone_marrow_shared_date').val(),
+            first_name: $('#first_name').val(),
+            last_name: $('#last_name').val(),
             sales_email: $('#sales_email').val(),
             account_email: $('#account_email').val(),
             phone: $('#phone').val(),

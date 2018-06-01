@@ -53,7 +53,7 @@ CREATE TABLE `configs` (
 
 /*Data for the table `configs` */
 
-insert  into `configs`(`id`,`agile_domain`,`agile_email`,`agile_key`,`created_at`,`updated_at`) values (1,'likeswiperight','jin@pheramor.com','upns4k6ajqtkm4ovkjb5hjjj9a','2018-05-15 22:30:28','2018-05-15 22:30:28');
+insert  into `configs`(`id`,`agile_domain`,`agile_email`,`agile_key`,`created_at`,`updated_at`) values (1,'likeswiperight','jin@pheramor.com','upns4k6ajqtkm4ovkjb5hjjj9a','2018-06-01 21:20:28','2018-06-01 21:20:28');
 
 /*Table structure for table `migrations` */
 
@@ -128,7 +128,7 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-05-15 22:30:27','2018-05-15 22:30:27'),(2,'api','web','2018-05-15 22:30:27','2018-05-15 22:30:27');
+insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-06-01 21:20:27','2018-06-01 21:20:27'),(2,'api','web','2018-06-01 21:20:27','2018-06-01 21:20:27');
 
 /*Table structure for table `products` */
 
@@ -139,6 +139,8 @@ CREATE TABLE `products` (
   `pheramor_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sales_email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `first_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `source` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sales_date` date DEFAULT NULL,
@@ -191,7 +193,7 @@ CREATE TABLE `roles` (
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-05-15 22:30:27','2018-05-15 22:30:27'),(2,'admin','web','2018-05-15 22:30:27','2018-05-15 22:30:27'),(3,'street team','web','2018-05-15 22:30:27','2018-05-15 22:30:27'),(4,'staff','web','2018-05-15 22:30:27','2018-05-15 22:30:27');
+insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-06-01 21:20:26','2018-06-01 21:20:26'),(2,'admin','web','2018-06-01 21:20:27','2018-06-01 21:20:27'),(3,'street team','web','2018-06-01 21:20:27','2018-06-01 21:20:27'),(4,'staff','web','2018-06-01 21:20:27','2018-06-01 21:20:27');
 
 /*Table structure for table `tags` */
 
@@ -232,7 +234,7 @@ CREATE TABLE `users` (
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','','ersrsrtrerer','Super Admin','$2y$10$seIzs137JLhEyCdT34Q3h.lfFAkQeF8yhbetJqJrBSDpq33732CaK',NULL,'2018-05-15 22:30:27','2018-05-15 22:30:27'),(2,'Admin User','admin@gmail.com','','ersrsrtrerer','Admin','$2y$10$XkwjZK53LYGnWKsYY7ezn.rWklmm0gWw5s7/2A0AMq4tSXuDdajgG',NULL,'2018-05-15 22:30:27','2018-05-15 22:30:27'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$esad3HJUPnIbxDaSb1OyW.znY/.jpruWJ/gvaQBNVwliMcGJ4jhre',NULL,'2018-05-15 22:30:28','2018-05-15 22:30:28'),(4,'Staff','staff@gmail.com','','ersrsrtrerer','Staff','$2y$10$bmDFwGwYdMnBSnEMu4/gg.ZcaIhtANgTW51eRSbvPZqocnpefcEY.',NULL,'2018-05-15 22:30:28','2018-05-15 22:30:28');
+insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','','ersrsrtrerer','Super Admin','$2y$10$V4MaXg.U0qzRCm6AMgNeV.weWVX1hVKehhlCrwi0AClMy2Ih3Vt.q',NULL,'2018-06-01 21:20:27','2018-06-01 21:20:27'),(2,'Admin User','admin@gmail.com','','ersrsrtrerer','Admin','$2y$10$PepktfshzNaVIJ1OyRew7OlyYCNixr74C.M6/F8UmeQg2gue5cu1.',NULL,'2018-06-01 21:20:27','2018-06-01 21:20:27'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$O9uMAcFnhtc6ZiSJwFqofeqXxYcs9MZBtpL/lwbaCikABMwlyLAP6',NULL,'2018-06-01 21:20:27','2018-06-01 21:20:27'),(4,'Staff','staff@gmail.com','','ersrsrtrerer','Staff','$2y$10$y7w5WUd5vwkwiFSFYYiii.i/6SSxuX/XEzE0nvmUb3sJ9GL6BsBuC',NULL,'2018-06-01 21:20:28','2018-06-01 21:20:28');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

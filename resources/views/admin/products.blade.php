@@ -21,6 +21,7 @@
                         <th class="text-center">Pheramor ID</th>
                         <th class="text-center">Sales Email</th>
                         <th class="text-center">Account Email</th>
+                        <th class="text-center">Name</th>
                         <th class="text-center">Phone</th>
                         <th class="text-center">Source</th>
                         <th class="text-center">Created</th>
@@ -42,6 +43,7 @@
                         <th class="filter-input">Pheramor ID</th>
                         <th class="filter-input">Sales Email</th>
                         <th class="filter-input">Account Email</th>
+                        <th class="filter-input">Name</th>
                         <th class="filter-input">Phone</th>
                         <th class="filter-input">Source</th>
                         <th class="filter-date">Created Date</th>
@@ -68,6 +70,7 @@
                         <td class="text-center">{{ $product->pheramor_id }}</td>
                         <td class="text-center">{{ $product->sales_email }}</td>
                         <td class="text-center">{{ $product->account_email }}</td>
+                        <td class="text-center">{{ $product->first_name . ' ' . $product->last_name }}</td>
                         <td class="text-center">{{ $product->phone }}</td>
                         <td class="text-center">{{ $product->source }}</td>
                         <td class="text-center">{{ $product->created_at === null ? 'n/a' : $product->created_at->format('d-M-Y') }}</td>
@@ -90,32 +93,6 @@
                     </tr>
                 @endforeach
                 </tbody>
-                <!-- <tfoot>
-                    <th></th>
-                    <th class="filter-input">Pheramor ID</th>
-                    <th class="filter-input">Sales Email</th>
-                    <th class="filter-input">Account Email</th>
-                    <th>
-                        <select class="form-control">
-                            <option value="">All</option>
-                            <option value="admin">admin</option>
-                            <option value="Street Team">Street Team</option>
-                            <option value="Staff">Staff</option>
-                        </select>
-                    </th>
-                    <th class="filter-date">Created Date</th>
-                    <th class="filter-date">Sales Date</th>
-                    <th class="filter-date">Account Connected Date</th>
-                    <th class="filter-date">Swab Returned Date</th>
-                    <th class="filter-date">Ship To Lab Date</th>
-                    <th class="filter-date">Lab Received Date</th>
-                    <th class="filter-date">Sequenced Date</th>
-                    <th class="filter-date">Uploaded To Server Date</th>
-                    <th class="filter-date">Bone Marrow Consent Date</th>
-                    <th class="filter-date">Bone Marrow Shared Date</th>
-                    <th></th>
-                    <th></th>
-                </tfoot> -->
             </table>
             <button class="btn btn-primary" id="add_customer">Add Customer</button>
             <button class="btn btn-success" id="update_status_bulk">Update Status</button>
@@ -147,6 +124,16 @@
                             <label for="pheramor_id">Pheramor ID</label>
                             <input type="text" class="form-control" id="pheramor_id" required>
                             <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="create_first_name">First Name</label>
+                                <input type="text" class="form-control" id="create_first_name">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="create_last_name">Last Name</label>
+                                <input type="text" class="form-control" id="create_last_name">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="create_sales_email">Sales Email</label>
@@ -270,6 +257,24 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="first_name" class="col-sm-4 control-label">First Name</label>
+                            <div class="input-prepend input-group col-sm-8">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-user fa fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control" id="first_name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name" class="col-sm-4 control-label">Last Name</label>
+                            <div class="input-prepend input-group col-sm-8">
+                                <span class="add-on input-group-addon">
+                                    <i class="glyphicon glyphicon-user fa fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control" id="last_name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="sales_email" class="col-sm-4 control-label">Sales Email</label>
                             <div class="input-prepend input-group col-sm-8">
                                 <span class="add-on input-group-addon">
@@ -352,6 +357,14 @@
                     <div>
                         <span>Bone Marrow Shared Date: </span>    
                         <span class="pull-right" id="summary_bone_marrow_shared_date">---</span>
+                    </div>
+                    <div>
+                        <span>First Name: </span>    
+                        <span class="pull-right" id="summary_first_name"></span>
+                    </div>
+                    <div>
+                        <span>Last Name: </span>    
+                        <span class="pull-right" id="summary_last_name"></span>
                     </div>
                     <div>
                         <span>Sales Email: </span>    

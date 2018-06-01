@@ -70,6 +70,8 @@ class ProductController extends Controller
     {
         $this->product->pheramor_id = $request->get('pheramor_id');
         $this->product->sales_email = $request->get('sales_email');
+        $this->product->first_name = $request->get('first_name');
+        $this->product->last_name = $request->get('last_name');
         $this->product->note = $request->get('note');
         $this->product->source = Auth::user()->roles[0]->name;
 
@@ -126,6 +128,8 @@ class ProductController extends Controller
         $product->uploaded_to_server_date = $request->get('uploaded_to_server_date');
         $product->bone_marrow_consent_date = $request->get('bone_marrow_consent_date');
         $product->bone_marrow_shared_date = $request->get('bone_marrow_shared_date');
+        $product->first_name= $request->get('first_name');
+        $product->last_name= $request->get('last_name');
         $product->sales_email= $request->get('sales_email');
         $product->account_email = $request->get('account_email');
         $product->phone = $request->get('phone');
@@ -274,6 +278,8 @@ class ProductController extends Controller
                 array_push($tags, $this->getTagValue('bone_marrow_shared_date'));
             }
 
+            $product->first_name= $request->get('first_name');
+            $product->last_name= $request->get('last_name');
             $product->sales_email= $request->get('sales_email');
             $product->account_email = $request->get('account_email');
             $product->phone = $request->get('phone');
