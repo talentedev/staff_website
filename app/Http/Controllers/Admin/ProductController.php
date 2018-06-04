@@ -148,9 +148,12 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
+        $product = $this->product->find($id);
+
         $this->product->destroy($id);
 
-        return response()->json(['status' => true], 200);
+        $result = $this->deleteContact($product->sales_email);
+        return response()->json(['status' => $result], 200);
     }
 
     /**
@@ -518,6 +521,18 @@ class ProductController extends Controller
         activity('agile')
             ->causedBy($auth_id)
             ->log($log_text);
+    }
+
+    // Delete contact from AgileCRM
+    public function deleteContact($email) {
+        $contact = $this->getContact($email);
+        if(!empty(json_decode($contact))) {
+            $id = substr($contact, 6, 16);
+            $url = "contacts/" . $id;
+            $this->curl_wrap($url, null, "DELETE", "application/json");
+            return true;
+        }
+        return false;
     }
 
     // Get contact by email

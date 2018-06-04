@@ -57,13 +57,39 @@ class ProductController extends ApiController
     public function store(Request $request)
     {
         try{
-            $this->product->pheramor_id = $request->get('pheramor_id');
-            $this->product->sales_email = $request->get('sales_email');
+            if($request->get('pheramor_id') != null) {
+                $this->product->pheramor_id = $request->get('pheramor_id');
+            }
+
+            if($request->get('sales_email') != null) {
+                $this->product->sales_email = $request->get('sales_email');
+            }
+
+            if($request->get('first_name') != null) {
+                $this->product->first_name = $request->get('first_name');
+            }
+
+            if($request->get('last_name') != null) {
+                $this->product->last_name= $request->get('last_name');
+            }
+
+            if($request->get('phone') != null) {
+                $this->product->phone = $request->get('phone');
+            }
+
+            $this->product->sales_date = \Carbon\Carbon::now();
             $this->product->source = Auth::user()->source;
 
             $this->product->save();
 
-            $this->addContact($request->get('sales_email'), $request->get('pheramor_id'), array());
+            $this->addContact(
+                $request->get('sales_email'),
+                $request->get('pheramor_id'),
+                $request->get('first_name'),
+                $request->get('last_name'),
+                $request->get('phone'),
+                array(Auth::user()->source)
+            );
 
             return $this->respond([
                 'status' => true,
@@ -73,7 +99,7 @@ class ProductController extends ApiController
         catch(\Exception $e){
             return $this->respond([
                 'status' => false,
-                'message' => 'Pheramor ID or Email alrady exist'
+                'message' => 'Pheramor ID or Email already exist'
             ]);
         }
     }
@@ -274,7 +300,7 @@ class ProductController extends ApiController
     }
 
     // Add new contact to AgileCRM
-    protected function addContact($email, $pheramor_id, $tags) {
+    protected function addContact($email, $pheramor_id, $first_name, $last_name, $phone, $tags) {
         $contact_json = array(
           "tags"=>$tags,
           "properties"=>array(
@@ -284,11 +310,25 @@ class ProductController extends ApiController
               "type"=>"SYSTEM"
             ),
             array(
+              "name"=>"first_name",
+              "value"=>$first_name,
+              "type"=>"SYSTEM"
+            ),
+            array(
+              "name"=>"last_name",
+              "value"=>$last_name,
+              "type"=>"SYSTEM"
+            ),
+            array(
+              "name"=>"Phone Number",
+              "value"=>$phone,
+              "type"=>"CUSTOM"
+            ),
+            array(
                 "name"=>"Pheramor ID",
-                "value"=>$pheramor_id,      // This is epoch time in seconds.
+                "value"=>$pheramor_id,
                 "type"=>"CUSTOM"
             )
-            
           )
         );
 

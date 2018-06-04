@@ -58,15 +58,21 @@ class LoginController extends Controller
         if(!Auth::guard('web')->attempt($credentials)){
             return redirect('/login');
         }else{
-            // Register login activity
-            $auth_name = Auth::guard('web')->user()->name;
-            $auth_id =  Auth::guard('web')->user()->id;
-            $log_text = $auth_name . ' logged at ' . date('Y-m-d h:m:s') . '.';
-            activity('login')
-                ->causedBy($auth_id)
-                ->log($log_text);
+            // allow user login except for street team
+            if (!Auth::guard('web')->user()->hasRole('street team')) {
+                // Register login activity
+                $auth_name = Auth::guard('web')->user()->name;
+                $auth_id =  Auth::guard('web')->user()->id;
+                $log_text = $auth_name . ' logged at ' . date('Y-m-d h:m:s') . '.';
+                activity('login')
+                    ->causedBy($auth_id)
+                    ->log($log_text);
 
-            return redirect('/');
+                return redirect('/');
+            } else {
+                return redirect('/login');
+            }
+            
         }
     }
 
