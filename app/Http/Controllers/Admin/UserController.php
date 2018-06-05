@@ -166,6 +166,7 @@ class UserController extends Controller
 
         $data = array(
             'name' => $this->users->name,
+            'email' => $this->users->email,
             'password' => '123456'
         );
         Mail::send('mail', $data, function($message) {

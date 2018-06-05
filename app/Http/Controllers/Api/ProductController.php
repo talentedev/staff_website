@@ -57,6 +57,9 @@ class ProductController extends ApiController
     public function store(Request $request)
     {
         try{
+
+            $tags = array();
+
             if($request->get('pheramor_id') != null) {
                 $this->product->pheramor_id = $request->get('pheramor_id');
             }
@@ -67,6 +70,7 @@ class ProductController extends ApiController
 
             if($request->get('first_name') != null) {
                 $this->product->first_name = $request->get('first_name');
+                $tags = array(Auth::user()->source, Auth::user()->tag, $this->getTagValue('sales_date'));
             }
 
             if($request->get('last_name') != null) {
@@ -88,7 +92,7 @@ class ProductController extends ApiController
                 $request->get('first_name'),
                 $request->get('last_name'),
                 $request->get('phone'),
-                array(Auth::user()->source, $this->getTagValue('sales_date'))
+                $tags
             );
 
             return $this->respond([
