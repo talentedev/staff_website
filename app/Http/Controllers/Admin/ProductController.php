@@ -44,6 +44,9 @@ class ProductController extends Controller
      */
     public function index()
     {
+        if (Auth::guard()->user()->hasRole('street team')) {
+            return redirect('/login');
+        }
         $products = $this->product->get();
         return view('admin.products', [
             'products' => $products

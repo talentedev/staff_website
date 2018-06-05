@@ -43,6 +43,9 @@ class SettingController extends Controller
      */
     public function index()
     {
+        if (Auth::guard()->user()->hasRole('street team')) {
+            return redirect('/login');
+        }
         // Get activity logs
         $loginLogs = array();
         $agileLogs = array();

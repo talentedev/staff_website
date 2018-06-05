@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\User;
 
@@ -40,6 +41,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        if (!Auth::guard()->user()->hasRole('super admin')) {
+            return redirect('/login');
+        }
         // All users
         $users = $this->users->get();
 
