@@ -61,8 +61,8 @@ $(function () {
 
         $('#name').val('');
         $('#code').val('');
-        $('#email').val(email);
-        $('#tag').val(tag);
+        $('#email').val('');
+        $('#tag').val('');
         $('#role').val('admin');
 
         $('#btn_save_data').data('staff', 'add');
@@ -113,7 +113,7 @@ $(function () {
             var url = 'staff'
             axios.post(url, data)
                 .then(function (response) {
-                    if (response.data.message == 'User successfully added') {
+                    if (response.data.status == true) {
                         showCreateResult(true, true);
                     } else {
                         showCreateResult(false, true);
@@ -128,7 +128,7 @@ $(function () {
             var url = 'staff/' + id;
             axios.put(url, data, id)
                 .then(function (response) {
-                    if (response.data.message == 'User successfully updated') {
+                    if (response.data.status == true) {
                         showCreateResult(true, false);
                     } else {
                         showCreateResult(false, false);

@@ -53,7 +53,7 @@ CREATE TABLE `configs` (
 
 /*Data for the table `configs` */
 
-insert  into `configs`(`id`,`agile_domain`,`agile_email`,`agile_key`,`created_at`,`updated_at`) values (1,'likeswiperight','jin@pheramor.com','upns4k6ajqtkm4ovkjb5hjjj9a','2018-06-01 21:20:28','2018-06-01 21:20:28');
+insert  into `configs`(`id`,`agile_domain`,`agile_email`,`agile_key`,`created_at`,`updated_at`) values (1,'likeswiperight','jin@pheramor.com','upns4k6ajqtkm4ovkjb5hjjj9a','2018-06-05 01:39:12','2018-06-05 01:39:12');
 
 /*Table structure for table `migrations` */
 
@@ -128,7 +128,7 @@ CREATE TABLE `permissions` (
 
 /*Data for the table `permissions` */
 
-insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-06-01 21:20:27','2018-06-01 21:20:27'),(2,'api','web','2018-06-01 21:20:27','2018-06-01 21:20:27');
+insert  into `permissions`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'admin','web','2018-06-05 01:39:11','2018-06-05 01:39:11'),(2,'api','web','2018-06-05 01:39:11','2018-06-05 01:39:11');
 
 /*Table structure for table `products` */
 
@@ -193,7 +193,7 @@ CREATE TABLE `roles` (
 
 /*Data for the table `roles` */
 
-insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-06-01 21:20:26','2018-06-01 21:20:26'),(2,'admin','web','2018-06-01 21:20:27','2018-06-01 21:20:27'),(3,'street team','web','2018-06-01 21:20:27','2018-06-01 21:20:27'),(4,'staff','web','2018-06-01 21:20:27','2018-06-01 21:20:27');
+insert  into `roles`(`id`,`name`,`guard_name`,`created_at`,`updated_at`) values (1,'super admin','web','2018-06-05 01:39:11','2018-06-05 01:39:11'),(2,'admin','web','2018-06-05 01:39:11','2018-06-05 01:39:11'),(3,'street team','web','2018-06-05 01:39:11','2018-06-05 01:39:11'),(4,'staff','web','2018-06-05 01:39:11','2018-06-05 01:39:11');
 
 /*Table structure for table `tags` */
 
@@ -229,12 +229,13 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`)
+  UNIQUE KEY `users_email_unique` (`email`),
+  UNIQUE KEY `users_source_unique` (`source`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com','','ersrsrtrerer','Super Admin','$2y$10$V4MaXg.U0qzRCm6AMgNeV.weWVX1hVKehhlCrwi0AClMy2Ih3Vt.q',NULL,'2018-06-01 21:20:27','2018-06-01 21:20:27'),(2,'Admin User','admin@gmail.com','','ersrsrtrerer','Admin','$2y$10$PepktfshzNaVIJ1OyRew7OlyYCNixr74C.M6/F8UmeQg2gue5cu1.',NULL,'2018-06-01 21:20:27','2018-06-01 21:20:27'),(3,'Street Team','team@gmail.com','staff123457','ersrsrtrerer','Street','$2y$10$O9uMAcFnhtc6ZiSJwFqofeqXxYcs9MZBtpL/lwbaCikABMwlyLAP6',NULL,'2018-06-01 21:20:27','2018-06-01 21:20:27'),(4,'Staff','staff@gmail.com','','ersrsrtrerer','Staff','$2y$10$y7w5WUd5vwkwiFSFYYiii.i/6SSxuX/XEzE0nvmUb3sJ9GL6BsBuC',NULL,'2018-06-01 21:20:28','2018-06-01 21:20:28');
+insert  into `users`(`id`,`name`,`email`,`source`,`api_key`,`tag`,`password`,`remember_token`,`created_at`,`updated_at`) values (1,'Super Admin','super@gmail.com',NULL,NULL,'Super Admin','$2y$10$ZVjVHlw0PCBK8beWb9rhg.x24wyPL46r5IG4CGzcnNL6fujMigeEu',NULL,'2018-06-05 01:39:11','2018-06-05 01:39:11'),(2,'Admin User','admin@gmail.com',NULL,NULL,'Admin','$2y$10$z9bEHqGOY8r9ifp3EHF5rOr3F88DO7J5Q8X0y1Q44zXsIg7HPSBMa',NULL,'2018-06-05 01:39:12','2018-06-05 01:39:12'),(3,'Street Team','team@gmail.com','staff123457',NULL,'Street','$2y$10$R/i.lWp2Zu9zlYr3KTMzx.FGTB2kfXaZeVqPnePYDwn1ZJ9o0SEw.',NULL,'2018-06-05 01:39:12','2018-06-05 01:39:12'),(4,'Staff','staff@gmail.com',NULL,NULL,'Staff','$2y$10$NHKYyrznc5KazUSM18bGbee8cRhGbD9nD./0ajqM5YRgkrAVeW03K',NULL,'2018-06-05 01:39:12','2018-06-05 01:39:12');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\User;
+use Mail;
 
 class UserController extends Controller
 {
@@ -74,27 +75,27 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $message = '';
-
-        if($this->existSameCode($request->get('source')) && $request->get('source') != '') {
-            $message = 'Access Code exist already';
-        } else {
+        try {
             $this->users->name = $request->get('name');
             $this->users->email = $request->get('email');
             $this->users->source = $request->get('source');
             $this->users->api_key = $request->get('api_key');
             $this->users->tag = $request->get('tag');
-            $this->users->password = \Illuminate\Support\Facades\Hash::make("123456");
+            $this->users->password = \Illuminate\Support\Facades\Hash::make('123456');
 
             $this->users->save();
 
             $this->users->assignRole($request->get('role'));
 
-            $message = 'User successfully added';
-        }
+            if($request->get('role') == 'street team') {
+                $this->sendMail();
+            }
 
-        return response()->json(['message' => $message], 200);
-        
+            return response()->json(['status' => true], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => false], 200);
+        }
     }
 
     /**
@@ -128,24 +129,23 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $message = '';
+        try {
+            $user = $this->users::find($id);
 
-        $user = $this->users::find($id);
+            $user->name = $request->get('name');
+            $user->email = $request->get('email');
+            $user->source = $request->get('source');
+            $user->api_key = $request->get('api_key');
+            $user->tag = $request->get('tag');
 
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
-        $user->source = $request->get('source');
-        $user->api_key = $request->get('api_key');
-        $user->tag = $request->get('tag');
-        $user->password = \Illuminate\Support\Facades\Hash::make("123456");
+            $user->save();
 
-        $user->save();
+            $user->syncRoles($request->get('role'));
 
-        $user->syncRoles($request->get('role'));
-
-        $message = 'User successfully updated';
-
-        return response()->json(['message' => $message], 200);
+            return response()->json(['status' => true], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false], 200);
+        }
     }
 
     /**
@@ -161,19 +161,15 @@ class UserController extends Controller
         return response()->json(['status' => true], 200);
     }
 
-    /**
-     * Check if same access code exist.
-     *
-     * @param  string $access_code
-     * @return Boolean
-     */
-    public function existSameCode($access_code)
-    {
-        $is_exist = false;
-        $user = $this->users::where('source', $access_code)->count();
-        if($user > 0) {
-            $is_exist = true;
-        }
-        return $is_exist;
+    // Send mail
+    public function sendMail() {
+
+        $data = array(
+            'name' => $this->users->name,
+            'password' => '123456'
+        );
+        Mail::send('mail', $data, function($message) {
+            $message->to($this->users->email, $this->users->name)->subject('Staff App Account');
+        });
     }
 }

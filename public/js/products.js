@@ -81,7 +81,7 @@ $(function () {
     // Datatable
     var table = $('#products_table').DataTable({
         order: [1, 'asc'],
-        columnDefs: [{ targets: [0, 18, 19], orderable: false }],
+        columnDefs: [{ targets: [0, 19, 20], orderable: false }],
         paging: true,
         info: true,
         bSortCellsTop: true

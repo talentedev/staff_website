@@ -15,8 +15,6 @@ class UsersTableSeeder extends Seeder
         $super = new App\User;
         $super->name = "Super Admin";
         $super->email = "super@gmail.com";
-        $super->source = "";
-        $super->api_key = "ersrsrtrerer";
         $super->tag = "Super Admin";
         $super->password = \Illuminate\Support\Facades\Hash::make("123456");
         $super->save();
@@ -27,8 +25,6 @@ class UsersTableSeeder extends Seeder
         $admin = new App\User;
         $admin->name = "Admin User";
         $admin->email = "admin@gmail.com";
-        $admin->source = "";
-        $admin->api_key = "ersrsrtrerer";
         $admin->tag = "Admin";
         $admin->password = \Illuminate\Support\Facades\Hash::make("123456");
         $admin->save();
@@ -40,7 +36,6 @@ class UsersTableSeeder extends Seeder
         $team->name = "Street Team";
         $team->email = "team@gmail.com";
         $team->source = "staff123457";
-        $team->api_key = "ersrsrtrerer";
         $team->tag = "Street";
         $team->password = \Illuminate\Support\Facades\Hash::make("123456");
         $team->save();
@@ -51,8 +46,6 @@ class UsersTableSeeder extends Seeder
         $staff = new App\User;
         $staff->name = "Staff";
         $staff->email = "staff@gmail.com";
-        $staff->source = "";
-        $staff->api_key = "ersrsrtrerer";
         $staff->tag = "Staff";
         $staff->password = \Illuminate\Support\Facades\Hash::make("123456");
         $staff->save();

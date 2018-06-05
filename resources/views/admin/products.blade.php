@@ -21,7 +21,8 @@
                         <th class="text-center">Pheramor ID</th>
                         <th class="text-center">Sales Email</th>
                         <th class="text-center">Account Email</th>
-                        <th class="text-center">Name</th>
+                        <th class="text-center">First Name</th>
+                        <th class="text-center">Last Name</th>
                         <th class="text-center">Phone</th>
                         <th class="text-center">Source</th>
                         <th class="text-center">Created</th>
@@ -43,7 +44,8 @@
                         <th class="filter-input">Pheramor ID</th>
                         <th class="filter-input">Sales Email</th>
                         <th class="filter-input">Account Email</th>
-                        <th class="filter-input">Name</th>
+                        <th class="filter-input">First Name</th>
+                        <th class="filter-input">Last Name</th>
                         <th class="filter-input">Phone</th>
                         <th class="filter-input">Source</th>
                         <th class="filter-date">Created Date</th>
@@ -70,7 +72,8 @@
                         <td class="text-center">{{ $product->pheramor_id }}</td>
                         <td class="text-center">{{ $product->sales_email }}</td>
                         <td class="text-center">{{ $product->account_email }}</td>
-                        <td class="text-center">{{ $product->first_name . ' ' . $product->last_name }}</td>
+                        <td class="text-center">{{ $product->first_name }}</td>
+                        <td class="text-center">{{ $product->last_name }}</td>
                         <td class="text-center">{{ $product->phone }}</td>
                         <td class="text-center">{{ $product->source }}</td>
                         <td class="text-center">{{ $product->created_at === null ? 'n/a' : $product->created_at->format('d-M-Y') }}</td>

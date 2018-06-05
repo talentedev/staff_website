@@ -88,7 +88,7 @@ class ProductController extends ApiController
                 $request->get('first_name'),
                 $request->get('last_name'),
                 $request->get('phone'),
-                array(Auth::user()->source)
+                array(Auth::user()->source, $this->getTagValue('sales_date'))
             );
 
             return $this->respond([
