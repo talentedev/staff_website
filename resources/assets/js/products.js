@@ -45,7 +45,6 @@ $(function () {
             { "data": "actions" }
         ],
         "initComplete": function(settings, json) {
-            init();
             var api = this.api();
 
             // Apply the search
@@ -59,11 +58,19 @@ $(function () {
                 }
               });
             });
+        },
+        "drawCallback": function() {
+            init();
         }
     });
 
     // Initialize
     function init() {
+        //iCheck for checkbox and radio inputs
+        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass   : 'iradio_minimal-blue'
+        });
 
         // Update customer infomations
         $('.update-product').click(function() {

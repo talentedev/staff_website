@@ -132,7 +132,7 @@ class ProductController extends Controller
         {
             foreach ($posts as $post)
             {
-                $nestedData['id'] = $post->id;
+                $nestedData['id'] = '<input type="checkbox" class="minimal" data-id="' . $post->id . '">';
                 $nestedData['pheramor_id'] = $post->pheramor_id;
                 $nestedData['sales_email'] = $post->sales_email;
                 $nestedData['account_email'] = $post->account_email;

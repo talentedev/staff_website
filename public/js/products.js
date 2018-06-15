@@ -98,7 +98,6 @@ $(function () {
         },
         "columns": [{ "data": "id" }, { "data": "pheramor_id" }, { "data": "sales_email" }, { "data": "account_email" }, { "data": "first_name" }, { "data": "last_name" }, { "data": "phone" }, { "data": "source" }, { "data": "created_at" }, { "data": "sales_date" }, { "data": "ship_date" }, { "data": "account_connected_date" }, { "data": "swab_returned_date" }, { "data": "ship_to_lab_date" }, { "data": "lab_received_date" }, { "data": "sequenced_date" }, { "data": "uploaded_to_server_date" }, { "data": "bone_marrow_consent_date" }, { "data": "bone_marrow_shared_date" }, { "data": "note" }, { "data": "actions" }],
         "initComplete": function initComplete(settings, json) {
-            init();
             var api = this.api();
 
             // Apply the search
@@ -110,11 +109,19 @@ $(function () {
                     }
                 });
             });
+        },
+        "drawCallback": function drawCallback() {
+            init();
         }
     });
 
     // Initialize
     function init() {
+        //iCheck for checkbox and radio inputs
+        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass: 'iradio_minimal-blue'
+        });
 
         // Update customer infomations
         $('.update-product').click(function () {
