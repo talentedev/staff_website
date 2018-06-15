@@ -1,16 +1,151 @@
 $(function () {
 
+
+    var customer;
+    var deleteUserId;
+
     // Datatable
     var table = $('#products_table').DataTable({
-        order: [1, 'asc'],
-        columnDefs: [
-            { targets: [0, 19, 20], orderable: false}
+        "order": [1, 'asc'],
+        "columnDefs": [
+            { "targets": [0, 19, 20], "orderable": false}
         ],
-        paging: true,
-        info: true,
-        bSortCellsTop: true
-    }); 
+        "paging": true,
+        "info": true,
+        "bSortCellsTop": true,
+        "processing": true,
+        "serverSide": true,
+        "ajax":{
+                 "url": "getCustomersByAjax",
+                 "dataType": "json",
+                 "type": "POST",
+                 "data":{ _token: $('input[name="_token"').val()}
+               },
+        "columns": [
+            { "data": "id" },
+            { "data": "pheramor_id" },
+            { "data": "sales_email" },
+            { "data": "account_email" },
+            { "data": "first_name" },
+            { "data": "last_name" },
+            { "data": "phone" },
+            { "data": "source" },
+            { "data": "created_at" },
+            { "data": "sales_date" },
+            { "data": "ship_date" },
+            { "data": "account_connected_date" },
+            { "data": "swab_returned_date" },
+            { "data": "ship_to_lab_date" },
+            { "data": "lab_received_date" },
+            { "data": "sequenced_date" },
+            { "data": "uploaded_to_server_date" },
+            { "data": "bone_marrow_consent_date" },
+            { "data": "bone_marrow_shared_date" },
+            { "data": "note" },
+            { "data": "actions" }
+        ],
+        "initComplete": function(settings, json) {
+            init();
+            var api = this.api();
 
+            // Apply the search
+            api.columns().every(function() {
+              var that = this;
+              $('tr.filters th.filter-input input').on('keyup change', function() {
+                if (that.search() !== this.value) {
+                  that
+                    .search(this.value)
+                    .draw();
+                }
+              });
+            });
+        }
+    });
+
+    // Initialize
+    function init() {
+
+        // Update customer infomations
+        $('.update-product').click(function() {
+
+            $('#update_product_modal').modal('show');
+            initUpdateStatusModal();
+
+            var customerId = $(this).data('id');
+
+            var url = 'customers/' + customerId;
+            axios.get(url)
+                .then(function (response) {
+                    if (response.data.status == true) {
+                        customer = response.data.data;
+
+                        $('#update_modal_label').text('Pheramor ID: ' + customer.pheramor_id);
+
+                        $('#sales_date').val(customer.sales_date);
+                        $('#ship_date').val(customer.ship_date);
+                        $('#account_connected_date').val(customer.account_connected_date);
+                        $('#swab_returned_date').val(customer.swab_returned_date);
+                        $('#ship_to_lab_date').val(customer.ship_to_lab_date);
+                        $('#lab_received_date').val(customer.lab_received_date);
+                        $('#sequenced_date').val(customer.sequenced_date);
+                        $('#uploaded_to_server_date').val(customer.uploaded_to_server_date);
+                        $('#bone_marrow_consent_date').val(customer.bone_marrow_consent_date);
+                        $('#bone_marrow_shared_date').val(customer.bone_marrow_shared_date);
+
+                        $('#first_name').prop('disabled', false);
+                        $('#last_name').prop('disabled', false);
+                        $('#sales_email').prop('disabled', false);
+                        $('#account_email').prop('disabled', false);
+                        $('#phone').prop('disabled', false);
+
+                        $('#first_name').val(customer.first_name);
+                        $('#last_name').val(customer.last_name);
+                        $('#sales_email').val(customer.sales_email);
+                        $('#account_email').val(customer.account_email);
+                        $('#phone').val(customer.phone);
+
+                        $('#btn_update_status').data('id', customer.id);
+                        $('#btn_update_status').data('product', customer);
+                    } else {
+                        console.log('Failed to get the customer.');
+                    }
+                })
+                .catch(function (error) {
+                    console.log('Failed to get the customer.');
+                });
+        });
+
+        // Update note for a customer
+        $('.update-note').click(function() {
+
+            $('#note_modal').modal('show');
+
+            var customerId = $(this).data('id');
+
+            var url = 'customers/' + customerId;
+            axios.get(url)
+                .then(function (response) {
+                    if (response.data.status == true) {
+                        customer = response.data.data;
+                        $('#note_modal textarea').val(customer.note);
+                        $('#btn_update_note').data('id', customer.id);
+
+                    } else {
+                        console.log('Failed to get the customer.');
+                    }
+                })
+                .catch(function (error) {
+                    console.log('Failed to get the customer.');
+                });
+        });
+
+        // Delete customer
+        $(".delete-product").on("click", function(){
+            $("#delete-mi-modal").modal('show');
+            deleteUserId = $(this).data('id');
+        });
+    }
+/*
     // Date Range Filter
     $('#products_table thead tr.filters th.filter-date').each( function (key) {
         var title = $(this).text();
@@ -127,33 +262,12 @@ $(function () {
                     .draw();
             }
         });
-    });
+    });*/
 
     // Setup - add a input to each footer cell
     $('#products_table thead tr.filters th.filter-input').each( function () {
         var title = $(this).text();
         $(this).html( '<input type="text" class="form-control text" placeholder="Search '+title+'" />' );
-    } );
-
-    $.each($('.filter-input', table.table().header()), function () {
-        var column = table.column($(this).index());
-        // console.log(column);
-        $('input', this).on('keyup change', function () {
-            console.log(this.value);
-            if (column.search() !== this.value) {
-                column
-                    .search(this.value)
-                    .draw();
-            }
-        });
-    });
-
-    $( '#filter_source' ).change(function () {
-        if ( table.search() !== this.value ) {
-            table
-                .search( this.value )
-                .draw();
-        }
     } );
 
     // Clear All Filters
@@ -222,7 +336,7 @@ $(function () {
     $('#btn_callback_confirm').click(function() {
         $('#product_create_callback_modal').modal('hide');
         if($(this).data('status')) {
-            location.reload();
+            table.ajax.reload();
         }
     });
 
@@ -248,42 +362,6 @@ $(function () {
     // Hide datepicker after selecting date.
     $('.datepicker').on('changeDate', function(ev){
         $(this).datepicker('hide');
-    });
-
-    $('.update-product').click(function() {
-
-        $('#update_product_modal').modal('show');
-        initUpdateStatusModal();
-
-        var data = $(this).data('product');
-
-        $('#update_modal_label').text('Pheramor ID: ' + data.pheramor_id);
-
-        $('#sales_date').val(data.sales_date);
-        $('#ship_date').val(data.ship_date);
-        $('#account_connected_date').val(data.account_connected_date);
-        $('#swab_returned_date').val(data.swab_returned_date);
-        $('#ship_to_lab_date').val(data.ship_to_lab_date);
-        $('#lab_received_date').val(data.lab_received_date);
-        $('#sequenced_date').val(data.sequenced_date);
-        $('#uploaded_to_server_date').val(data.uploaded_to_server_date);
-        $('#bone_marrow_consent_date').val(data.bone_marrow_consent_date);
-        $('#bone_marrow_shared_date').val(data.bone_marrow_shared_date);
-
-        $('#first_name').prop('disabled', false);
-        $('#last_name').prop('disabled', false);
-        $('#sales_email').prop('disabled', false);
-        $('#account_email').prop('disabled', false);
-        $('#phone').prop('disabled', false);
-
-        $('#first_name').val(data.first_name);
-        $('#last_name').val(data.last_name);
-        $('#sales_email').val(data.sales_email);
-        $('#account_email').val(data.account_email);
-        $('#phone').val(data.phone);
-
-        $('#btn_update_status').data('id', data.id);
-        $('#btn_update_status').data('product', data);
     });
 
     // Update customer status on bulk
@@ -445,41 +523,31 @@ $(function () {
         }
     }
 
-    // Update Note for a product
-    $('.update-note').click(function() {
-
-        $('#note_modal').modal('show');
-
-        var data = $(this).data('product');
-
-        $('#note_modal textarea').val(data.note);
-        $('#btn_update_note').data('id', data.id);
-    });
-
+    // Update note for a customer
     $('#btn_update_note').click(function() {
 
         waitingDialog.show('Updating note...');
 
         var postData = {
-            sales_date: $('#sales_date').val(),
-            ship_date: $('#ship_date').val(),
-            account_connected_date: $('#account_connected_date').val(),
-            swab_returned_date: $('#swab_returned_date').val(),
-            ship_to_lab_date: $('#ship_to_lab_date').val(),
-            lab_received_date: $('#lab_received_date').val(),
-            sequenced_date: $('#sequenced_date').val(),
-            uploaded_to_server_date: $('#uploaded_to_server_date').val(),
-            bone_marrow_consent_date: $('#bone_marrow_consent_date').val(),
-            bone_marrow_shared_date: $('#bone_marrow_shared_date').val(),
-            first_name: $('#first_name').val(),
-            last_name: $('#last_name').val(),
-            sales_email: $('#sales_email').val(),
-            account_email: $('#account_email').val(),
-            phone: $('#phone').val(),
+            sales_date: customer.sales_date,
+            ship_date: customer.ship_date,
+            account_connected_date: customer.account_connected_date,
+            swab_returned_date: customer.swab_returned_date,
+            ship_to_lab_date: customer.ship_to_lab_date,
+            lab_received_date: customer.lab_received_date,
+            sequenced_date: customer.sequenced_date,
+            uploaded_to_server_date: customer.uploaded_to_server_date,
+            bone_marrow_consent_date: customer.bone_marrow_consent_date,
+            bone_marrow_shared_date: customer.bone_marrow_shared_date,
+            first_name: customer.first_name,
+            last_name: customer.last_name,
+            sales_email: customer.sales_email,
+            account_email: customer.account_email,
+            phone: customer.phone,
             note: $('#note_modal textarea').val()
         }
 
-        var id = $(this).data('id');
+        var id = customer.id;
         var url = 'customers/' + id;
         axios.put(url, postData, id)
             .then(function (response) {
@@ -498,15 +566,8 @@ $(function () {
     // Delete product
     var modalDeleteConfirm = function(callback){
 
-        var userData = null;
-
-        $(".delete-product").on("click", function(){
-            $("#delete-mi-modal").modal('show');
-            userData = $(this).data('product');
-        });
-
         $("#delete-modal-btn-yes").on("click", function(){
-            callback(true, userData);
+            callback(true, deleteUserId);
             $("#delete-mi-modal").modal('hide');
             waitingDialog.show('Deleting customer...');
         });
@@ -517,9 +578,9 @@ $(function () {
         });
     };
 
-    modalDeleteConfirm(function(confirm, data){
+    modalDeleteConfirm(function(confirm, id){
         if(confirm){
-            var url = 'customers/' + data.id;
+            var url = 'customers/' + id;
             axios.delete(url)
                 .then(function (response) {
                     if (response.data.status == true) {

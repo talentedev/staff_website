@@ -27,6 +27,7 @@ Route::group(['middleware' => 'web'], function () {
 
         // Products
         Route::resource('customers', 'ProductController');
+        Route::post('getCustomersByAjax', 'ProductController@getList')->name('getCustomerAjax');
         Route::post('customers/update_status', 'ProductController@updateStatus');
         Route::post('customers/update_csv', 'ProductController@updateByCSV');
 

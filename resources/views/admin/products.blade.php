@@ -65,37 +65,6 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                @foreach ($products as $key => $product)
-                    <tr>
-                        <td class="text-center"><input type="checkbox" class="minimal" data-id="{{ $product->id }}"></td>
-                        <td class="text-center">{{ $product->pheramor_id }}</td>
-                        <td class="text-center">{{ $product->sales_email }}</td>
-                        <td class="text-center">{{ $product->account_email }}</td>
-                        <td class="text-center">{{ $product->first_name }}</td>
-                        <td class="text-center">{{ $product->last_name }}</td>
-                        <td class="text-center">{{ $product->phone }}</td>
-                        <td class="text-center">{{ $product->source }}</td>
-                        <td class="text-center">{{ $product->created_at === null ? 'n/a' : $product->created_at->format('d-M-Y') }}</td>
-                        <td class="text-center">{{ $product->sales_date === null ? 'n/a' : date('d-M-Y', strtotime($product->sales_date)) }}</td>
-                        <td class="text-center">{{ $product->ship_date === null ? 'n/a' : date('d-M-Y', strtotime($product->ship_date)) }}</td>
-                        <td class="text-center">{{ $product->account_connected_date === null ? 'n/a' : date('d-M-Y', strtotime($product->account_connected_date)) }}</td>
-                        <td class="text-center">{{ $product->swab_returned_date === null ? 'n/a' : date('d-M-Y', strtotime($product->swab_returned_date)) }}</td>
-                        <td class="text-center">{{ $product->ship_to_lab_date === null ? 'n/a' : date('d-M-Y', strtotime($product->ship_to_lab_date)) }}</td>
-                        <td class="text-center">{{ $product->lab_received_date === null ? 'n/a' : date('d-M-Y', strtotime($product->lab_received_date)) }}</td>
-                        <td class="text-center">{{ $product->sequenced_date === null ? 'n/a' : date('d-M-Y', strtotime($product->sequenced_date)) }}</td>
-                        <td class="text-center">{{ $product->uploaded_to_server_date === null ? 'n/a' : date('d-M-Y', strtotime($product->uploaded_to_server_date)) }}</td>
-                        <td class="text-center">{{ $product->bone_marrow_consent_date === null ? 'n/a' : date('d-M-Y', strtotime($product->bone_marrow_consent_date)) }}</td>
-                        <td class="text-center">{{ $product->bone_marrow_shared_date === null ? 'n/a' : date('d-M-Y', strtotime($product->bone_marrow_shared_date)) }}</td>
-                        <td class="text-center">{{ $product->note }}</td>
-                        <td class="text-center text-danger">
-                            <button class="btn btn-xs btn-success update-product" data-product="{{ $product }}">update</button>
-                            <button class="btn btn-xs btn-info update-note" data-product="{{ $product }}">note</button>
-                            <button class="btn btn-xs btn-danger delete-product" data-product="{{ $product }}"><i class="fa fa-trash"></i></button>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
             </table>
             <button class="btn btn-primary" id="add_customer">Add Customer</button>
             <button class="btn btn-success" id="update_status_bulk">Update Status</button>

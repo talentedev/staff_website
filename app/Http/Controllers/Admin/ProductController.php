@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Product;
@@ -54,6 +55,121 @@ class ProductController extends Controller
     }
 
     /**
+     * Return a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getList(Request $request)
+    {
+        //define index of column
+        $columns = array( 
+            0 =>'id',
+            1 =>'pheramor_id', 
+            2 => 'sales_email',
+            3 => 'account_email',
+            4 => 'first_name',
+            5 => 'last_name',
+            6 => 'phone',
+            7 => 'source',
+            8 => 'sales_date',
+            9 => 'ship_date',
+            10 => 'account_connected_date',
+            11 => 'swab_returned_date',
+            12 => 'ship_to_lab_date',
+            13 => 'lab_received_date',
+            14 => 'sequenced_date',
+            15 => 'uploaded_to_server_date',
+            16 => 'bone_marrow_consent_date',
+            17 => 'bone_marrow_shared_date',
+            18 => 'note'
+        );
+
+        $totalData = Product::count();
+
+        $totalFiltered = $totalData; 
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        if(empty($request->input('search.value')))
+        {            
+            $posts = Product::offset($start)
+                         ->limit($limit)
+                         ->orderBy($order,$dir)
+                         ->get();
+        }
+        else {
+            $search = $request->input('search.value'); 
+
+            $posts =  Product::where('id','LIKE',"%{$search}%")
+                            ->orWhere('pheramor_id', 'LIKE',"%{$search}%")
+                            ->orWhere('sales_email', 'LIKE',"%{$search}%")
+                            ->orWhere('account_email', 'LIKE',"%{$search}%")
+                            ->orWhere('first_name', 'LIKE',"%{$search}%")
+                            ->orWhere('last_name', 'LIKE',"%{$search}%")
+                            ->orWhere('phone', 'LIKE',"%{$search}%")
+                            ->orWhere('source', 'LIKE',"%{$search}%")
+                            ->offset($start)
+                            ->limit($limit)
+                            ->orderBy($order,$dir)
+                            ->get();
+
+            $totalFiltered = Product::where('id','LIKE',"%{$search}%")
+                             ->orWhere('pheramor_id', 'LIKE',"%{$search}%")
+                             ->orWhere('sales_email', 'LIKE',"%{$search}%")
+                             ->orWhere('account_email', 'LIKE',"%{$search}%")
+                             ->orWhere('first_name', 'LIKE',"%{$search}%")
+                             ->orWhere('last_name', 'LIKE',"%{$search}%")
+                             ->orWhere('phone', 'LIKE',"%{$search}%")
+                             ->orWhere('source', 'LIKE',"%{$search}%")
+                             ->count();
+        }
+
+        $data = array();
+        if(!empty($posts))
+        {
+            foreach ($posts as $post)
+            {
+                $nestedData['id'] = $post->id;
+                $nestedData['pheramor_id'] = $post->pheramor_id;
+                $nestedData['sales_email'] = $post->sales_email;
+                $nestedData['account_email'] = $post->account_email;
+                $nestedData['first_name'] = $post->first_name;
+                $nestedData['last_name'] = $post->last_name;
+                $nestedData['phone'] = $post->phone;
+                $nestedData['source'] = $post->source;
+                $nestedData['created_at'] = date('Y-m-j',strtotime($post->created_at));
+                $nestedData['sales_date'] = $post->sales_date;
+                $nestedData['ship_date'] = $post->ship_date;
+                $nestedData['account_connected_date'] = $post->account_connected_date;
+                $nestedData['swab_returned_date'] = $post->swab_returned_date;
+                $nestedData['ship_to_lab_date'] = $post->ship_to_lab_date;
+                $nestedData['lab_received_date'] = $post->lab_received_date;
+                $nestedData['sequenced_date'] = $post->sequenced_date;
+                $nestedData['uploaded_to_server_date'] = $post->uploaded_to_server_date;
+                $nestedData['bone_marrow_consent_date'] = $post->bone_marrow_consent_date;
+                $nestedData['bone_marrow_shared_date'] = $post->bone_marrow_shared_date;
+                $nestedData['note'] = $post->note;
+                $nestedData['actions'] = '<button class="btn btn-xs btn-success update-product" data-id="' . $post->id . '">update</button>
+                                          <button class="btn btn-xs btn-info update-note" data-id="' . $post->id . '">note</button>
+                                          <button class="btn btn-xs btn-danger delete-product" data-id="' . $post->id . '"><i class="fa fa-trash"></i></button>';
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data = array(
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data"            => $data
+        );
+
+        echo json_encode($json_data);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -94,9 +210,10 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = $this->product->find($id);
-        return view('admin.track', [
-            'product' => $product
-        ]);
+        return response()->json([
+            'status' => true,
+            'data'   => $product
+        ], 200);
     }
 
     /**
@@ -156,7 +273,7 @@ class ProductController extends Controller
         $this->product->destroy($id);
 
         $result = $this->deleteContact($product->sales_email);
-        return response()->json(['status' => $result], 200);
+        return response()->json(['status' => true], 200);
     }
 
     /**
