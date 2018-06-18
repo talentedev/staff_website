@@ -433,7 +433,9 @@ class ProductController extends Controller
 
                 $product = array();
 
-                $product['sales_email'] = $value['sales_email'];
+                if($value['sales_email'] != '') {
+                    $product['sales_email'] = $value['sales_email'];
+                }
 
                 $tags = array();
 
@@ -497,7 +499,9 @@ class ProductController extends Controller
                 $tags = array();
 
                 $product['pheramor_id'] = $value['pheramor_id'];
-                $product['sales_email'] = $value['sales_email'];
+                if($value['sales_email'] != '') {
+                    $product['sales_email'] = $value['sales_email'];
+                }
                 $product['source'] = Auth::user()->roles[0]->name;
 
                 if ($dates['sales_date']  != '') {
