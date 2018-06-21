@@ -563,7 +563,7 @@ class ProductController extends Controller
                 if(empty((array)$existContact)) {
                     $this->addTag($value['sales_email'], $tags, $value['pheramor_id']);
                 } else {
-                    $this->addContact($value['pheramor_id'], $value['sales_email'], $tags);
+                    $this->addContact($value['sales_email'], $value['pheramor_id'], $tags);
                 }
             }
         }

@@ -660,6 +660,16 @@ $(function () {
         // start reading the file. When it is done, calls the onload event defined above.
         reader.readAsBinaryString(document.getElementById("upload_csv").files[0]);
         document.getElementById("upload_csv").value = "";
+        $('#csv_sales_date').val('');
+        $('#csv_ship_date').val('');
+        $('#csv_account_connected_date').val('');
+        $('#csv_swab_returned_date').val('');
+        $('#csv_ship_to_lab_date').val('');
+        $('#csv_lab_received_date').val('');
+        $('#csv_sequenced_date').val('');
+        $('#csv_uploaded_to_server_date').val('');
+        $('#csv_bone_marrow_consent_date').val('');
+        $('#csv_bone_marrow_shared_date').val('');
     });
 
     function processCSVData(data) {
@@ -734,7 +744,7 @@ $(function () {
     function compareCSVwithExistData(data) {
         var existData = $('#data_products').data('products');
         for(key in existData) {
-            if (existData[key].pheramor_id == data[0]) {
+            if (existData[key].pheramor_id == data[0].replace(/\s/g, '')) {
                 return {
                     result: true,
                     id: existData[key].id
