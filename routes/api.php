@@ -31,3 +31,8 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     Route::resource('users', 'UserController');
 
 });
+
+// Public API
+Route::prefix('public')->group(function () {
+    Route::post('updateCustomerPhone', 'Api\ProductController@updatePhone');
+});

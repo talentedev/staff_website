@@ -419,4 +419,29 @@ class ProductController extends ApiController
     protected function getTagValue($key) {
         return Tag::where('selector', $key)->first()->value;
     }
+
+    /**
+     * Update the phone number in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePhone(Request $request)
+    {
+        try {
+            $product = $this->product::where('pheramor_id', $request->get('pheramor_id'))->get()->first();
+            $product->phone = $request->get('phone');
+            $product->save();
+            return $this->respond([
+                'status' => true,
+                'data'   => $this->product->orderBy('updated_at', 'desc')->first()
+            ]);
+        } catch(\Exception $e) {
+            return $this->respond([
+                'status' => false,
+                'message' => 'We can not update phone number.'
+            ]);
+        }
+    }
 }
