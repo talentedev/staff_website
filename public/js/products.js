@@ -103,7 +103,7 @@ $(function () {
         "initComplete": function initComplete(settings, json) {
             var api = this.api();
 
-            // Apply the search
+            // Apply the search by column
             api.columns().every(function () {
                 var that = this;
                 // Text
@@ -112,6 +112,14 @@ $(function () {
                         that.column($(this).parent().index()).search(this.value).draw();
                     }
                 });
+            });
+
+            // Search totally
+            $('#products_table input[type="search"]').on('keyup', function (e) {
+                var that = this;
+                if (that.search() !== this.value && e.keyCode == 13) {
+                    that.search(this.value).draw();
+                }
             });
         },
         "drawCallback": function drawCallback() {

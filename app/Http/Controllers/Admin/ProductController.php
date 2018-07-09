@@ -96,10 +96,10 @@ class ProductController extends Controller
         // Total search
         if(empty($request->input('search.value')))
         {            
-            $posts = Product::offset($start)
-                         ->limit($limit)
-                         ->orderBy($order,$dir)
-                         ->get();
+            // $posts = Product::offset($start)
+            //              ->limit($limit)
+            //              ->orderBy($order,$dir)
+            //              ->get();
         }
         else {
             $search = $request->input('search.value'); 
@@ -111,29 +111,15 @@ class ProductController extends Controller
                             ->orWhere('first_name', 'LIKE',"%{$search}%")
                             ->orWhere('last_name', 'LIKE',"%{$search}%")
                             ->orWhere('phone', 'LIKE',"%{$search}%")
-                            ->orWhere('source', 'LIKE',"%{$search}%")
-                            ->offset($start)
-                            ->limit($limit)
-                            ->orderBy($order,$dir)
-                            ->get();
-
-            $totalFiltered = Product::where('id','LIKE',"%{$search}%")
-                             ->orWhere('pheramor_id', 'LIKE',"%{$search}%")
-                             ->orWhere('sales_email', 'LIKE',"%{$search}%")
-                             ->orWhere('account_email', 'LIKE',"%{$search}%")
-                             ->orWhere('first_name', 'LIKE',"%{$search}%")
-                             ->orWhere('last_name', 'LIKE',"%{$search}%")
-                             ->orWhere('phone', 'LIKE',"%{$search}%")
-                             ->orWhere('source', 'LIKE',"%{$search}%")
-                             ->count();
+                            ->orWhere('source', 'LIKE',"%{$search}%");
         }
 
         // Searcy by column
         if (empty($request->input('columns'))) {
-            $posts = Product::offset($start)
-                         ->limit($limit)
-                         ->orderBy($order,$dir)
-                         ->get();
+            // $posts = Product::offset($start)
+            //              ->limit($limit)
+            //              ->orderBy($order,$dir)
+            //              ->get();
             
         } else {
             $whereSql = [];
@@ -169,6 +155,9 @@ class ProductController extends Controller
             }
 
             $whereResult = Product::where($whereSql);
+            if(!empty($posts)) {
+                $whereResult = $posts;
+            }
 
             // Date filter
             if(!empty($request->input('columns.8.search.value'))) {

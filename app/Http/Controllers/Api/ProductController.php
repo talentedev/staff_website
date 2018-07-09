@@ -85,7 +85,7 @@ class ProductController extends ApiController
             $this->product->source = Auth::user()->source;
 
             // Check if PheramorID alrady exist
-            $existID = $this->product->where('pheramor_id', $request->get('pheramor_id'))->get()->first();
+            $existID = $this->product->where('sales_email', $request->get('sales_email'))->get()->first();
             if (empty((array) $existID)) { // Add new contract
                 $this->product->save();
 
@@ -103,9 +103,9 @@ class ProductController extends ApiController
                     'data'   => $this->product->orderBy('created_at', 'desc')->first()
                 ]);
             } else { // Update contract
-                $this->product->where('pheramor_id', $request->get('pheramor_id'))
+                $this->product->where('sales_email', $request->get('sales_email'))
                               ->update([
-                                'sales_email' => $request->get('sales_email'),
+                                'pheramor_id' => $request->get('pheramor_id'),
                                 'first_name'  => $request->get('first_name'),
                                 'last_name'   => $request->get('last_name'),
                                 'phone'       => $request->get('phone')
@@ -115,7 +115,7 @@ class ProductController extends ApiController
                 
                 $this->updateContact(
                     $agileID,
-                    $request->get('sales_email'),
+                    $request->get('pheramor_id'),
                     $request->get('first_name'),
                     $request->get('last_name'),
                     $request->get('phone')
@@ -123,6 +123,7 @@ class ProductController extends ApiController
 
                 return $this->respond([
                     'status' => true,
+                    'contract' => $this->getContact($request->get('sales_email')),
                     'data'   => $this->product->orderBy('updated_at', 'desc')->first()
                 ]);
             }
@@ -383,15 +384,10 @@ class ProductController extends ApiController
     }
 
     // Update contact to AgileCRM
-    protected function updateContact($id, $email, $first_name, $last_name, $phone) {
+    protected function updateContact($id, $pheramor_id, $first_name, $last_name, $phone) {
         $contact_json = array(
           "id"=>$id,
           "properties"=>array(
-            array(
-              "name"=>"email",
-              "value"=>$email,
-              "type"=>"SYSTEM"
-            ),
             array(
               "name"=>"first_name",
               "value"=>$first_name,
@@ -406,6 +402,11 @@ class ProductController extends ApiController
               "name"=>"Phone Number",
               "value"=>$phone,
               "type"=>"CUSTOM"
+            ),
+            array(
+                "name"=>"Pheramor ID",
+                "value"=>$pheramor_id,
+                "type"=>"CUSTOM"
             )
           )
         );

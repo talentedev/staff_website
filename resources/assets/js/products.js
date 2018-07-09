@@ -49,7 +49,7 @@ $(function () {
         "initComplete": function(settings, json) {
             var api = this.api();
 
-            // Apply the search
+            // Apply the search by column
             api.columns().every(function() {
               var that = this;
               // Text
@@ -62,6 +62,16 @@ $(function () {
                 }
               });
             });
+
+            // Search totally
+            $('#products_table input[type="search"]').on('keyup', function(e) {
+                var that = this;
+                if (that.search() !== this.value && e.keyCode == 13) {
+                  that
+                    .search(this.value)
+                    .draw();
+                }
+              });
         },
         "drawCallback": function() {
             init();
