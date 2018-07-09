@@ -1,5 +1,7 @@
 $(function () {
 
+    // Show/Hide Advanced Filters
+    $('#products_table thead tr.filters').hide();
 
     var customer;
     var deleteUserId;
@@ -50,9 +52,11 @@ $(function () {
             // Apply the search
             api.columns().every(function() {
               var that = this;
-              $('tr.filters th.filter-input input').on('keyup change', function() {
-                if (that.search() !== this.value) {
+              // Text
+              $('#products_table thead').on('keyup', ".text-search", function(e) {
+                if (that.search() !== this.value && e.keyCode == 13) {
                   that
+                    .column( $(this).parent().index() )
                     .search(this.value)
                     .draw();
                 }
@@ -70,6 +74,15 @@ $(function () {
         $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
             checkboxClass: 'icheckbox_minimal-blue',
             radioClass   : 'iradio_minimal-blue'
+        });
+
+        // Show/Hide Advanced Filters
+        $('#show_advanced_filter').on('ifChecked', function(event){
+            $('#products_table thead tr.filters').show();
+        });
+
+        $('#show_advanced_filter').on('ifUnchecked', function(event){
+            $('#products_table thead tr.filters').hide();
         });
 
         // Update customer infomations
@@ -152,7 +165,7 @@ $(function () {
             deleteUserId = $(this).data('id');
         });
     }
-/*
+
     // Date Range Filter
     $('#products_table thead tr.filters th.filter-date').each( function (key) {
         var title = $(this).text();
@@ -174,7 +187,7 @@ $(function () {
         opens: "left",
         locale: {
             cancelLabel: 'Clear',
-            format: 'DD-MMM-YYYY'
+            format: 'YYYY-MM-DD'
         }
     });
 
@@ -187,22 +200,13 @@ $(function () {
         dataIdx = table.column.index('fromVisible', visIdx);
     });
 
-    // Function for converting a dd/mmm/yyyy date value into a numeric string for comparison (example 01-Dec-2010 becomes 20101201
-    function parseDateValue(rawDate) {
-
-        var d = moment(rawDate, "DD-MMM-YYYY").format('DD-MM-YYYY');
-        var dateArray = d.split("-");
-        var parsedDate = dateArray[2] + dateArray[1] + dateArray[0];
-        return parsedDate;
-    }
-
     //filter on daterange
     $(".daterange").on('apply.daterangepicker', function (ev, picker) {
 
         ev.preventDefault();
 
         //if blank date option was selected
-        if ((picker.startDate.format('DD-MMM-YYYY') == "01-Jan-0001") && (picker.endDate.format('DD-MMM-YYYY')) == "01-Jan-0001") {
+        if ((picker.startDate.format('YYYY-MM-DD') == "01-Jan-0001") && (picker.endDate.format('YYYY-MM-DD')) == "01-Jan-0001") {
             $(this).val('Blank');
 
             val = "^$";
@@ -213,38 +217,16 @@ $(function () {
         }
         else {
             //set field value
-            $(this).val(picker.startDate.format('DD-MMM-YYYY') + ' to ' + picker.endDate.format('DD-MMM-YYYY'));
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' to ' + picker.endDate.format('YYYY-MM-DD'));
 
             //run date filter
-            startDate = picker.startDate.format('DD-MMM-YYYY');
-            endDate = picker.endDate.format('DD-MMM-YYYY');
+            startDate = picker.startDate.format('YYYY-MM-DD');
+            endDate = picker.endDate.format('YYYY-MM-DD');
 
-            var dateStart = parseDateValue(startDate);
-            var dateEnd = parseDateValue(endDate);
-
-            var filteredData = table
-                    .column(dataIdx)
-                    .data()
-                    .filter(function (value, index) {
-
-                        var evalDate = value === "" ? 0 : parseDateValue(value);
-                        if ((isNaN(dateStart) && isNaN(dateEnd)) || (evalDate >= dateStart && evalDate <= dateEnd)) {
-
-                            return true;
-                        }
-                        return false;
-                    });
-
-            var val = "";
-            for (var count = 0; count < filteredData.length; count++) {
-
-                val += filteredData[count] + "|";
-            }
-
-            val = val.slice(0, -1);
-
+            console.log(startDate);
+            console.log(endDate);
             table.column(dataIdx)
-                  .search(val ? "^" + val + "$" : "^" + "-" + "$", true, false, true)
+                  .search(startDate + '|' + endDate, true, false, true)
                   .draw();
         }
     });
@@ -256,32 +238,17 @@ $(function () {
               .search("")
               .draw();
     });
-       
-    // Apply the search
-    $.each($('.filter-date', table.table().header()), function () {
-        var column = table.column($(this).index());
-        // console.log(column);
-        $('input', this).on('keyup change', function () {
-            console.log(this.value);
-            if (column.search() !== this.value) {
-                column
-                    .search(this.value)
-                    .draw();
-            }
-        });
-    });*/
 
     // Setup - add a input to each footer cell
     $('#products_table thead tr.filters th.filter-input').each( function () {
         var title = $(this).text();
-        $(this).html( '<input type="text" class="form-control text" placeholder="Search '+title+'" />' );
+        $(this).html( '<input type="text" class="form-control text-search" placeholder="Search '+title+'" />' );
     } );
 
     // Clear All Filters
     $('#btn_clear_filter').click(function() {
         console.log('clear filter');
-        $('#products_table thead input').val('').change();
-        $( '#filter_source' ).val('').change();
+        location.reload();
     });
 
     // Add Customer Form validation
@@ -632,17 +599,6 @@ $(function () {
         $('tbody input').each(function () {
             $(this).iCheck('uncheck');
         });
-    });
-
-    // Show/Hide Advanced Filters
-    $('#products_table thead tr.filters').hide();
-
-    $('#show_advanced_filter').on('ifChecked', function(event){
-        $('#products_table thead tr.filters').show();
-    });
-
-    $('#show_advanced_filter').on('ifUnchecked', function(event){
-        $('#products_table thead tr.filters').hide();
     });
 
     ////////////////////////////// Read CSV File ////////////////////////////////

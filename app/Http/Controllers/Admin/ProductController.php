@@ -93,6 +93,7 @@ class ProductController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
 
+        // Total search
         if(empty($request->input('search.value')))
         {            
             $posts = Product::offset($start)
@@ -124,6 +125,137 @@ class ProductController extends Controller
                              ->orWhere('last_name', 'LIKE',"%{$search}%")
                              ->orWhere('phone', 'LIKE',"%{$search}%")
                              ->orWhere('source', 'LIKE',"%{$search}%")
+                             ->count();
+        }
+
+        // Searcy by column
+        if (empty($request->input('columns'))) {
+            $posts = Product::offset($start)
+                         ->limit($limit)
+                         ->orderBy($order,$dir)
+                         ->get();
+            
+        } else {
+            $whereSql = [];
+
+            // Text filter
+            if(!empty($request->input('columns.1.search.value'))) {
+                $searchPheramorID = $request->input('columns.1.search.value');
+                array_push($whereSql, ['pheramor_id', 'LIKE', "%{$searchPheramorID}%"]);
+            }
+            if(!empty($request->input('columns.2.search.value'))) {
+                $searchSalesEmail = $request->input('columns.2.search.value');
+                array_push($whereSql, ['sales_email', 'LIKE', "%{$searchSalesEmail}%"]);
+            }
+            if(!empty($request->input('columns.3.search.value'))) {
+                $searchAccountEmail = $request->input('columns.3.search.value');
+                array_push($whereSql, ['account_email', 'LIKE', "%{$searchAccountEmail}%"]);
+            }
+            if(!empty($request->input('columns.4.search.value'))) {
+                $searchFirstName = $request->input('columns.4.search.value');
+                array_push($whereSql, ['first_name', 'LIKE', "%{$searchFirstName}%"]);
+            }
+            if(!empty($request->input('columns.5.search.value'))) {
+                $searchLastName = $request->input('columns.5.search.value');
+                array_push($whereSql, ['last_name', 'LIKE', "%{$searchLastName}%"]);
+            }
+            if(!empty($request->input('columns.6.search.value'))) {
+                $searchPhone = $request->input('columns.6.search.value');
+                array_push($whereSql, ['phone', 'LIKE', "%{$searchPhone}%"]);
+            }
+            if(!empty($request->input('columns.7.search.value'))) {
+                $searchSource = $request->input('columns.7.search.value');
+                array_push($whereSql, ['source', 'LIKE', "%{$searchSource}%"]);
+            }
+
+            $whereResult = Product::where($whereSql);
+
+            // Date filter
+            if(!empty($request->input('columns.8.search.value'))) {
+                $searchCreatedDate = $request->input('columns.8.search.value');
+                $createdDates = explode("|", $searchCreatedDate);
+                $from = date($createdDates[0]);
+                $to = date($createdDates[1]);
+                $whereResult->whereBetween('created_at', [$from, $to]);
+            }
+            if(!empty($request->input('columns.9.search.value'))) {
+                $searchSalesDate = $request->input('columns.9.search.value');
+                $salesDates = explode("|", $searchSalesDate);
+                $from = date($salesDates[0]);
+                $to = date($salesDates[1]);
+                $whereResult->whereBetween('sales_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.10.search.value'))) {
+                $searchShipDate = $request->input('columns.10.search.value');
+                $shipDates = explode("|", $searchShipDate);
+                $from = date($shipDates[0]);
+                $to = date($shipDates[1]);
+                $whereResult->whereBetween('ship_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.11.search.value'))) {
+                $searchAccountDate = $request->input('columns.11.search.value');
+                $accountDates = explode("|", $searchAccountDate);
+                $from = date($accountDates[0]);
+                $to = date($accountDates[1]);
+                $whereResult->whereBetween('account_connected_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.12.search.value'))) {
+                $searchSwabDate = $request->input('columns.12.search.value');
+                $swabDates = explode("|", $searchSwabDate);
+                $from = date($swabDates[0]);
+                $to = date($swabDates[1]);
+                $whereResult->whereBetween('swab_returned_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.13.search.value'))) {
+                $searchShipToLabDate = $request->input('columns.13.search.value');
+                $shipToLabDates = explode("|", $searchShipToLabDate);
+                $from = date($shipToLabDates[0]);
+                $to = date($shipToLabDates[1]);
+                $whereResult->whereBetween('ship_to_lab_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.14.search.value'))) {
+                $searchLabReceivedDate = $request->input('columns.14.search.value');
+                $labReceivedDates = explode("|", $searchLabReceivedDate);
+                $from = date($labReceivedDates[0]);
+                $to = date($labReceivedDates[1]);
+                $whereResult->whereBetween('lab_received_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.15.search.value'))) {
+                $searchSequencedDate = $request->input('columns.15.search.value');
+                $sequencedDates = explode("|", $searchSequencedDate);
+                $from = date($sequencedDates[0]);
+                $to = date($sequencedDates[1]);
+                $whereResult->whereBetween('sequenced_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.16.search.value'))) {
+                $searchUploadedDate = $request->input('columns.16.search.value');
+                $uploadedDates = explode("|", $searchUploadedDate);
+                $from = date($uploadedDates[0]);
+                $to = date($uploadedDates[1]);
+                $whereResult->whereBetween('uploaded_to_server_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.17.search.value'))) {
+                $searchConsentDate = $request->input('columns.17.search.value');
+                $consentDates = explode("|", $searchConsentDate);
+                $from = date($consentDates[0]);
+                $to = date($consentDates[1]);
+                $whereResult->whereBetween('bone_marrow_consent_date', [$from, $to]);
+            }
+            if(!empty($request->input('columns.18.search.value'))) {
+                $searchSharedDate = $request->input('columns.18.search.value');
+                $sharedDates = explode("|", $searchSharedDate);
+                $from = date($sharedDates[0]);
+                $to = date($sharedDates[1]);
+                $whereResult->whereBetween('bone_marrow_shared_date', [$from, $to]);
+            }
+
+            $posts =  $whereResult
+                            ->offset($start)
+                            ->limit($limit)
+                            ->orderBy($order,$dir)
+                            ->get();
+
+            $totalFiltered = Product::where($whereSql)
                              ->count();
         }
 

@@ -78,6 +78,9 @@ module.exports = __webpack_require__(57);
 
 $(function () {
 
+    // Show/Hide Advanced Filters
+    $('#products_table thead tr.filters').hide();
+
     var customer;
     var deleteUserId;
 
@@ -103,9 +106,10 @@ $(function () {
             // Apply the search
             api.columns().every(function () {
                 var that = this;
-                $('tr.filters th.filter-input input').on('keyup change', function () {
-                    if (that.search() !== this.value) {
-                        that.search(this.value).draw();
+                // Text
+                $('#products_table thead').on('keyup', ".text-search", function (e) {
+                    if (that.search() !== this.value && e.keyCode == 13) {
+                        that.column($(this).parent().index()).search(this.value).draw();
                     }
                 });
             });
@@ -121,6 +125,15 @@ $(function () {
         $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
             checkboxClass: 'icheckbox_minimal-blue',
             radioClass: 'iradio_minimal-blue'
+        });
+
+        // Show/Hide Advanced Filters
+        $('#show_advanced_filter').on('ifChecked', function (event) {
+            $('#products_table thead tr.filters').show();
+        });
+
+        $('#show_advanced_filter').on('ifUnchecked', function (event) {
+            $('#products_table thead tr.filters').hide();
         });
 
         // Update customer infomations
@@ -198,136 +211,83 @@ $(function () {
             deleteUserId = $(this).data('id');
         });
     }
-    /*
-        // Date Range Filter
-        $('#products_table thead tr.filters th.filter-date').each( function (key) {
-            var title = $(this).text();
-            $(this).html('<div class="input-prepend input-group"><label class="add-on input-group-addon" for="' + $.trim(title).replace(/ /g, '') + '"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></label><input type="text" style="width: 200px" name="' + $.trim(title).replace(/ /g, '') + '"  placeholder="Search ' + $.trim(title) + '" id="' + $.trim(title).replace(/ /g, '') + '" class="form-control daterange"/></div>');
-        } );
-    
-        //instantiate datepicker and choose your format of the dates
-        $('.daterange').daterangepicker({
-            ranges: {
-                "Today": [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                '7 last days': [moment().subtract(6, 'days'), moment()],
-                '30 last days': [moment().subtract(29, 'days'), moment()],
-                'This month': [moment().startOf('month'), moment().endOf('month')],
-                'Last month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-                // 'Blank date': [moment("0001-01-01"), moment("0001-01-01")]
-            },
-            autoUpdateInput: false,
-            opens: "left",
-            locale: {
-                cancelLabel: 'Clear',
-                format: 'DD-MMM-YYYY'
-            }
-        });
-    
-        var startDate;
-        var endDate;
-        var dataIdx;  //current data column to work with
-    
-        $("#products_table thead tr.filters").on("mousedown", "th", function (event) {
-            var visIdx = $(this).parent().children().index($(this));
-            dataIdx = table.column.index('fromVisible', visIdx);
-        });
-    
-        // Function for converting a dd/mmm/yyyy date value into a numeric string for comparison (example 01-Dec-2010 becomes 20101201
-        function parseDateValue(rawDate) {
-    
-            var d = moment(rawDate, "DD-MMM-YYYY").format('DD-MM-YYYY');
-            var dateArray = d.split("-");
-            var parsedDate = dateArray[2] + dateArray[1] + dateArray[0];
-            return parsedDate;
+
+    // Date Range Filter
+    $('#products_table thead tr.filters th.filter-date').each(function (key) {
+        var title = $(this).text();
+        $(this).html('<div class="input-prepend input-group"><label class="add-on input-group-addon" for="' + $.trim(title).replace(/ /g, '') + '"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></label><input type="text" style="width: 200px" name="' + $.trim(title).replace(/ /g, '') + '"  placeholder="Search ' + $.trim(title) + '" id="' + $.trim(title).replace(/ /g, '') + '" class="form-control daterange"/></div>');
+    });
+
+    //instantiate datepicker and choose your format of the dates
+    $('.daterange').daterangepicker({
+        ranges: {
+            "Today": [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '7 last days': [moment().subtract(6, 'days'), moment()],
+            '30 last days': [moment().subtract(29, 'days'), moment()],
+            'This month': [moment().startOf('month'), moment().endOf('month')],
+            'Last month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            // 'Blank date': [moment("0001-01-01"), moment("0001-01-01")]
+        },
+        autoUpdateInput: false,
+        opens: "left",
+        locale: {
+            cancelLabel: 'Clear',
+            format: 'YYYY-MM-DD'
         }
-    
-        //filter on daterange
-        $(".daterange").on('apply.daterangepicker', function (ev, picker) {
-    
-            ev.preventDefault();
-    
-            //if blank date option was selected
-            if ((picker.startDate.format('DD-MMM-YYYY') == "01-Jan-0001") && (picker.endDate.format('DD-MMM-YYYY')) == "01-Jan-0001") {
-                $(this).val('Blank');
-    
-                val = "^$";
-    
-                table.column(dataIdx)
-                   .search(val, true, false, true)
-                   .draw();
-            }
-            else {
-                //set field value
-                $(this).val(picker.startDate.format('DD-MMM-YYYY') + ' to ' + picker.endDate.format('DD-MMM-YYYY'));
-    
-                //run date filter
-                startDate = picker.startDate.format('DD-MMM-YYYY');
-                endDate = picker.endDate.format('DD-MMM-YYYY');
-    
-                var dateStart = parseDateValue(startDate);
-                var dateEnd = parseDateValue(endDate);
-    
-                var filteredData = table
-                        .column(dataIdx)
-                        .data()
-                        .filter(function (value, index) {
-    
-                            var evalDate = value === "" ? 0 : parseDateValue(value);
-                            if ((isNaN(dateStart) && isNaN(dateEnd)) || (evalDate >= dateStart && evalDate <= dateEnd)) {
-    
-                                return true;
-                            }
-                            return false;
-                        });
-    
-                var val = "";
-                for (var count = 0; count < filteredData.length; count++) {
-    
-                    val += filteredData[count] + "|";
-                }
-    
-                val = val.slice(0, -1);
-    
-                table.column(dataIdx)
-                      .search(val ? "^" + val + "$" : "^" + "-" + "$", true, false, true)
-                      .draw();
-            }
-        });
-    
-        $(".daterange").on('cancel.daterangepicker', function (ev, picker) {
-            ev.preventDefault();
-            $(this).val('');
-            table.column(dataIdx)
-                  .search("")
-                  .draw();
-        });
-           
-        // Apply the search
-        $.each($('.filter-date', table.table().header()), function () {
-            var column = table.column($(this).index());
-            // console.log(column);
-            $('input', this).on('keyup change', function () {
-                console.log(this.value);
-                if (column.search() !== this.value) {
-                    column
-                        .search(this.value)
-                        .draw();
-                }
-            });
-        });*/
+    });
+
+    var startDate;
+    var endDate;
+    var dataIdx; //current data column to work with
+
+    $("#products_table thead tr.filters").on("mousedown", "th", function (event) {
+        var visIdx = $(this).parent().children().index($(this));
+        dataIdx = table.column.index('fromVisible', visIdx);
+    });
+
+    //filter on daterange
+    $(".daterange").on('apply.daterangepicker', function (ev, picker) {
+
+        ev.preventDefault();
+
+        //if blank date option was selected
+        if (picker.startDate.format('YYYY-MM-DD') == "01-Jan-0001" && picker.endDate.format('YYYY-MM-DD') == "01-Jan-0001") {
+            $(this).val('Blank');
+
+            val = "^$";
+
+            table.column(dataIdx).search(val, true, false, true).draw();
+        } else {
+            //set field value
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' to ' + picker.endDate.format('YYYY-MM-DD'));
+
+            //run date filter
+            startDate = picker.startDate.format('YYYY-MM-DD');
+            endDate = picker.endDate.format('YYYY-MM-DD');
+
+            console.log(startDate);
+            console.log(endDate);
+            table.column(dataIdx).search(startDate + '|' + endDate, true, false, true).draw();
+        }
+    });
+
+    $(".daterange").on('cancel.daterangepicker', function (ev, picker) {
+        ev.preventDefault();
+        $(this).val('');
+        table.column(dataIdx).search("").draw();
+    });
 
     // Setup - add a input to each footer cell
     $('#products_table thead tr.filters th.filter-input').each(function () {
         var title = $(this).text();
-        $(this).html('<input type="text" class="form-control text" placeholder="Search ' + title + '" />');
+        $(this).html('<input type="text" class="form-control text-search" placeholder="Search ' + title + '" />');
     });
 
     // Clear All Filters
     $('#btn_clear_filter').click(function () {
         console.log('clear filter');
-        $('#products_table thead input').val('').change();
-        $('#filter_source').val('').change();
+        location.reload();
     });
 
     // Add Customer Form validation
@@ -670,17 +630,6 @@ $(function () {
         $('tbody input').each(function () {
             $(this).iCheck('uncheck');
         });
-    });
-
-    // Show/Hide Advanced Filters
-    $('#products_table thead tr.filters').hide();
-
-    $('#show_advanced_filter').on('ifChecked', function (event) {
-        $('#products_table thead tr.filters').show();
-    });
-
-    $('#show_advanced_filter').on('ifUnchecked', function (event) {
-        $('#products_table thead tr.filters').hide();
     });
 
     ////////////////////////////// Read CSV File ////////////////////////////////
