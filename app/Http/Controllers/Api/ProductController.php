@@ -84,21 +84,48 @@ class ProductController extends ApiController
             $this->product->sales_date = \Carbon\Carbon::now();
             $this->product->source = Auth::user()->source;
 
-            $this->product->save();
+            // Check if PheramorID alrady exist
+            $existID = $this->product->where('pheramor_id', $request->get('pheramor_id'))->get()->first();
+            if (empty((array) $existID)) { // Add new contract
+                $this->product->save();
 
-            $this->addContact(
-                $request->get('sales_email'),
-                $request->get('pheramor_id'),
-                $request->get('first_name'),
-                $request->get('last_name'),
-                $request->get('phone'),
-                $tags
-            );
+                $this->addContact(
+                    $request->get('sales_email'),
+                    $request->get('pheramor_id'),
+                    $request->get('first_name'),
+                    $request->get('last_name'),
+                    $request->get('phone'),
+                    $tags
+                );
 
-            return $this->respond([
-                'status' => true,
-                'data'   => $this->product->orderBy('created_at', 'desc')->first()
-            ]);
+                return $this->respond([
+                    'status' => true,
+                    'data'   => $this->product->orderBy('created_at', 'desc')->first()
+                ]);
+            } else { // Update contract
+                $this->product->where('pheramor_id', $request->get('pheramor_id'))
+                              ->update([
+                                'sales_email' => $request->get('sales_email'),
+                                'first_name'  => $request->get('first_name'),
+                                'last_name'   => $request->get('last_name'),
+                                'phone'       => $request->get('phone')
+                              ]);
+
+                $agileID = substr($this->getContact($request->get('sales_email')), 6, 16);
+                
+                $this->updateContact(
+                    $agileID,
+                    $request->get('sales_email'),
+                    $request->get('first_name'),
+                    $request->get('last_name'),
+                    $request->get('phone')
+                );
+
+                return $this->respond([
+                    'status' => true,
+                    'data'   => $this->product->orderBy('updated_at', 'desc')->first()
+                ]);
+            }
         }
         catch(\Exception $e){
             return $this->respond([
@@ -353,6 +380,38 @@ class ProductController extends ApiController
         activity('agile')
             ->causedBy($auth_id)
             ->log($log_text);
+    }
+
+    // Update contact to AgileCRM
+    protected function updateContact($id, $email, $first_name, $last_name, $phone) {
+        $contact_json = array(
+          "id"=>$id,
+          "properties"=>array(
+            array(
+              "name"=>"email",
+              "value"=>$email,
+              "type"=>"SYSTEM"
+            ),
+            array(
+              "name"=>"first_name",
+              "value"=>$first_name,
+              "type"=>"SYSTEM"
+            ),
+            array(
+              "name"=>"last_name",
+              "value"=>$last_name,
+              "type"=>"SYSTEM"
+            ),
+            array(
+              "name"=>"Phone Number",
+              "value"=>$phone,
+              "type"=>"CUSTOM"
+            )
+          )
+        );
+
+        $contact_json = json_encode($contact_json);
+        $status = $this->curl_wrap("contacts/edit-properties", $contact_json, "PUT", "application/json");
     }
 
     // Get contact by email
