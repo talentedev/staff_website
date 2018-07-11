@@ -84,46 +84,38 @@ class ProductController extends ApiController
             $this->product->sales_date = \Carbon\Carbon::now();
             $this->product->source = Auth::user()->source;
 
-            // Check if PheramorID alrady exist
-            $existID = $this->product->where('sales_email', $request->get('sales_email'))->get()->first();
-            if (empty((array) $existID)) { // Add new contract
-                $this->product->save();
+            // // Check if PheramorID alrady exist
+            // $existID = $this->product->where('sales_email', $request->get('sales_email'))->get()->first();
+            // if (empty((array) $existID)) { // Add new contract
+            //     $this->product->save();
+            // } else { // Update contract
+            //     $this->product->where('sales_email', $request->get('sales_email'))
+            //                   ->update([
+            //                     'pheramor_id' => $request->get('pheramor_id'),
+            //                     'first_name'  => $request->get('first_name'),
+            //                     'last_name'   => $request->get('last_name'),
+            //                     'phone'       => $request->get('phone')
+            //                   ]);
+            // }
 
-                $this->addContact(
-                    $request->get('sales_email'),
-                    $request->get('pheramor_id'),
-                    $request->get('first_name'),
-                    $request->get('last_name'),
-                    $request->get('phone'),
-                    $tags
-                );
+            $agileContact = json_decode($this->getContact($request->get('sales_email')));
 
-                return $this->respond([
-                    'status' => true,
-                    'data'   => $this->product->orderBy('created_at', 'desc')->first()
-                ]);
-            } else { // Update contract
-                $this->product->where('sales_email', $request->get('sales_email'))
-                              ->update([
-                                'pheramor_id' => $request->get('pheramor_id'),
-                                'first_name'  => $request->get('first_name'),
-                                'last_name'   => $request->get('last_name'),
-                                'phone'       => $request->get('phone')
-                              ]);
-
+            if (!empty((array)$agileContact)) {
                 $agileID = substr($this->getContact($request->get('sales_email')), 6, 16);
                 
                 $this->updateContact(
                     $agileID,
+                    $request->get('sales_email'),
                     $request->get('pheramor_id'),
                     $request->get('first_name'),
                     $request->get('last_name'),
                     $request->get('phone')
                 );
 
+                $this->product->save();
+
                 return $this->respond([
                     'status' => true,
-                    'contract' => $this->getContact($request->get('sales_email')),
                     'data'   => $this->product->orderBy('updated_at', 'desc')->first()
                 ]);
             }
@@ -384,7 +376,7 @@ class ProductController extends ApiController
     }
 
     // Update contact to AgileCRM
-    protected function updateContact($id, $pheramor_id, $first_name, $last_name, $phone) {
+    protected function updateContact($id, $email, $pheramor_id, $first_name, $last_name, $phone) {
         $contact_json = array(
           "id"=>$id,
           "properties"=>array(
@@ -413,6 +405,20 @@ class ProductController extends ApiController
 
         $contact_json = json_encode($contact_json);
         $status = $this->curl_wrap("contacts/edit-properties", $contact_json, "PUT", "application/json");
+
+        // Register log activity
+        $auth_name = Auth::user()->name;
+        $auth_id = Auth::user()->id;
+        $log_text = '';
+        if($status == true) {
+            $log_text = $auth_name . ' updated the contact (' . $pheramor_id . ', ' . $email . ') to AgileCRM at ' . date('Y-m-d h:m:s') . '.';
+        } else {
+            $log_text = $auth_name . ' failed to update the contact (' . $pheramor_id . ', ' . $email . ') to AgileCRM at ' . date('Y-m-d h:m:s') . '.';
+        }
+        
+        activity('agile')
+            ->causedBy($auth_id)
+            ->log($log_text);
     }
 
     // Get contact by email
