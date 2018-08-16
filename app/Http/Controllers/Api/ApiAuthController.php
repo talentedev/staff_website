@@ -47,7 +47,22 @@ class ApiAuthController extends Controller
         if (empty(auth()->user())) {
             return response()->json(['error' => 'Token is invalid']);
         }
-        return response()->json(auth()->user());
+
+        $user = auth()->user();
+
+        $data = array(
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'api_key' => $user->api_key,
+            'source' => $user->source,
+            'tag' => $user->tag,
+            'roles' => $user->roles->pluck('name'),
+            'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $user->updated_at->format('Y-m-d H:i:s')
+        );
+
+        return response()->json($data);
     }
 
     /**
