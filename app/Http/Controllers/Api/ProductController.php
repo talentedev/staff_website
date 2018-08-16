@@ -10,6 +10,7 @@ use App\Product;
 use App\Tag;
 use App\Config;
 use Spatie\Activitylog\Models\Activity;
+use Log;
 
 class ProductController extends ApiController
 {
@@ -82,7 +83,7 @@ class ProductController extends ApiController
             }
 
             $this->product->sales_date = \Carbon\Carbon::now();
-            $this->product->source = Auth::user()->source;
+            $this->product->source = Auth::user()->roles->pluck('name')[0];
 
             // Create new contact on admin system
             $this->product->save();
@@ -124,6 +125,7 @@ class ProductController extends ApiController
             }
         }
         catch(\Exception $e){
+            Log::error($e->getMessage());
             return $this->respond([
                 'status' => false,
                 'message' => 'Pheramor ID or Email already exist'
