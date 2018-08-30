@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ShipUpdated;
 use Validator;
 use App\Product;
 use App\Tag;
@@ -89,6 +87,13 @@ class ProductController extends ApiController
 
             // Create new contact on admin system
             $this->product->save();
+
+            // Send email to user
+            $email_data = array(
+                'name' => Auth::user()->name,
+                'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $request->get('pheramor_id')
+            );
+            $this->sendMail(Auth::user()->email, $email_data, 'sales_update');
 
             // Create or update the contact on AgileCRM
             $agileContact = json_decode($this->getContact($request->get('sales_email')));
@@ -217,21 +222,45 @@ class ProductController extends ApiController
             if($request->get('sales_date') != null) {
                 $product->sales_date = $request->get('sales_date');
                 array_push($tags, $this->getTagValue('sales_date'));
+                // Send email
+                $email_data = array(
+                    'name' => auth()->user()->name,
+                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                );
+                $this->sendMail(auth()->user()->email, $email_data, 'sales_update');
             }
 
             if($request->get('ship_date') != null) {
                 $product->ship_date = $request->get('ship_date');
                 array_push($tags, $this->getTagValue('ship_date'));
+                // Send email
+                $email_data = array(
+                    'name' => auth()->user()->name,
+                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                );
+                $this->sendMail(auth()->user()->email, $email_data, 'ship_update');
             }
             
             if($request->get('account_connected_date') != null) {
                 $product->account_connected_date = $request->get('account_connected_date');
                 array_push($tags, $this->getTagValue('account_connected_date'));
+                // Send email
+                $email_data = array(
+                    'name' => auth()->user()->name,
+                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                );
+                $this->sendMail(auth()->user()->email, $email_data, 'account_update');
             }
 
             if($request->get('swab_returned_date') != null) {
                 $product->swab_returned_date = $request->get('swab_returned_date');
                 array_push($tags, $this->getTagValue('swab_returned_date'));
+                // Send email
+                $email_data = array(
+                    'name' => auth()->user()->name,
+                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                );
+                $this->sendMail(auth()->user()->email, $email_data, 'swab_update');
             }
 
             if($request->get('ship_to_lab_date') != null) {
@@ -247,6 +276,12 @@ class ProductController extends ApiController
             if($request->get('sequenced_date') != null) {
                 $product->sequenced_date = $request->get('sequenced_date');
                 array_push($tags, $this->getTagValue('sequenced_date'));
+                // Send email
+                $email_data = array(
+                    'name' => auth()->user()->name,
+                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                );
+                $this->sendMail(auth()->user()->email, $email_data, 'sequenced_update');
             }
 
             if($request->get('uploaded_to_server_date') != null) {
@@ -527,12 +562,12 @@ class ProductController extends ApiController
     }
 
     // Send mail
-    public function sendMail() {
+    public function sendTestMail() {
         $to = 'markozzz37@gmail.com';
         $data = array(
                     'name' => 'Pheramor team',
                     'link' => 'https://id.banana.com/'
                 );
-        Mail::to($to)->send(new ShipUpdated($data));
+        $this->sendMail($to, $data, 'ship_update');
     }
 }
