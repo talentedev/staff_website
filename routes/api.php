@@ -36,3 +36,6 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
 Route::prefix('public')->group(function () {
     Route::post('updateCustomerPhone', 'Api\ProductController@updatePhone');
 });
+
+// Test API
+Route::get('test-email', 'Api\ProductController@sendMail');

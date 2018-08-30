@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ShipUpdated;
 use Validator;
 use App\Product;
 use App\Tag;
@@ -522,5 +524,15 @@ class ProductController extends ApiController
                 'message' => 'We can not update phone number.'
             ]);
         }
+    }
+
+    // Send mail
+    public function sendMail() {
+        $to = 'markozzz37@gmail.com';
+        $data = array(
+                    'name' => 'Pheramor team',
+                    'link' => 'https://id.banana.com/'
+                );
+        Mail::to($to)->send(new ShipUpdated($data));
     }
 }

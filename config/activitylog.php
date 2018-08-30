@@ -36,4 +36,10 @@ return [
      * it should be or extend the Spatie\Activitylog\Models\Activity model.
      */
     'activity_model' => \Spatie\Activitylog\Models\Activity::class,
+
+    /*
+     * This is the name of the table that will be created by the migration and
+     * used by the Activity model shipped with this package.
+     */
+    'table_name' => 'activity_log',
 ];
