@@ -39,6 +39,11 @@ Route::group(['middleware' => 'web'], function () {
         Route::post('settings/change_me', 'SettingController@changeMe');
         Route::post('settings/change_config', 'SettingController@changeConfig');
 
+        // Email management
+        Route::get('emails', 'EmailController@index');
+        Route::post('update-status-email', 'EmailController@updateStatusEmail');
+        Route::post('update-reminder-email', 'EmailController@updateReminderEmail');
+
     });
 
 });

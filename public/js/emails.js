@@ -60,85 +60,93 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 59);
+/******/ 	return __webpack_require__(__webpack_require__.s = 61);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 59:
+/***/ 61:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(60);
+module.exports = __webpack_require__(62);
 
 
 /***/ }),
 
-/***/ 60:
+/***/ 62:
 /***/ (function(module, exports) {
 
 $(function () {
 
-    // Form validation
-    $('#setting_form').validator();
+    var arrSettings = $('#setting_values').data('settings');
+    var objSettings = {};
 
-    $('#setting_form').validator().on('submit', function (e) {
-        if (e.isDefaultPrevented()) {
-            console.log('form is not valid');
+    for (key in arrSettings) {
+        objSettings[arrSettings[key].setting_key] = arrSettings[key].setting_value;
+    }
+    console.log(objSettings);
+
+    for (key in objSettings) {
+        var id = '#' + key;
+        if (key == 'first_reminder_email') {
+            $('#first_reminder_email').val(objSettings[key]);
+        } else if (key == 'second_reminder_email') {
+            $('#second_reminder_email').val(objSettings[key]);
+        } else if (objSettings[key] == '1') {
+            $(id).iCheck('check');
         } else {
-            e.preventDefault();
-            submit();
+            $(id).iCheck('uncheck');
         }
-    });
+    }
 
-    function submit() {
-        var data = {
-            name: $('#name').val(),
-            email: $('#email').val(),
-            password: $('#password').val()
+    // Save status update email
+    $('#save_update_email').click(function () {
+        var ship_update_email = $('#ship_update_email').iCheck('update')[0].checked;
+        var sales_update_email = $('#sales_update_email').iCheck('update')[0].checked;
+        var account_update_email = $('#account_update_email').iCheck('update')[0].checked;
+        var swab_update_email = $('#swab_update_email').iCheck('update')[0].checked;
+        var sequence_update_email = $('#sequence_update_email').iCheck('update')[0].checked;
+
+        var requestData = {
+            ship_update_email: ship_update_email,
+            sales_update_email: sales_update_email,
+            account_update_email: account_update_email,
+            swab_update_email: swab_update_email,
+            sequence_update_email: sequence_update_email
         };
-
-        var url = 'settings/change_me';
-        axios.post(url, data).then(function (response) {
+        var url = 'update-status-email';
+        axios.post(url, requestData).then(function (response) {
             if (response.data.status == true) {
                 location.reload();
             } else {
-                console.log('Failed to change the account info.');
+                alert('Update failed!');
             }
         }).catch(function (error) {
             console.log(error);
         });
-    }
-
-    // Form validation
-    $('#agile_form').validator();
-
-    $('#agile_form').validator().on('submit', function (e) {
-        if (e.isDefaultPrevented()) {
-            console.log('form is not valid');
-        } else {
-            e.preventDefault();
-            submitConfig();
-        }
     });
 
-    function submitConfig() {
-        var data = {
-            agile_domain: $('#agile_domain').val(),
-            agile_email: $('#agile_email').val(),
-            api_key: $('#api_key').val()
-        };
+    // Save reminder email
+    $('#save_reminder_email').click(function () {
 
-        var url = 'settings/change_config';
-        axios.post(url, data).then(function (response) {
+        var first_reminder_email = $('#first_reminder_email').val();
+        var second_reminder_email = $('#second_reminder_email').val();
+
+        var requestData = {
+            first_reminder_email: objSettings.first_reminder_email == first_reminder_email ? '' : first_reminder_email,
+            second_reminder_email: objSettings.second_reminder_email == second_reminder_email ? '' : second_reminder_email
+        };
+        var url = 'update-reminder-email';
+        axios.post(url, requestData).then(function (response) {
             if (response.data.status == true) {
                 location.reload();
             } else {
-                console.log('Failed to change the account info.');
+                alert('Update failed!');
             }
         }).catch(function (error) {
             console.log(error);
         });
-    }
+    });
 });
 
 /***/ })

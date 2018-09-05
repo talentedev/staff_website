@@ -41,6 +41,11 @@ class AppServiceProvider extends ServiceProvider
                 'url'  => 'settings',
                 'icon' => 'cog',
             ];
+            $email = [
+                'text' => 'Email Settings',
+                'url'  => 'emails',
+                'icon' => 'envelope',
+            ];
 
             // Check if authrized user is super admin.
             if (Auth::user()->hasRole('super admin')) {
@@ -49,7 +54,8 @@ class AppServiceProvider extends ServiceProvider
                     $users,
                     $products,
                     $tags,
-                    $settings
+                    $settings,
+                    $email
                 );
             } else {
                 // add menu items

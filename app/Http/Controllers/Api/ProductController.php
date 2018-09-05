@@ -11,6 +11,7 @@ use App\Tag;
 use App\Config;
 use Spatie\Activitylog\Models\Activity;
 use Log;
+use DB;
 
 class ProductController extends ApiController
 {
@@ -89,11 +90,14 @@ class ProductController extends ApiController
             $this->product->save();
 
             // Send email to user
-            $email_data = array(
-                'name' => Auth::user()->name,
-                'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $request->get('pheramor_id')
-            );
-            $this->sendMail(Auth::user()->email, $email_data, 'sales_update');
+            $isEnabled = DB::table('settings')->where('setting_key', 'sales_update_email')->get()->first()->setting_value;
+            if ($isEnabled == '1') {
+                $email_data = array(
+                    'name' => Auth::user()->name,
+                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $request->get('pheramor_id')
+                );
+                $this->sendMail(Auth::user()->email, $email_data, 'sales_update');
+            }
 
             // Create or update the contact on AgileCRM
             $agileContact = json_decode($this->getContact($request->get('sales_email')));
@@ -221,46 +225,58 @@ class ProductController extends ApiController
 
             if($request->get('sales_date') != null) {
                 $product->sales_date = $request->get('sales_date');
-                array_push($tags, $this->getTagValue('sales_date'));
-                // Send email
-                $email_data = array(
-                    'name' => auth()->user()->name,
-                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
-                );
-                $this->sendMail(auth()->user()->email, $email_data, 'sales_update');
+                $isEnabled = DB::table('settings')->where('setting_key', 'sales_update_email')->get()->first()->setting_value;
+                if ($isEnabled == '1') {
+                    array_push($tags, $this->getTagValue('sales_date'));
+                    // Send email
+                    $email_data = array(
+                        'name' => auth()->user()->name,
+                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                    );
+                    $this->sendMail(auth()->user()->email, $email_data, 'sales_update');
+                }
             }
 
             if($request->get('ship_date') != null) {
                 $product->ship_date = $request->get('ship_date');
-                array_push($tags, $this->getTagValue('ship_date'));
-                // Send email
-                $email_data = array(
-                    'name' => auth()->user()->name,
-                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
-                );
-                $this->sendMail(auth()->user()->email, $email_data, 'ship_update');
+                $isEnabled = DB::table('settings')->where('setting_key', 'ship_update_email')->get()->first()->setting_value;
+                if ($isEnabled == '1') {
+                    array_push($tags, $this->getTagValue('ship_date'));
+                    // Send email
+                    $email_data = array(
+                        'name' => auth()->user()->name,
+                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                    );
+                    $this->sendMail(auth()->user()->email, $email_data, 'ship_update');
+                }
             }
             
             if($request->get('account_connected_date') != null) {
                 $product->account_connected_date = $request->get('account_connected_date');
-                array_push($tags, $this->getTagValue('account_connected_date'));
-                // Send email
-                $email_data = array(
-                    'name' => auth()->user()->name,
-                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
-                );
-                $this->sendMail(auth()->user()->email, $email_data, 'account_update');
+                $isEnabled = DB::table('settings')->where('setting_key', 'account_update_email')->get()->first()->setting_value;
+                if ($isEnabled == '1') {
+                    array_push($tags, $this->getTagValue('account_connected_date'));
+                    // Send email
+                    $email_data = array(
+                        'name' => auth()->user()->name,
+                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                    );
+                    $this->sendMail(auth()->user()->email, $email_data, 'account_update');
+                }
             }
 
             if($request->get('swab_returned_date') != null) {
                 $product->swab_returned_date = $request->get('swab_returned_date');
-                array_push($tags, $this->getTagValue('swab_returned_date'));
-                // Send email
-                $email_data = array(
-                    'name' => auth()->user()->name,
-                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
-                );
-                $this->sendMail(auth()->user()->email, $email_data, 'swab_update');
+                $isEnabled = DB::table('settings')->where('setting_key', 'swab_update_email')->get()->first()->setting_value;
+                if ($isEnabled == '1') {
+                    array_push($tags, $this->getTagValue('swab_returned_date'));
+                    // Send email
+                    $email_data = array(
+                        'name' => auth()->user()->name,
+                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                    );
+                    $this->sendMail(auth()->user()->email, $email_data, 'swab_update');
+                }
             }
 
             if($request->get('ship_to_lab_date') != null) {
@@ -275,13 +291,16 @@ class ProductController extends ApiController
 
             if($request->get('sequenced_date') != null) {
                 $product->sequenced_date = $request->get('sequenced_date');
-                array_push($tags, $this->getTagValue('sequenced_date'));
-                // Send email
-                $email_data = array(
-                    'name' => auth()->user()->name,
-                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
-                );
-                $this->sendMail(auth()->user()->email, $email_data, 'sequenced_update');
+                $isEnabled = DB::table('settings')->where('setting_key', 'sequenced_update_email')->get()->first()->setting_value;
+                if ($isEnabled == '1') {
+                    array_push($tags, $this->getTagValue('sequenced_date'));
+                    // Send email
+                    $email_data = array(
+                        'name' => auth()->user()->name,
+                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
+                    );
+                    $this->sendMail(auth()->user()->email, $email_data, 'sequenced_update');
+                }
             }
 
             if($request->get('uploaded_to_server_date') != null) {
