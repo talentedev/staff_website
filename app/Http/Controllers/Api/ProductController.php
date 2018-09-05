@@ -12,6 +12,7 @@ use App\Config;
 use Spatie\Activitylog\Models\Activity;
 use Log;
 use DB;
+use Carbon\Carbon;
 
 class ProductController extends ApiController
 {
@@ -248,6 +249,22 @@ class ProductController extends ApiController
                         'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id
                     );
                     $this->sendMail(auth()->user()->email, $email_data, 'ship_update');
+
+                    // Save data to email queue
+                    $firstInverval = (int)DB::table('settings')->where('setting_key', 'first_reminder_email')->get()->first()->setting_value;
+                    $secondInverval = (int)DB::table('settings')->where('setting_key', 'second_reminder_email')->get()->first()->setting_value;
+                    $current = Carbon::now();
+
+                    DB::table('email_queue')->insert([
+                        'email' => auth()->user()->email,
+                        'send_order' => 1,
+                        'send_date' => $current->addDays($firstInverval)
+                    ]);
+                    DB::table('email_queue')->insert([
+                        'email' => auth()->user()->email,
+                        'send_order' => 2,
+                        'send_date' => $current->addDays($secondInverval - $firstInverval)
+                    ]);
                 }
             }
             

@@ -5,6 +5,9 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use DB;
+use Carbon\Carbon;
+use App\Mail\StatusReminder;
+use Illuminate\Support\Facades\Mail;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,8 +29,21 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            DB::table('activity_log')->delete();
-        })->dailyAt('9:08');
+            $current = Carbon::now()->toDateString();
+            $emails = DB::table('email_queue')->where('send_date', $current)->get();
+            foreach ($emails as $key => $value) {
+                $email_data = array(
+                    'name' => $value->email
+                );
+                if ($value->send_order == 1) {
+                    Mail::to($value->email)->send(new StatusReminder($email_data, 'ship_reminder1'));
+                    DB::table('email_queue')->where('id', $value->id)->delete();
+                } else if($value->send_order == 2) {
+                    Mail::to($value->email)->send(new StatusReminder($email_data, 'ship_reminder2'));
+                    DB::table('email_queue')->where('id', $value->id)->delete();
+                }
+            }
+        })->daily();
     }
 
     /**
