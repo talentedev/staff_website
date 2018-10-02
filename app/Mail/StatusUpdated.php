@@ -45,19 +45,19 @@ class StatusUpdated extends Mailable
     {
         switch ($this->type) {
             case 'ship_update':
-                return $this->view('emails.ship.updated');
+                return $this->subject('Your Pheramor Kit is on the way!')->view('emails.ship.updated');
                 break;
             case 'sales_update':
-                return $this->view('emails.sales.updated');
+                return $this->subject('Thank you for purchasing a Pheramor kit!')->view('emails.sales.updated');
                 break;
             case 'account_update':
-                return $this->view('emails.account-connected.updated');
+                return $this->subject('Thanks for connecting your Pheramor Kit')->view('emails.account-connected.updated');
                 break;
             case 'swab_update':
-                return $this->view('emails.swab-returned.updated');
+                return $this->subject('Your Pheramor Kit was Successfully Returned')->view('emails.swab-returned.updated');
                 break;
             case 'sequenced_update':
-                return $this->view('emails.sequenced.updated');
+                return $this->subject('Your genetic data has been uploaded - Check it out!')->view('emails.sequenced.updated');
                 break;
             default:
                 # code...

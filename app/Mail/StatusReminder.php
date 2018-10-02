@@ -45,10 +45,10 @@ class StatusReminder extends Mailable
     {
         switch ($this->type) {
             case 'ship_reminder1':
-                return $this->view('emails.ship.reminder1');
+                return $this->subject("We Haven't Received Your Pheramor Kit Yet =(")->view('emails.ship.reminder1');
                 break;
             case 'ship_reminder2':
-                return $this->view('emails.ship.reminder2');
+                return $this->subject("The swabs at the lab miss their swab buddies. Send them back!")->view('emails.ship.reminder2');
                 break;
             default:
                 # code...

@@ -31,9 +31,15 @@ class ApiController extends Controller
     }
 
     // Send mail
-    public function sendMail($to, $data, $type) {
+    public function sendMail($to, $cc, $data, $type) {
 
-        Mail::to($to)->send(new StatusUpdated($data, $type));
+        if ($cc == null || $cc == '') {
+            Mail::to($to)->queue(new StatusUpdated($data, $type));
+        } else {
+            Mail::to($to)
+                ->cc($cc)
+                ->queue(new StatusUpdated($data, $type));
+        }
 
     }
 }

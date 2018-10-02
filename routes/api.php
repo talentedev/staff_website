@@ -38,4 +38,4 @@ Route::prefix('public')->group(function () {
 });
 
 // Test API
-Route::get('test-email', 'Api\ProductController@sendMail');
+Route::get('test-email', 'Api\ProductController@sendTestMail');
