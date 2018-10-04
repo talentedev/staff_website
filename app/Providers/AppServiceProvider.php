@@ -53,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
                 $event->menu->add(
                     $users,
                     $products,
-                    $tags,
+                    // $tags,
                     $settings,
                     $email
                 );

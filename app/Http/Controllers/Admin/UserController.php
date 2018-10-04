@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\User;
 use Mail;
+use Log;
 
 class UserController extends Controller
 {
@@ -94,6 +95,7 @@ class UserController extends Controller
             return response()->json(['status' => true], 200);
 
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['status' => false], 200);
         }
     }
@@ -144,6 +146,7 @@ class UserController extends Controller
 
             return response()->json(['status' => true], 200);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return response()->json(['status' => false], 200);
         }
     }

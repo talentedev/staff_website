@@ -28,8 +28,10 @@ $ composer install
  php artisan key:generate
 ```
  
- You should set DB connection info and mail server information on .env file.
+ You should set host url and DB connection, mail server information on .env file.
 ```bash
+ APP_URL=<YOUR_HOST_URL>  // For example, https://banana.pheramor.com
+
  DB_HOST=<DB_HOST>      // 127.0.0.1 or localhost
  DB_PORT=<DB_PORT>      // 3306 by default
  DB_DATABASE=<DB_NAME>

@@ -39,36 +39,13 @@
                     <button type="submit" class="btn btn-primary" id="btn_submit">Save</button>
                 </form>
             </div>
-            <div class="col-md-6">
-                @if(Auth::user()->hasRole('super admin'))
-                <form id="agile_form" data-toggle="validator" role="form" class="col-md-10">
-                    <h3>AgileCRM Configuration</h3>
-                    <div class="form-group">
-                        <label for="name">Domain For AgileCRM</label>
-                        <input type="text" class="form-control" id="agile_domain" value="{{ $configs[0]->agile_domain }}" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Email For AgileCRM</label>
-                        <input type="email" class="form-control" id="agile_email" value="{{ $configs[0]->agile_email }}" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">API Key For AgileCRM</label>
-                        <input type="text" class="form-control" id="api_key" value="{{ $configs[0]->agile_key }}" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="btn_submit_agile">Save</button>
-                </form>
-                @endif
-            </div>
         </div>
         <!-- /.box-body -->
     </div>
     <!-- /.box -->
 
     <div class="row">
-        <div class="col-md-6" id="login_log">
+        <div class="col-md-12" id="login_log">
             <div class="box">
                 <div class="box-header">
                     <i class="ion ion-clipboard"></i>
@@ -86,27 +63,6 @@
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
-        </div>
-        <div class="col-md-6" id="agile_log">
-            @if(Auth::user()->hasRole('super admin'))
-            <div class="box">
-                <div class="box-header">
-                    <i class="ion ion-clipboard"></i>
-                    <h3 class="box-title">AgileCRM Logs</h3>
-                </div>
-                <div class="box-body">
-                    @if(count($agileLogs) > 0)
-                        @foreach($agileLogs as $log)
-                            <p>{{ $log->description }}</p>
-                        @endforeach
-                    @else
-                        There are no logs.
-                    @endif
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-            @endif
         </div>
     </div>
 @stop
