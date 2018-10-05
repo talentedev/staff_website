@@ -70,8 +70,8 @@ $ CREATE TABLE email_queue ( id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, prod
 
 You should create cron job.
 
-in case of the unit in minute
+in case of the unit in day
 ```bash
 $ crontab -e
-$ * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+$ 0 0 * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```

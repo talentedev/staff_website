@@ -225,12 +225,12 @@ class ProductController extends ApiController
                     DB::table('email_queue')->insert([
                         'product_id' => $product->id,
                         'send_order' => 1,
-                        'send_date' => $current->addMinutes($firstInverval)//->addDays($firstInverval)
+                        'send_date' => $current->addDays($firstInverval)//->addMinutes($firstInverval)
                     ]);
                     DB::table('email_queue')->insert([
                         'product_id' => $product->id,
                         'send_order' => 2,
-                        'send_date' => $current->addMinutes($secondInverval - $firstInverval)//->addDays($secondInverval - $firstInverval)
+                        'send_date' => $current->addDays($secondInverval - $firstInverval)//->addMinutes($secondInverval - $firstInverval)
                     ]);
                 }
             }
@@ -352,27 +352,34 @@ class ProductController extends ApiController
 
     // Send mail
     public function sendTestMail() {
-        $currentStart = Carbon::now()->format('Y-m-d H:i:00');//->toDateTimeString();
-        $currentEnd = Carbon::now()->format('Y-m-d H:i:59');//->toDateTimeString();
-        $emails = DB::table('email_queue')->get();
-        
-        foreach ($emails as $key => $value) {
-            $product = DB::table('products')->find($value->product_id);
-            $email_data = array(
-                'name' => $product->first_name,
-                'link' => 'https://id.pheramor.com/status.php?pheramor_id=',
-                'to' => 'markozzz37@gmail.com'//$product->sales_email
-            );
-            if ($value->send_order == 1) {
-                // $this->sendMail($product->sales_email, $product->account_email, $email_data, 'ship_update');
-                Mail::to($product->sales_email)->queue(new StatusReminder($email_data, 'ship_reminder1'));
-                // DB::table('email_queue')->where('id', $value->id)->delete();
-            } else {
-                // $this->sendMail($product->sales_email, $product->account_email, $email_data, 'ship_update');
-                Mail::to($product->sales_email)->queue(new StatusReminder($email_data, 'ship_reminder2'));
-                // DB::table('email_queue')->where('id', $value->id)->delete();
+        try{
+            $currentStart = Carbon::now()->format('Y-m-d H:i:00');//->toDateTimeString();
+            $currentEnd = Carbon::now()->format('Y-m-d H:i:59');//->toDateTimeString();
+            $emails = DB::table('email_queue')->get();
+            
+            foreach ($emails as $key => $value) {
+                $product = DB::table('products')->find($value->product_id);
+                $email_data = array(
+                    'name' => $product->first_name,
+                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=',
+                    'to' => 'markozzz37@gmail.com'//$product->sales_email
+                );
+                if ($value->send_order == 1) {
+                    // $this->sendMail($product->sales_email, $product->account_email, $email_data, 'ship_update');
+                    Mail::to('markozzz37@gmail.com')->queue(new StatusReminder($email_data, 'ship_reminder1'));
+                    // DB::table('email_queue')->where('id', $value->id)->delete();
+                } else {
+                    // $this->sendMail($product->sales_email, $product->account_email, $email_data, 'ship_update');
+                    Mail::to('markozzz37@gmail.com')->queue(new StatusReminder($email_data, 'ship_reminder2'));
+                    // DB::table('email_queue')->where('id', $value->id)->delete();
+                }
             }
+            return $this->respond($emails);
+        } catch(\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->respond([
+                'message' => $e->getMessage()
+            ]);
         }
-        return $this->respond($emails);
     }
 }

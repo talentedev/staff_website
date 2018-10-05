@@ -1,0 +1,269 @@
+{
+	"info": {
+		"_postman_id": "eea8d449-5ee4-4eba-b455-65e16ba45a7f",
+		"name": "Pheramor Banana API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Get customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{host_url}}/api/customers/PA-21245-2",
+							"host": [
+								"{{host_url}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"PA-21245-2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"pheramor_id\": \"UA-99999-1\",\n\t\"sales_email\": \"markozzz37@gmail.com\",\n\t\"first_name\": \"John\",\n\t\"last_name\": \"Smith\",\n\t\"phone\": \"123456789\"\n}"
+						},
+						"url": {
+							"raw": "{{host_url}}/api/customers",
+							"host": [
+								"{{host_url}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update status dates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"first_name\": \"John\",\n\t\"last_name\": \"Smith\",\n\t\"sales_email\": \"jinisasshole@yop.com\",\n\t\"account_email\": \"jinisasshole@yop.com\",\n\t\"phone\": \"2222222222\",\n\t\"sales_date\": \"2018-05-5\",\n\t\"ship_date\": \"2018-05-5\",\n    \"account_connected_date\": \"2018-05-16\",\n    \"swab_returned_date\": \"2018-05-16\",\n    \"ship_to_lab_date\": \"2018-05-16\",\n    \"lab_received_date\": \"2018-05-16\",\n    \"sequenced_date\": \"2018-05-16\",\n    \"uploaded_to_server_date\": \"2018-05-16\",\n    \"bone_marrow_consent_date\": \"2018-05-16\",\n    \"bone_marrow_shared_date\": \"2018-05-26\"\n}"
+						},
+						"url": {
+							"raw": "{{host_url}}/api/customers/UA-99999-1",
+							"host": [
+								"{{host_url}}"
+							],
+							"path": [
+								"api",
+								"customers",
+								"UA-99999-1"
+							]
+						},
+						"description": "insert only dates to be updated.\nFor example, if you need update only ship date,\n{\n\t\"ship_date\": \"2018-5-12\"\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Phone Number(Public)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"pheramor_id\":\"UP-10003-6\",\n\t\"phone\":\"+1188888888\"\n}"
+						},
+						"url": {
+							"raw": "https://marko.dev.pheramor.com/api/public/updateCustomerPhone",
+							"protocol": "https",
+							"host": [
+								"marko",
+								"dev",
+								"pheramor",
+								"com"
+							],
+							"path": [
+								"api",
+								"public",
+								"updateCustomerPhone"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"markozzz37@gmail.com\",\n\t\"password\": \"1234567\"\n}"
+				},
+				"url": {
+					"raw": "{{host_url}}/api/login",
+					"host": [
+						"{{host_url}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get account info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{host_url}}/api/me",
+					"host": [
+						"{{host_url}}"
+					],
+					"path": [
+						"api",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Account Info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"John Smith\",\n\t\"email\": \"team@gmail.com\",\n\t\"password\": \"1234567\"\n}"
+				},
+				"url": {
+					"raw": "https://marko.dev.pheramor.com/api/users/3",
+					"protocol": "https",
+					"host": [
+						"marko",
+						"dev",
+						"pheramor",
+						"com"
+					],
+					"path": [
+						"api",
+						"users",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test email",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{host_url}}/api/test-email",
+					"host": [
+						"{{host_url}}"
+					],
+					"path": [
+						"api",
+						"test-email"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -29,9 +29,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $currentStart = Carbon::now()->format('Y-m-d H:i:00');//->toDateTimeString();
-            $currentEnd = Carbon::now()->format('Y-m-d H:i:59');//->toDateTimeString();
-            $emails = DB::table('email_queue')->whereBetween('send_date', [$currentStart,$currentEnd])->get();
+            // $currentStart = Carbon::now()->format('Y-m-d 00:00:00');//->toDateTimeString();
+            // $currentEnd = Carbon::now()->format('Y-m-d 23:59:59');//->toDateTimeString();
+            // $emails = DB::table('email_queue')->whereBetween('send_date', [$currentStart,$currentEnd])->get();
+            $emails = DB::table('email_queue')->whereDate('send_date', '<', Carbon::now())->get();
             
             foreach ($emails as $key => $value) {
                 $product = DB::table('products')->find($value->product_id);
@@ -53,7 +54,7 @@ class Kernel extends ConsoleKernel
                     DB::table('email_queue')->where('id', $value->id)->delete();
                 }
             }
-        })->everyMinute();
+        })->daily();
     }
 
     /**
