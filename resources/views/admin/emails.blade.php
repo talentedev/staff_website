@@ -55,6 +55,10 @@
                             <option>5</option>
                             <option>7</option>
                             <option>10</option>
+                            <option>15</option>
+                            <option>20</option>
+                            <option>25</option>
+                            <option>30</option>
                         </select>
                         <label> Days</label>
                     </div>
@@ -66,6 +70,10 @@
                             <option>5</option>
                             <option>7</option>
                             <option>10</option>
+                            <option>15</option>
+                            <option>20</option>
+                            <option>25</option>
+                            <option>30</option>
                         </select>
                         <label> Days</label>
                     </div>
