@@ -45,7 +45,7 @@
     <!-- /.box -->
 
     <div class="row">
-        <div class="col-md-12" id="login_log">
+        <div class="col-md-6" id="login_log">
             <div class="box">
                 <div class="box-header">
                     <i class="ion ion-clipboard"></i>
@@ -54,6 +54,25 @@
                 <div class="box-body">
                     @if(count($logs) > 0)
                         @foreach($logs as $log)
+                            <p>{{ $log->description }}</p>
+                        @endforeach
+                    @else
+                        There are no logs.
+                    @endif
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <div class="col-md-6" id="login_log">
+            <div class="box">
+                <div class="box-header">
+                    <i class="ion ion-clipboard"></i>
+                    <h3 class="box-title">Email Logs</h3>
+                </div>
+                <div class="box-body">
+                    @if(count($email_logs) > 0)
+                        @foreach($email_logs as $log)
                             <p>{{ $log->description }}</p>
                         @endforeach
                     @else

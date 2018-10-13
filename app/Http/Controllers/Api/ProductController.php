@@ -10,9 +10,10 @@ use App\Product;
 use Spatie\Activitylog\Models\Activity;
 use Log;
 use DB;
+use Mail;
 use Carbon\Carbon;
 use App\Mail\StatusReminder;
-use Illuminate\Support\Facades\Mail;
+use App\Mail\StatusUpdated;
 
 class ProductController extends ApiController
 {
@@ -88,16 +89,7 @@ class ProductController extends ApiController
             $this->product->save();
 
             // Send email to user
-            $isEnabled = DB::table('settings')->where('setting_key', 'sales_update_email')->get()->first()->setting_value;
-            if ($isEnabled == '1') {
-                $email_data = array(
-                    'name' => $this->product->first_name,
-                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $request->get('pheramor_id'),
-                    'kit_id' => $request->get('pheramor_id'),
-                    'to' => $this->product->sales_email
-                );
-                $this->sendMail($this->product->sales_email, null, $email_data, 'sales_update');
-            }
+            $this->sendMail($this->product, 'sales_update');
 
             return $this->respond([
                 'status' => true,
@@ -192,75 +184,23 @@ class ProductController extends ApiController
 
             if($request->get('sales_date') != null) {
                 $product->sales_date = $request->get('sales_date');
-                $isEnabled = DB::table('settings')->where('setting_key', 'sales_update_email')->get()->first()->setting_value;
-                if ($isEnabled == '1') {
-                    // Send email
-                    $email_data = array(
-                        'name' => $product->first_name,
-                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id,
-                        'kit_id' => $request->get('pheramor_id'),
-                        'to' => $product->sales_email
-                    );
-                    $this->sendMail($product->sales_email, $product->account_email, $email_data, 'sales_update');
-                }
+                $this->sendMail($product, 'sales_update');
             }
 
             if($request->get('ship_date') != null) {
                 $product->ship_date = $request->get('ship_date');
-                $isEnabled = DB::table('settings')->where('setting_key', 'ship_update_email')->get()->first()->setting_value;
-                if ($isEnabled == '1') {
-                    // Send email
-                    $email_data = array(
-                        'name' => $product->first_name,
-                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id,
-                        'to' => $product->sales_email
-                    );
-                    $this->sendMail($product->sales_email, $product->account_email, $email_data, 'ship_update');
-
-                    // Save data to email queue
-                    $firstInverval = (int)DB::table('settings')->where('setting_key', 'first_reminder_email')->get()->first()->setting_value;
-                    $secondInverval = (int)DB::table('settings')->where('setting_key', 'second_reminder_email')->get()->first()->setting_value;
-                    $current = Carbon::now();
-
-                    DB::table('email_queue')->insert([
-                        'product_id' => $product->id,
-                        'send_order' => 1,
-                        'send_date' => $current->addDays($firstInverval)//->addMinutes($firstInverval)
-                    ]);
-                    DB::table('email_queue')->insert([
-                        'product_id' => $product->id,
-                        'send_order' => 2,
-                        'send_date' => $current->addDays($secondInverval - $firstInverval)//->addMinutes($secondInverval - $firstInverval)
-                    ]);
-                }
+                $this->sendMail($product, 'ship_update');
+                $this->prepareReminderEmail($product->id);
             }
             
             if($request->get('account_connected_date') != null) {
                 $product->account_connected_date = $request->get('account_connected_date');
-                $isEnabled = DB::table('settings')->where('setting_key', 'account_update_email')->get()->first()->setting_value;
-                if ($isEnabled == '1') {
-                    // Send email
-                    $email_data = array(
-                        'name' => $product->first_name,
-                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id,
-                        'to' => $product->sales_email
-                    );
-                    $this->sendMail($product->sales_email, $product->account_email, $email_data, 'account_update');
-                }
+                $this->sendMail($product, 'account_update');
             }
 
             if($request->get('swab_returned_date') != null) {
                 $product->swab_returned_date = $request->get('swab_returned_date');
-                $isEnabled = DB::table('settings')->where('setting_key', 'swab_update_email')->get()->first()->setting_value;
-                if ($isEnabled == '1') {
-                    // Send email
-                    $email_data = array(
-                        'name' => $product->first_name,
-                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id,
-                        'to' => $product->sales_email
-                    );
-                    $this->sendMail($product->sales_email, $product->account_email, $email_data, 'swab_update');
-                }
+                $this->sendMail($product, 'swab_update');
             }
 
             if($request->get('ship_to_lab_date') != null) {
@@ -273,16 +213,7 @@ class ProductController extends ApiController
 
             if($request->get('sequenced_date') != null) {
                 $product->sequenced_date = $request->get('sequenced_date');
-                $isEnabled = DB::table('settings')->where('setting_key', 'sequence_update_email')->get()->first()->setting_value;
-                if ($isEnabled == '1') {
-                    // Send email
-                    $email_data = array(
-                        'name' => $product->first_name,
-                        'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $id,
-                        'to' => $product->sales_email
-                    );
-                    $this->sendMail($product->sales_email, $product->account_email, $email_data, 'sequenced_update');
-                }
+                $this->sendMail($product, 'sequenced_update');
             }
 
             if($request->get('uploaded_to_server_date') != null) {
@@ -350,7 +281,108 @@ class ProductController extends ApiController
         }
     }
 
-    // Send mail
+        /**
+     * Send email and log the status when user update status date.
+     *
+     * @param  App\Product  $product
+     * @param  String  $type
+     * @return void
+     */
+    protected function sendMail($product, $type) {
+
+        $to = $product->sales_email;
+        $cc = $product->account_email;
+        $data = array(
+                    'name' => $product->first_name,
+                    'link' => 'https://id.pheramor.com/status.php?pheramor_id=' . $product->pheramor_id,
+                    'to' => $product->sales_email
+                );
+
+        if ($type == 'sales_update') {
+            $data['kit_id'] = $product->pheramor_id;
+        }
+
+        // Check if sending email is allowed.
+        switch ($type) {
+            case 'sales_update':
+                $setting_key = 'sales_update_email';
+                $log_prefix = 'Sales update email';
+                break;
+            case 'ship_update':
+                $setting_key = 'ship_update_email';
+                $log_prefix = 'Ship update email';
+                break;
+            case 'account_update':
+                $setting_key = 'account_update_email';
+                $log_prefix = 'Account connected email';
+                break;
+            case 'swab_update':
+                $setting_key = 'swab_update_email';
+                $log_prefix = 'Swab return email';
+                break;
+            case 'sequenced_update':
+                $setting_key = 'sequence_update_email';
+                $log_prefix = 'Sequenced email';
+                break;
+            default:
+                break;
+        }
+
+        $isEnabled = DB::table('settings')->where('setting_key', $setting_key)->get()->first()->setting_value;
+
+        // Send email if it is allowed
+        if ($isEnabled) {
+            if ($cc == null || $cc == '') {
+                Mail::to($to)->queue(new StatusUpdated($data, $type));
+                $log_success_text = $log_prefix . ' successfuly sent to ' . $product->sales_email . ' by ' . Auth::user()->name . ' at ' . date('Y-m-d h:m:s') . '.';
+                $log_fail_text = $log_prefix . ' can not send to ' . $product->sales_email . ' by ' . Auth::user()->name . ' at ' . date('Y-m-d h:m:s') . '.';
+            } else {
+                Mail::to($to)
+                    ->cc($cc)
+                    ->queue(new StatusUpdated($data, $type));
+                $log_success_text = $log_prefix . ' successfuly sent to ' . $product->sales_email . ', ' . $product->account_email . ' by ' . Auth::user()->name . ' at ' . date('Y-m-d h:m:s') . '.';
+                $log_fail_text = $log_prefix . ' can not send to ' . $product->sales_email . ', ' . $product->account_email . ' by ' . Auth::user()->name . ' at ' . date('Y-m-d h:m:s') . '.';
+            }
+
+            // Log status whether email sent successfuly or not.
+            if( count(Mail::failures()) > 0 ) {
+                activity('mail')
+                    ->causedBy(Auth::user()->id)
+                    ->log( $log_fail_text );
+
+            } else {
+                activity('mail')
+                    ->causedBy(Auth::user()->id)
+                    ->log( $log_success_text );
+            }
+        }
+    }
+
+    /**
+     * Save the data for reminder emailing.
+     *
+     * @param  Integer  $product_id
+     * @return void
+     */
+    protected function prepareReminderEmail($product_id) {
+        // Save data to email queue
+        $firstInverval = (int)DB::table('settings')->where('setting_key', 'first_reminder_email')->get()->first()->setting_value;
+        $secondInverval = (int)DB::table('settings')->where('setting_key', 'second_reminder_email')->get()->first()->setting_value;
+        $current = Carbon::now();
+
+        DB::table('email_queue')->insert([
+            'product_id' => $product_id,
+            'send_order' => 1,
+            'send_date' => $current->addDays($firstInverval)//->addMinutes($firstInverval)
+        ]);
+        DB::table('email_queue')->insert([
+            'product_id' => $product_id,
+            'send_order' => 2,
+            'send_date' => $current->addDays($secondInverval - $firstInverval)//->addMinutes($secondInverval - $firstInverval)
+        ]);
+    }
+
+    // Send test mail.
     public function sendTestMail() {
         try{
             $currentStart = Carbon::now()->format('Y-m-d H:i:00');//->toDateTimeString();

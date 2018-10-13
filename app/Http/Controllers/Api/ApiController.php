@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\StatusUpdated;
 
 class ApiController extends Controller
 {
@@ -28,18 +26,5 @@ class ApiController extends Controller
     public function respondWithError($data, $errorCode = 500)
     {
         return response()->json($data, $errorCode);
-    }
-
-    // Send mail
-    public function sendMail($to, $cc, $data, $type) {
-
-        if ($cc == null || $cc == '') {
-            Mail::to($to)->queue(new StatusUpdated($data, $type));
-        } else {
-            Mail::to($to)
-                ->cc($cc)
-                ->queue(new StatusUpdated($data, $type));
-        }
-
     }
 }

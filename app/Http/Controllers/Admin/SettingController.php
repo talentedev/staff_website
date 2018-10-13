@@ -50,10 +50,15 @@ class SettingController extends Controller
         $loginLogs = array();
         if (Auth::user()->hasRole('super admin')) {
             $loginLogs = Activity::where('log_name', 'login')->orderBy('created_at', 'desc')->get();
+            $emailLogs = Activity::where('log_name', 'mail')->orderBy('created_at', 'desc')->get();
         } else {
             $loginLogs = Activity::where([
                 'causer_id' => Auth::user()->id,
                 'log_name' => 'login'
+            ])->get();
+            $emailLogs = Activity::where([
+                'causer_id' => Auth::user()->id,
+                'log_name' => 'mail'
             ])->get();
         }
 
@@ -63,7 +68,8 @@ class SettingController extends Controller
         return view('admin.settings', [
             'user' => Auth::user(),
             'logs' => $loginLogs,
-            'configs' => $configs
+            'configs' => $configs,
+            'email_logs' =>$emailLogs
         ]);
     }
 
